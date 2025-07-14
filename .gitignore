@@ -4,3 +4,14 @@
 
 /OnwardsDalUnitTestCases/bin/Debug/net8.0
 /.vs/OnwardsSolution
+/OnwardsApi/bin/Debug/net8.0/OnwardsApi.deps.json
+/OnwardsApi/bin/Debug/net8.0/OnwardsApi.dll
+/OnwardsApi/bin/Debug/net8.0/OnwardsApi.exe
+/OnwardsApi/bin/Debug/net8.0/OnwardsApi.pdb
+/OnwardsApi/bin/Debug/net8.0/OnwardsApi.xml
+/OnwardsApi/bin/Debug/net8.0/OnwardsBLL.dll
+/OnwardsApi/bin/Debug/net8.0/OnwardsBLL.pdb
+/OnwardsApi/bin/Debug/net8.0/OnwardsDAL.dll
+/OnwardsApi/bin/Debug/net8.0/OnwardsDAL.pdb
+/OnwardsApi/bin/Debug/net8.0/OnwardsModel.dll
+/OnwardsApi/bin/Debug/net8.0/OnwardsModel.pdb

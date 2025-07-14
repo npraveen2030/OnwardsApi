@@ -9,29 +9,218 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "OnwardsModel.Dtos.LoginRequest",
+        "Type": "OnwardsModel.Dtos.LoginRequestDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Program\u002B\u003C\u003Ec__DisplayClass0_0",
-    "Method": "\u003C\u003CMain\u003E$\u003Eb__1",
-    "RelativePath": "weatherforecast",
-    "HttpMethod": "GET",
-    "IsController": false,
+    "ContainingType": "OnwardsApi.Controllers.HolidayListController",
+    "Method": "Add",
+    "RelativePath": "api/HolidayList",
+    "HttpMethod": "POST",
+    "IsController": true,
     "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
+    "Parameters": [
       {
-        "Type": "WeatherForecast[]",
-        "MediaTypes": [
-          "application/json"
-        ],
-        "StatusCode": 200
+        "Name": "holiday",
+        "Type": "OnwardsModel.Dtos.HolidayListDto",
+        "IsRequired": true
       }
     ],
-    "EndpointName": "GetWeatherForecast"
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.HolidayListController",
+    "Method": "Update",
+    "RelativePath": "api/HolidayList/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "holiday",
+        "Type": "OnwardsModel.Dtos.HolidayListDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.HolidayListController",
+    "Method": "Delete",
+    "RelativePath": "api/HolidayList/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.HolidayListController",
+    "Method": "GetByLocation",
+    "RelativePath": "api/HolidayList/location/{locationId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "locationId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.TrainingController",
+    "Method": "Add",
+    "RelativePath": "api/Training",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "OnwardsModel.Dtos.TrainingDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.TrainingController",
+    "Method": "Update",
+    "RelativePath": "api/Training/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "model",
+        "Type": "OnwardsModel.Dtos.TrainingDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.TrainingController",
+    "Method": "Delete",
+    "RelativePath": "api/Training/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.TrainingController",
+    "Method": "GetByLocation",
+    "RelativePath": "api/Training/location/{locationId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "locationId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.UserShiftDetailsController",
+    "Method": "GetUserShiftDetails",
+    "RelativePath": "api/UserShiftDetails/GetUserShiftDetailsById/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "OnwardsModel.Dtos.UserShiftLogDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.UserShiftDetailsController",
+    "Method": "InsertOrUpdate",
+    "RelativePath": "api/UserShiftDetails/InsertOrUpdate",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Object",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "System.Object",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 400
+      }
+    ]
   }
 ]

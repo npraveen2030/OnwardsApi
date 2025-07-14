@@ -4,12 +4,54 @@
         <name>OnwardsApi</name>
     </assembly>
     <members>
-        <member name="M:OnwardsApi.Controllers.AuthController.Login(OnwardsModel.Dtos.LoginRequest)">
+        <member name="M:OnwardsApi.Controllers.AuthController.Login(OnwardsModel.Dtos.LoginRequestDto)">
             <summary>
             User login API to validate Employee credentials.
             </summary>
             <param name="request">LoginRequest containing EmployeeCode and Password</param>
             <returns>200 OK or 401 Unauthorized</returns>
+        </member>
+        <member name="M:OnwardsApi.Controllers.TrainingController.GetByLocation(System.Int32)">
+            <summary>
+            Get all training records for a specific location.
+            </summary>
+            <param name="locationId">The ID of the location.</param>
+            <returns>List of trainings.</returns> 
+        </member>
+        <member name="M:OnwardsApi.Controllers.TrainingController.Add(OnwardsModel.Dtos.TrainingDto)">
+            <summary>
+            Add a new training session.
+            </summary>
+            <param name="model">Training model to add.</param>
+        </member>
+        <member name="M:OnwardsApi.Controllers.TrainingController.Update(System.Int32,OnwardsModel.Dtos.TrainingDto)">
+            <summary>
+            Update existing training details.
+            </summary>
+            <param name="id">Training ID.</param>
+            <param name="model">Updated training model.</param>
+            <returns>Status message.</returns>
+        </member>
+        <member name="M:OnwardsApi.Controllers.TrainingController.Delete(System.Int32)">
+            <summary>
+            Delete a training record by ID.
+            </summary>
+            <param name="id">Training ID.</param>
+            <returns>Status message.</returns>
+        </member>
+        <member name="M:OnwardsApi.Controllers.UserShiftDetailsController.InsertOrUpdate(System.Int32)">
+            <summary>
+            Inserts or updates a user's shift log. Returns LogId.
+            </summary>
+            <param name="userId">User ID</param>
+            <returns>200 OK with LogId or 400 BadRequest with error</returns>
+        </member>
+        <member name="M:OnwardsApi.Controllers.UserShiftDetailsController.GetUserShiftDetails(System.Int32)">
+            <summary>
+            Gets user shift details including login/logout time and total logged hours.
+            </summary>
+            <param name="userId">The user ID.</param>
+            <returns>User shift details for today.</returns>
         </member>
     </members>
 </doc>

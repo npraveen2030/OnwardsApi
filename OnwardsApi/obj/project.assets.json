@@ -226,6 +226,7 @@
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
           "Microsoft.Extensions.Configuration.Abstractions": "9.0.6",
+          "OnwardsModel": "1.0.0",
           "System.Data.SqlClient": "4.9.0"
         },
         "compile": {
@@ -794,11 +795,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Praveen\\Projects\\OnwardsAngular\\ApiFor18\\OnwardsApi\\OnwardsApi.csproj",
+      "projectUniqueName": "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsApi\\OnwardsApi.csproj",
       "projectName": "OnwardsApi",
-      "projectPath": "D:\\Praveen\\Projects\\OnwardsAngular\\ApiFor18\\OnwardsApi\\OnwardsApi.csproj",
+      "projectPath": "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsApi\\OnwardsApi.csproj",
       "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-      "outputPath": "D:\\Praveen\\Projects\\OnwardsAngular\\ApiFor18\\OnwardsApi\\obj\\",
+      "outputPath": "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsApi\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -819,11 +820,11 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "D:\\Praveen\\Projects\\OnwardsAngular\\ApiFor18\\OnwardsBLL\\OnwardsBLL.csproj": {
-              "projectPath": "D:\\Praveen\\Projects\\OnwardsAngular\\ApiFor18\\OnwardsBLL\\OnwardsBLL.csproj"
+            "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsBLL\\OnwardsBLL.csproj": {
+              "projectPath": "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsBLL\\OnwardsBLL.csproj"
             },
-            "D:\\Praveen\\Projects\\OnwardsAngular\\ApiFor18\\OnwardsModel\\OnwardsModel.csproj": {
-              "projectPath": "D:\\Praveen\\Projects\\OnwardsAngular\\ApiFor18\\OnwardsModel\\OnwardsModel.csproj"
+            "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsModel\\OnwardsModel.csproj": {
+              "projectPath": "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsModel\\OnwardsModel.csproj"
             }
           }
         }
