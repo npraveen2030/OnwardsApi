@@ -21,3 +21,7 @@
 /OnwardsDAL/bin/Debug/net8.0/OnwardsModel.pdb
 /OnwardsDAL/obj/Debug/net8.0/ref/OnwardsDAL.dll
 /OnwardsDAL/obj/Debug/net8.0/refint/OnwardsDAL.dll
+/OnwardsDAL/obj/Debug/net8.0
+/OnwardsDAL/obj/OnwardsDAL.csproj.nuget.dgspec.json
+/OnwardsDAL/obj/project.assets.json
+/OnwardsDAL/obj/project.nuget.cache
