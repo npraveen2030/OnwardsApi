@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using OnwardsModel.Dtos;
 
 namespace OnwardsBLL.Interface
 {
-    public interface IUserService
-    {
-        bool ValidateUser(string employeeCode, string password);
-    }
+  public interface IUserService
+  {
+    bool ValidateUser(string employeeCode, string password);
+  }
 }
