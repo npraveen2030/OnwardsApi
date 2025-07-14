@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "EvykTGGsyqQ=",
+  "dgSpecHash": "VVYMP/XrnNY=",
   "success": true,
-  "projectFilePath": "D:\\Praveen\\Projects\\OnwardsAngular\\ApiFor18\\OnwardsBLL\\OnwardsBLL.csproj",
+  "projectFilePath": "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsBLL\\OnwardsBLL.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\admin\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\9.0.6\\microsoft.extensions.configuration.abstractions.9.0.6.nupkg.sha512",
     "C:\\Users\\admin\\.nuget\\packages\\microsoft.extensions.primitives\\9.0.6\\microsoft.extensions.primitives.9.0.6.nupkg.sha512",
