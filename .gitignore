@@ -17,3 +17,5 @@
 /OnwardsApi/bin/Debug/net8.0/OnwardsModel.pdb
 /OnwardsBllUnitTestCases/bin/Debug/net8.0
 /OnwardsBllUnitTestCases/obj
+/OnwardsDAL/bin/Debug/net8.0/OnwardsModel.dll
+/OnwardsDAL/bin/Debug/net8.0/OnwardsModel.pdb
