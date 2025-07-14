@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace OnwardsModel.Dtos
 {
-    internal class AddressDto
-    {
-    }
+  public class ApiResponseDto
+  {
+    public string Message { get; set; }
+    public string? Error { get; set; }
+  }
 }

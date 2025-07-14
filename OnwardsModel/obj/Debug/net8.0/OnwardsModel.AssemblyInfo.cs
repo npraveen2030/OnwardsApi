@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OnwardsModel")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+63cc913fbb72326ca8137dc19637f8a02aab17c3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ea01d8bd9976289f1fe6ff30098045d786430cfc")]
 [assembly: System.Reflection.AssemblyProductAttribute("OnwardsModel")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OnwardsModel")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

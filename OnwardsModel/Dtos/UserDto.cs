@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OnwardsModel.Dtos
 {
-    internal class AddressDto
+    internal class UserDto
     {
     }
 }

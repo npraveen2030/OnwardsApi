@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OnwardsModel.Dtos
+namespace OnwardsModel.Model
 {
-    internal class AddressDto
+    internal class AddressModel
     {
     }
 }

@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Praveen\\Projects\\OnwardsAngular\\ApiFor18\\OnwardsModel\\OnwardsModel.csproj",
+      "projectUniqueName": "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsModel\\OnwardsModel.csproj",
       "projectName": "OnwardsModel",
-      "projectPath": "D:\\Praveen\\Projects\\OnwardsAngular\\ApiFor18\\OnwardsModel\\OnwardsModel.csproj",
+      "projectPath": "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsModel\\OnwardsModel.csproj",
       "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-      "outputPath": "D:\\Praveen\\Projects\\OnwardsAngular\\ApiFor18\\OnwardsModel\\obj\\",
+      "outputPath": "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsModel\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

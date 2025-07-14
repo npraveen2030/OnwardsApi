@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace OnwardsModel.Dtos
 {
-    internal class AddressDto
+    public class LoginRequestDto
     {
+        public string EmployeeCode { get; set; }
+        public string Password { get; set; }
     }
 }

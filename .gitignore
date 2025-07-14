@@ -26,3 +26,5 @@
 /OnwardsDAL/obj/project.assets.json
 /OnwardsDAL/obj/project.nuget.cache
 /OnwardsDalUnitTestCases/obj
+/OnwardsModel/bin/Debug/net8.0/OnwardsModel.dll
+/OnwardsModel/bin/Debug/net8.0/OnwardsModel.pdb
