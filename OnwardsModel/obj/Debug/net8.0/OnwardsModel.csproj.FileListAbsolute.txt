@@ -1,0 +1,12 @@
+D:\Praveen\Projects\OnwardsAngular\ApiFor18\OnwardsModel\bin\Debug\net8.0\OnwardsModel.deps.json
+D:\Praveen\Projects\OnwardsAngular\ApiFor18\OnwardsModel\bin\Debug\net8.0\OnwardsModel.dll
+D:\Praveen\Projects\OnwardsAngular\ApiFor18\OnwardsModel\bin\Debug\net8.0\OnwardsModel.pdb
+D:\Praveen\Projects\OnwardsAngular\ApiFor18\OnwardsModel\obj\Debug\net8.0\OnwardsModel.GeneratedMSBuildEditorConfig.editorconfig
+D:\Praveen\Projects\OnwardsAngular\ApiFor18\OnwardsModel\obj\Debug\net8.0\OnwardsModel.AssemblyInfoInputs.cache
+D:\Praveen\Projects\OnwardsAngular\ApiFor18\OnwardsModel\obj\Debug\net8.0\OnwardsModel.AssemblyInfo.cs
+D:\Praveen\Projects\OnwardsAngular\ApiFor18\OnwardsModel\obj\Debug\net8.0\OnwardsModel.csproj.CoreCompileInputs.cache
+D:\Praveen\Projects\OnwardsAngular\ApiFor18\OnwardsModel\obj\Debug\net8.0\OnwardsModel.sourcelink.json
+D:\Praveen\Projects\OnwardsAngular\ApiFor18\OnwardsModel\obj\Debug\net8.0\OnwardsModel.dll
+D:\Praveen\Projects\OnwardsAngular\ApiFor18\OnwardsModel\obj\Debug\net8.0\refint\OnwardsModel.dll
+D:\Praveen\Projects\OnwardsAngular\ApiFor18\OnwardsModel\obj\Debug\net8.0\OnwardsModel.pdb
+D:\Praveen\Projects\OnwardsAngular\ApiFor18\OnwardsModel\obj\Debug\net8.0\ref\OnwardsModel.dll
