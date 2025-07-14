@@ -19,3 +19,5 @@
 /OnwardsBllUnitTestCases/obj
 /OnwardsDAL/bin/Debug/net8.0/OnwardsModel.dll
 /OnwardsDAL/bin/Debug/net8.0/OnwardsModel.pdb
+/OnwardsDAL/obj/Debug/net8.0/ref/OnwardsDAL.dll
+/OnwardsDAL/obj/Debug/net8.0/refint/OnwardsDAL.dll
