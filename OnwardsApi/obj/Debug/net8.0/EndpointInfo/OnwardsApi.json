@@ -330,7 +330,7 @@
         }
       }
     },
-    "/api/UserShiftDetails/GetUserShiftDetailsById/{userId}": {
+    "/api/UserShiftDetails/GetByUserId/{userId}": {
       "get": {
         "tags": [
           "UserShiftDetails"
