@@ -1,0 +1,6 @@
+@OnwardsApi_HostAddress = http://localhost:5100
+
+GET {{OnwardsApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

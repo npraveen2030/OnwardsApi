@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>OnwardsApi</name>
+    </assembly>
+    <members>
+        <member name="M:OnwardsApi.Controllers.AuthController.Login(OnwardsModel.Dtos.LoginRequest)">
+            <summary>
+            User login API to validate Employee credentials.
+            </summary>
+            <param name="request">LoginRequest containing EmployeeCode and Password</param>
+            <returns>200 OK or 401 Unauthorized</returns>
+        </member>
+    </members>
+</doc>
