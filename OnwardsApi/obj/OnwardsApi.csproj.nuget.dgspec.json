@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsApi\\OnwardsApi.csproj": {}
+    "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsApi\\OnwardsApi.csproj": {}
   },
   "projects": {
-    "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsApi\\OnwardsApi.csproj": {
+    "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsApi\\OnwardsApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsApi\\OnwardsApi.csproj",
+        "projectUniqueName": "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsApi\\OnwardsApi.csproj",
         "projectName": "OnwardsApi",
-        "projectPath": "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsApi\\OnwardsApi.csproj",
-        "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-        "outputPath": "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsApi\\obj\\",
+        "projectPath": "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsApi\\OnwardsApi.csproj",
+        "packagesPath": "C:\\Users\\Mohammad Sameer\\.nuget\\packages\\",
+        "outputPath": "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Mohammad Sameer\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -32,11 +32,11 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsBLL\\OnwardsBLL.csproj": {
-                "projectPath": "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsBLL\\OnwardsBLL.csproj"
+              "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsBLL\\OnwardsBLL.csproj": {
+                "projectPath": "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsBLL\\OnwardsBLL.csproj"
               },
-              "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsModel\\OnwardsModel.csproj": {
-                "projectPath": "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsModel\\OnwardsModel.csproj"
+              "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsModel\\OnwardsModel.csproj": {
+                "projectPath": "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsModel\\OnwardsModel.csproj"
               }
             }
           }
@@ -51,7 +51,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -85,24 +85,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsBLL\\OnwardsBLL.csproj": {
+    "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsBLL\\OnwardsBLL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsBLL\\OnwardsBLL.csproj",
+        "projectUniqueName": "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsBLL\\OnwardsBLL.csproj",
         "projectName": "OnwardsBLL",
-        "projectPath": "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsBLL\\OnwardsBLL.csproj",
-        "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-        "outputPath": "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsBLL\\obj\\",
+        "projectPath": "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsBLL\\OnwardsBLL.csproj",
+        "packagesPath": "C:\\Users\\Mohammad Sameer\\.nuget\\packages\\",
+        "outputPath": "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsBLL\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Mohammad Sameer\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -117,11 +117,11 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsDAL\\OnwardsDAL.csproj": {
-                "projectPath": "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsDAL\\OnwardsDAL.csproj"
+              "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsDAL\\OnwardsDAL.csproj": {
+                "projectPath": "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsDAL\\OnwardsDAL.csproj"
               },
-              "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsModel\\OnwardsModel.csproj": {
-                "projectPath": "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsModel\\OnwardsModel.csproj"
+              "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsModel\\OnwardsModel.csproj": {
+                "projectPath": "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsModel\\OnwardsModel.csproj"
               }
             }
           }
@@ -136,7 +136,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -157,24 +157,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsDAL\\OnwardsDAL.csproj": {
+    "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsDAL\\OnwardsDAL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsDAL\\OnwardsDAL.csproj",
+        "projectUniqueName": "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsDAL\\OnwardsDAL.csproj",
         "projectName": "OnwardsDAL",
-        "projectPath": "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsDAL\\OnwardsDAL.csproj",
-        "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-        "outputPath": "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsDAL\\obj\\",
+        "projectPath": "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsDAL\\OnwardsDAL.csproj",
+        "packagesPath": "C:\\Users\\Mohammad Sameer\\.nuget\\packages\\",
+        "outputPath": "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsDAL\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Mohammad Sameer\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -189,8 +189,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsModel\\OnwardsModel.csproj": {
-                "projectPath": "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsModel\\OnwardsModel.csproj"
+              "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsModel\\OnwardsModel.csproj": {
+                "projectPath": "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsModel\\OnwardsModel.csproj"
               }
             }
           }
@@ -205,12 +205,16 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.Data.SqlClient": {
+              "target": "Package",
+              "version": "[6.0.2, )"
+            },
             "Microsoft.Extensions.Configuration.Abstractions": {
               "target": "Package",
               "version": "[9.0.6, )"
@@ -236,24 +240,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsModel\\OnwardsModel.csproj": {
+    "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsModel\\OnwardsModel.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsModel\\OnwardsModel.csproj",
+        "projectUniqueName": "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsModel\\OnwardsModel.csproj",
         "projectName": "OnwardsModel",
-        "projectPath": "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsModel\\OnwardsModel.csproj",
-        "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-        "outputPath": "D:\\Praveen\\Projects\\OnwardsAngularJuly25\\OnwardsApi\\OnwardsApi\\OnwardsModel\\obj\\",
+        "projectPath": "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsModel\\OnwardsModel.csproj",
+        "packagesPath": "C:\\Users\\Mohammad Sameer\\.nuget\\packages\\",
+        "outputPath": "D:\\Projects\\OnwardsApi V2\\OnwardsApi\\OnwardsModel\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Mohammad Sameer\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -280,7 +284,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -301,7 +305,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
