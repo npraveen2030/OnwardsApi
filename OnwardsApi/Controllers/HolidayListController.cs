@@ -17,37 +17,6 @@ namespace OnwardsApi.Controllers
       _service = service;
     }
 
-    //[HttpGet("location/{locationId}")]
-    //public IActionResult GetByLocation(int locationId)
-    //{
-    //  var data = _service.GetByLocation(locationId);
-    //  return Ok(data);
-    //}
-
-    //[HttpPost]
-    //public IActionResult Add([FromBody] HolidayList holiday)
-    //{
-    //  _service.Add(holiday);
-    //  return Ok(new { message = "Holiday added successfully" });
-    //}
-
-    //[HttpPut("{id}")]
-    //public IActionResult Update(int id, [FromBody] HolidayList holiday)
-    //{
-    //  if (id != holiday.HolidayId)
-    //    return BadRequest("Id mismatch");
-
-    //  _service.Update(holiday);
-    //  return Ok(new { message = "Holiday updated successfully" });
-    //}
-
-    //[HttpDelete("{id}")]
-    //public IActionResult Delete(int id)
-    //{
-    //  _service.Delete(id);
-    //  return Ok(new { message = "Holiday deleted successfully" });
-    //}
-
 
     // GET: api/HolidayList/location/1
     [HttpGet("location/{locationId}")]

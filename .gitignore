@@ -87,3 +87,7 @@
 /.vs/ProjectEvaluation/onwardssolution.metadata.v9.bin
 /.vs/ProjectEvaluation/onwardssolution.projects.v9.bin
 /.vs/ProjectEvaluation/onwardssolution.strings.v9.bin
+/OnwardsApiUnitTestCases/bin/Debug/net8.0
+/OnwardsApiUnitTestCases/obj/Debug/net8.0
+/OnwardsApiUnitTestCases/obj
+/OnwardsApi/bin/Debug/net8.0/appsettings.json
