@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace OnwardsDAL.Interface
 {
-    public interface IBasicDetailsRepository
+    public interface IUserAddressesRepository
     {
-        public Task AddOrUpdateBasicDetailsAsync(BasicDetail detail);
+        public Task AddOrUpdateUserAddressAsync(UserAddress address);
     }
 }

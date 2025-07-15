@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using OnwardsDAL.Interface;
 using OnwardsModel.Dtos;
+using OnwardsModel.Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -22,47 +23,42 @@ namespace OnwardsDAL.Repository
         private SqlConnection GetConn() =>
             new SqlConnection(_config.GetConnectionString("DefaultConnection"));
 
-        public bool AddBasicDetails(BasicDetailsDto b)
+        public async Task AddOrUpdateBasicDetailsAsync(BasicDetail detail)
         {
-            using var conn = GetConn();
-            conn.Open();
-
-            using var cmd = new SqlCommand("Onwards.InsertOrUpdateBasicDetails", conn)
+            try
             {
-                CommandType = CommandType.StoredProcedure
-            };
+                await using var conn = GetConn();
+                await conn.OpenAsync();
 
-            cmd.Parameters.AddWithValue("@UserId", b.UserId);
-            cmd.Parameters.AddWithValue("@FirstName", b.FirstName);
-            cmd.Parameters.AddWithValue("@MiddleName", b.MiddleName);
-            cmd.Parameters.AddWithValue("@LastName", b.LastName);
-            cmd.Parameters.AddWithValue("@PersonalEmailID", b.PersonalEmailID);
-            cmd.Parameters.AddWithValue("@PrimaryContactNumber", b.PrimaryContactNumber);
-            cmd.Parameters.AddWithValue("@Gender", b.Gender);
-            cmd.Parameters.AddWithValue("@FatherOrHusbandName", b.FatherOrHusbandName);
-            cmd.Parameters.AddWithValue("@DOB", b.DOB);
-            cmd.Parameters.AddWithValue("@Nationality", b.Nationality);
-            cmd.Parameters.AddWithValue("@DifferentlyAbled", b.DifferentlyAbled);
-            cmd.Parameters.AddWithValue("@VaccinationStatus", b.VaccinationStatus);
-            cmd.Parameters.AddWithValue("@BloodGroup", b.BloodGroup);
-            cmd.Parameters.AddWithValue("@BloodDonor", b.BloodDonor);
-            cmd.Parameters.AddWithValue("@PanNumber", b.PanNumber);
-            cmd.Parameters.AddWithValue("@AadhaarCardno", b.AadhaarCardno);
-            cmd.Parameters.AddWithValue("@PerformedBy", b.CreatedBy ?? "System");
+                await using var cmd = new SqlCommand("Onwards.InsertOrUpdateBasicDetails", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
 
-            // Output parameter
-            var resultParam = new SqlParameter("@ResultId", SqlDbType.Int)
+                cmd.Parameters.AddWithValue("@UserId", detail.UserId);
+                cmd.Parameters.AddWithValue("@FirstName", detail.FirstName);
+                cmd.Parameters.AddWithValue("@MiddleName", detail.MiddleName);
+                cmd.Parameters.AddWithValue("@LastName", detail.LastName);
+                cmd.Parameters.AddWithValue("@PersonalEmailID", detail.PersonalEmailID);
+                cmd.Parameters.AddWithValue("@PrimaryContactNumber", detail.PrimaryContactNumber);
+                cmd.Parameters.AddWithValue("@Gender", detail.Gender);
+                cmd.Parameters.AddWithValue("@FatherOrHusbandName", detail.FatherOrHusbandName);
+                cmd.Parameters.AddWithValue("@DOB", detail.DOB);
+                cmd.Parameters.AddWithValue("@Nationality", detail.Nationality);
+                cmd.Parameters.AddWithValue("@DifferentlyAbled", detail.DifferentlyAbled);
+                cmd.Parameters.AddWithValue("@VaccinationStatus", detail.VaccinationStatus);
+                cmd.Parameters.AddWithValue("@BloodGroup", detail.BloodGroup);
+                cmd.Parameters.AddWithValue("@BloodDonor", detail.BloodDonor);
+                cmd.Parameters.AddWithValue("@PanNumber", detail.PanNumber);
+                cmd.Parameters.AddWithValue("@AadhaarCardno", detail.AadhaarCardno);
+                cmd.Parameters.AddWithValue("@LoginId", detail.LoginId);
+
+                await cmd.ExecuteNonQueryAsync();
+            }
+            catch (Exception ex)
             {
-                Direction = ParameterDirection.Output
-            };
-            cmd.Parameters.Add(resultParam);
-
-            int rowsAffected = cmd.ExecuteNonQuery();
-
-            // Optional: you can capture the inserted/updated ID here
-            int resultId = (int)(resultParam.Value ?? 0);
-
-            return rowsAffected > 0;
+                throw new Exception("Error occurred while inserting/updating basic details.", ex);
+            }
         }
 
     }

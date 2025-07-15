@@ -11,8 +11,8 @@ namespace OnwardsModel.Model
     [Table("BasicDetails", Schema = "Onwards")]
     public class BasicDetail : BaseModel
     {
-        [Key]
-        public int Id { get; set; }
+        //[Required]
+        //public int UserId { get; set; }
 
         [Required]
         [StringLength(50)]

@@ -29,9 +29,16 @@ namespace OnwardsApi
       services.AddScoped<ITrainingService, TrainingService>();
 
       services.AddScoped<IUserShiftDetailsRepository, UserShiftDetailsRepository>();
-      //services.AddScoped<IUserShiftDetailsService, UserShiftDetailsService>();
+            //services.AddScoped<IUserShiftDetailsService, UserShiftDetailsService>();
 
-      return services;
+      services.AddScoped<IBasicDetailsRepository, BasicDetailsRepository>();
+      services.AddScoped<IUserAddressesRepository, UserAddressesRepository>();
+      services.AddScoped<IComplianceRepository, ComplianceRepository>();
+      services.AddScoped<IBankDetailsRepository, BankDetailsRepository>();
+      services.AddScoped<IEmergencyContactsRepository, EmergencyContactsRepository>();
+      services.AddScoped<IPersonalDetailsService, PersonalDetailsService>();
+
+            return services;
     }
   }
 }

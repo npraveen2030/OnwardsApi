@@ -155,6 +155,37 @@
         }
       }
     },
+    "/api/PersonalDetails": {
+      "post": {
+        "tags": [
+          "PersonalDetails"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonalDetailsDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonalDetailsDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonalDetailsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Training/location/{locationId}": {
       "get": {
         "tags": [
@@ -402,6 +433,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "loginId": {
+            "type": "integer",
+            "format": "int32"
+          },
           "createdBy": {
             "type": "string",
             "nullable": true
@@ -421,8 +456,7 @@
             "nullable": true
           },
           "isActive": {
-            "type": "boolean",
-            "nullable": true
+            "type": "boolean"
           },
           "holidayId": {
             "type": "integer",
@@ -459,6 +493,248 @@
             "nullable": true
           },
           "password": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PersonalDetailsDto": {
+        "required": [
+          "aadhaarCardno",
+          "accountHolderName",
+          "bankAccountNumber",
+          "bankName",
+          "bloodDonor",
+          "bloodGroup",
+          "branchName",
+          "contactName",
+          "contactRelationship",
+          "differentlyAbled",
+          "dob",
+          "esicNo",
+          "fatherOrHusbandName",
+          "firstName",
+          "gender",
+          "ifscCode",
+          "isSameAsPermanent",
+          "lastName",
+          "middleName",
+          "nationality",
+          "panNumber",
+          "personalEmailID",
+          "pfNo",
+          "presentAddressLine",
+          "presentDoorNo",
+          "presentPincode",
+          "presentState",
+          "primaryContactNumber_BasicDetails",
+          "primaryContactNumber_EmergencyContactDetails",
+          "uanNo",
+          "vaccinationStatus"
+        ],
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "loginId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "modifiedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "firstName": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "middleName": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "lastName": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "personalEmailID": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "primaryContactNumber_BasicDetails": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "gender": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "fatherOrHusbandName": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "dob": {
+            "type": "string",
+            "format": "date"
+          },
+          "nationality": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "differentlyAbled": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "vaccinationStatus": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "bloodGroup": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "bloodDonor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "panNumber": {
+            "maxLength": 10,
+            "minLength": 0,
+            "type": "string"
+          },
+          "aadhaarCardno": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "presentDoorNo": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string"
+          },
+          "presentAddressLine": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string"
+          },
+          "presentState": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "presentPincode": {
+            "maxLength": 10,
+            "minLength": 0,
+            "type": "string"
+          },
+          "isSameAsPermanent": {
+            "type": "boolean"
+          },
+          "permanentDoorNo": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "permanentAddressLine": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "permanentState": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "permanentPincode": {
+            "maxLength": 10,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "pfNo": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string"
+          },
+          "uanNo": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string"
+          },
+          "esicNo": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string"
+          },
+          "bankAccountNumber": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string"
+          },
+          "accountHolderName": {
+            "maxLength": 150,
+            "minLength": 0,
+            "type": "string"
+          },
+          "ifscCode": {
+            "maxLength": 15,
+            "minLength": 0,
+            "type": "string"
+          },
+          "bankName": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "branchName": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "contactName": {
+            "maxLength": 150,
+            "minLength": 0,
+            "type": "string"
+          },
+          "contactRelationship": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "primaryContactNumber_EmergencyContactDetails": {
+            "maxLength": 15,
+            "minLength": 0,
+            "type": "string"
+          },
+          "secondaryContactNumber": {
+            "maxLength": 15,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           }
@@ -550,6 +826,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "loginId": {
+            "type": "integer",
+            "format": "int32"
+          },
           "createdBy": {
             "type": "string",
             "nullable": true
@@ -569,8 +849,7 @@
             "nullable": true
           },
           "isActive": {
-            "type": "boolean",
-            "nullable": true
+            "type": "boolean"
           },
           "id": {
             "type": "integer",
@@ -598,6 +877,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "loginId": {
+            "type": "integer",
+            "format": "int32"
+          },
           "createdBy": {
             "type": "string",
             "nullable": true
@@ -617,8 +900,7 @@
             "nullable": true
           },
           "isActive": {
-            "type": "boolean",
-            "nullable": true
+            "type": "boolean"
           },
           "logId": {
             "type": "integer",

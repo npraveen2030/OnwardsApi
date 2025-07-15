@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace OnwardsDAL.Interface
 {
-    public interface IBasicDetailsRepository
+    public interface IComplianceRepository
     {
-        public Task AddOrUpdateBasicDetailsAsync(BasicDetail detail);
+        public Task AddOrUpdateUserComplianceAsync(Compliance compliance);
     }
 }

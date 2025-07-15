@@ -85,6 +85,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "OnwardsApi.Controllers.PersonalDetailsController",
+    "Method": "AddPersonalDetails",
+    "RelativePath": "api/PersonalDetails",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "details",
+        "Type": "OnwardsModel.Dtos.PersonalDetailsDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "OnwardsApi.Controllers.TrainingController",
     "Method": "Add",
     "RelativePath": "api/Training",
