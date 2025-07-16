@@ -1,93 +1,118 @@
-USE [master]
+/****** Object:  Table [Onwards].[YesNoOptions]    Script Date: 16-07-2025 13:55:17 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Onwards].[YesNoOptions]') AND type in (N'U'))
+DROP TABLE [Onwards].[YesNoOptions]
 GO
-/****** Object:  Database [Projects]    Script Date: 16-07-2025 13:34:21 ******/
-CREATE DATABASE [Projects]
- CONTAINMENT = NONE
- ON  PRIMARY 
-( NAME = N'Projects', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\Projects.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
- LOG ON 
-( NAME = N'Projects_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\Projects_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
- WITH CATALOG_COLLATION = DATABASE_DEFAULT, LEDGER = OFF
+/****** Object:  Table [Onwards].[VaccinationStatusOptions]    Script Date: 16-07-2025 13:55:17 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Onwards].[VaccinationStatusOptions]') AND type in (N'U'))
+DROP TABLE [Onwards].[VaccinationStatusOptions]
 GO
-ALTER DATABASE [Projects] SET COMPATIBILITY_LEVEL = 160
+/****** Object:  Table [Onwards].[UserShiftLog]    Script Date: 16-07-2025 13:55:17 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Onwards].[UserShiftLog]') AND type in (N'U'))
+DROP TABLE [Onwards].[UserShiftLog]
 GO
-IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
-begin
-EXEC [Projects].[dbo].[sp_fulltext_database] @action = 'enable'
-end
+/****** Object:  Table [Onwards].[UserShiftAssignment]    Script Date: 16-07-2025 13:55:17 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Onwards].[UserShiftAssignment]') AND type in (N'U'))
+DROP TABLE [Onwards].[UserShiftAssignment]
 GO
-ALTER DATABASE [Projects] SET ANSI_NULL_DEFAULT OFF 
+/****** Object:  Table [Onwards].[Users]    Script Date: 16-07-2025 13:55:17 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Onwards].[Users]') AND type in (N'U'))
+DROP TABLE [Onwards].[Users]
 GO
-ALTER DATABASE [Projects] SET ANSI_NULLS OFF 
+/****** Object:  Table [Onwards].[UserDocuments]    Script Date: 16-07-2025 13:55:17 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Onwards].[UserDocuments]') AND type in (N'U'))
+DROP TABLE [Onwards].[UserDocuments]
 GO
-ALTER DATABASE [Projects] SET ANSI_PADDING OFF 
+/****** Object:  Table [Onwards].[UserAddresses]    Script Date: 16-07-2025 13:55:17 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Onwards].[UserAddresses]') AND type in (N'U'))
+DROP TABLE [Onwards].[UserAddresses]
 GO
-ALTER DATABASE [Projects] SET ANSI_WARNINGS OFF 
+/****** Object:  Table [Onwards].[Titles]    Script Date: 16-07-2025 13:55:17 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Onwards].[Titles]') AND type in (N'U'))
+DROP TABLE [Onwards].[Titles]
 GO
-ALTER DATABASE [Projects] SET ARITHABORT OFF 
+/****** Object:  Table [Onwards].[Shift]    Script Date: 16-07-2025 13:55:17 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Onwards].[Shift]') AND type in (N'U'))
+DROP TABLE [Onwards].[Shift]
 GO
-ALTER DATABASE [Projects] SET AUTO_CLOSE OFF 
+/****** Object:  Table [Onwards].[PreviousExperienceDetails]    Script Date: 16-07-2025 13:55:17 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Onwards].[PreviousExperienceDetails]') AND type in (N'U'))
+DROP TABLE [Onwards].[PreviousExperienceDetails]
 GO
-ALTER DATABASE [Projects] SET AUTO_SHRINK OFF 
+/****** Object:  Table [Onwards].[NationalityOptions]    Script Date: 16-07-2025 13:55:17 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Onwards].[NationalityOptions]') AND type in (N'U'))
+DROP TABLE [Onwards].[NationalityOptions]
 GO
-ALTER DATABASE [Projects] SET AUTO_UPDATE_STATISTICS ON 
+/****** Object:  Table [Onwards].[MaritalStatus]    Script Date: 16-07-2025 13:55:17 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Onwards].[MaritalStatus]') AND type in (N'U'))
+DROP TABLE [Onwards].[MaritalStatus]
 GO
-ALTER DATABASE [Projects] SET CURSOR_CLOSE_ON_COMMIT OFF 
+/****** Object:  Table [Onwards].[LoginDetails]    Script Date: 16-07-2025 13:55:17 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Onwards].[LoginDetails]') AND type in (N'U'))
+DROP TABLE [Onwards].[LoginDetails]
 GO
-ALTER DATABASE [Projects] SET CURSOR_DEFAULT  GLOBAL 
+/****** Object:  Table [Onwards].[GenderOptions]    Script Date: 16-07-2025 13:55:17 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Onwards].[GenderOptions]') AND type in (N'U'))
+DROP TABLE [Onwards].[GenderOptions]
 GO
-ALTER DATABASE [Projects] SET CONCAT_NULL_YIELDS_NULL OFF 
+/****** Object:  Table [Onwards].[EmergencyContacts]    Script Date: 16-07-2025 13:55:17 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Onwards].[EmergencyContacts]') AND type in (N'U'))
+DROP TABLE [Onwards].[EmergencyContacts]
 GO
-ALTER DATABASE [Projects] SET NUMERIC_ROUNDABORT OFF 
+/****** Object:  Table [Onwards].[DocumentTypes]    Script Date: 16-07-2025 13:55:17 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Onwards].[DocumentTypes]') AND type in (N'U'))
+DROP TABLE [Onwards].[DocumentTypes]
 GO
-ALTER DATABASE [Projects] SET QUOTED_IDENTIFIER OFF 
+/****** Object:  Table [Onwards].[Compliance]    Script Date: 16-07-2025 13:55:17 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Onwards].[Compliance]') AND type in (N'U'))
+DROP TABLE [Onwards].[Compliance]
 GO
-ALTER DATABASE [Projects] SET RECURSIVE_TRIGGERS OFF 
+/****** Object:  Table [Onwards].[ChildrenDetails]    Script Date: 16-07-2025 13:55:17 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Onwards].[ChildrenDetails]') AND type in (N'U'))
+DROP TABLE [Onwards].[ChildrenDetails]
 GO
-ALTER DATABASE [Projects] SET  DISABLE_BROKER 
+/****** Object:  Table [Onwards].[BloodGroupOptions]    Script Date: 16-07-2025 13:55:17 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Onwards].[BloodGroupOptions]') AND type in (N'U'))
+DROP TABLE [Onwards].[BloodGroupOptions]
 GO
-ALTER DATABASE [Projects] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+/****** Object:  Table [Onwards].[BasicDetails]    Script Date: 16-07-2025 13:55:17 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Onwards].[BasicDetails]') AND type in (N'U'))
+DROP TABLE [Onwards].[BasicDetails]
 GO
-ALTER DATABASE [Projects] SET DATE_CORRELATION_OPTIMIZATION OFF 
+/****** Object:  Table [Onwards].[BankDetails]    Script Date: 16-07-2025 13:55:17 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Onwards].[BankDetails]') AND type in (N'U'))
+DROP TABLE [Onwards].[BankDetails]
 GO
-ALTER DATABASE [Projects] SET TRUSTWORTHY OFF 
+/****** Object:  Table [Onwards].[Addresses]    Script Date: 16-07-2025 13:55:17 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Onwards].[Addresses]') AND type in (N'U'))
+DROP TABLE [Onwards].[Addresses]
 GO
-ALTER DATABASE [Projects] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+/****** Object:  Table [Onwards].[Addresses]    Script Date: 16-07-2025 13:55:17 ******/
+SET ANSI_NULLS ON
 GO
-ALTER DATABASE [Projects] SET PARAMETERIZATION SIMPLE 
+SET QUOTED_IDENTIFIER ON
 GO
-ALTER DATABASE [Projects] SET READ_COMMITTED_SNAPSHOT OFF 
+CREATE TABLE [Onwards].[Addresses](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[UserId] [int] NOT NULL,
+	[AddressLine1] [nvarchar](200) NOT NULL,
+	[AddressLine2] [nvarchar](200) NULL,
+	[City] [nvarchar](100) NULL,
+	[State] [nvarchar](100) NULL,
+	[Country] [nvarchar](100) NULL,
+	[PostalCode] [nvarchar](20) NULL,
+	[CreatedOn] [datetime] NULL,
+	[CreatedDate] [datetime] NULL,
+	[CreatedBy] [int] NULL,
+	[ModifiedDate] [datetime] NULL,
+	[ModifiedBy] [int] NULL,
+	[IsActive] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
 GO
-ALTER DATABASE [Projects] SET HONOR_BROKER_PRIORITY OFF 
-GO
-ALTER DATABASE [Projects] SET RECOVERY FULL 
-GO
-ALTER DATABASE [Projects] SET  MULTI_USER 
-GO
-ALTER DATABASE [Projects] SET PAGE_VERIFY CHECKSUM  
-GO
-ALTER DATABASE [Projects] SET DB_CHAINING OFF 
-GO
-ALTER DATABASE [Projects] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
-GO
-ALTER DATABASE [Projects] SET TARGET_RECOVERY_TIME = 60 SECONDS 
-GO
-ALTER DATABASE [Projects] SET DELAYED_DURABILITY = DISABLED 
-GO
-ALTER DATABASE [Projects] SET ACCELERATED_DATABASE_RECOVERY = OFF  
-GO
-EXEC sys.sp_db_vardecimal_storage_format N'Projects', N'ON'
-GO
-ALTER DATABASE [Projects] SET QUERY_STORE = ON
-GO
-ALTER DATABASE [Projects] SET QUERY_STORE (OPERATION_MODE = READ_WRITE, CLEANUP_POLICY = (STALE_QUERY_THRESHOLD_DAYS = 30), DATA_FLUSH_INTERVAL_SECONDS = 900, INTERVAL_LENGTH_MINUTES = 60, MAX_STORAGE_SIZE_MB = 1000, QUERY_CAPTURE_MODE = AUTO, SIZE_BASED_CLEANUP_MODE = AUTO, MAX_PLANS_PER_QUERY = 200, WAIT_STATS_CAPTURE_MODE = ON)
-GO
-USE [Projects]
-GO
-/****** Object:  Schema [Onwards]    Script Date: 16-07-2025 13:34:21 ******/
-CREATE SCHEMA [Onwards]
-GO
-/****** Object:  Table [Onwards].[BankDetails]    Script Date: 16-07-2025 13:34:21 ******/
+/****** Object:  Table [Onwards].[BankDetails]    Script Date: 16-07-2025 13:55:17 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -111,7 +136,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [Onwards].[BasicDetails]    Script Date: 16-07-2025 13:34:21 ******/
+/****** Object:  Table [Onwards].[BasicDetails]    Script Date: 16-07-2025 13:55:17 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -145,7 +170,7 @@ CREATE TABLE [Onwards].[BasicDetails](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [Onwards].[BloodGroupOptions]    Script Date: 16-07-2025 13:34:21 ******/
+/****** Object:  Table [Onwards].[BloodGroupOptions]    Script Date: 16-07-2025 13:55:17 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -164,7 +189,29 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [Onwards].[Compliance]    Script Date: 16-07-2025 13:34:21 ******/
+/****** Object:  Table [Onwards].[ChildrenDetails]    Script Date: 16-07-2025 13:55:17 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [Onwards].[ChildrenDetails](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[UserId] [int] NOT NULL,
+	[ChildName] [nvarchar](100) NOT NULL,
+	[GenderId] [int] NOT NULL,
+	[DateOfBirth] [date] NULL,
+	[CreatedDate] [datetime] NOT NULL,
+	[CreatedBy] [int] NULL,
+	[ModifiedDate] [datetime] NULL,
+	[ModifiedBy] [int] NULL,
+	[IsActive] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [Onwards].[Compliance]    Script Date: 16-07-2025 13:55:17 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -186,7 +233,26 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [Onwards].[EmergencyContacts]    Script Date: 16-07-2025 13:34:21 ******/
+/****** Object:  Table [Onwards].[DocumentTypes]    Script Date: 16-07-2025 13:55:17 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [Onwards].[DocumentTypes](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](100) NOT NULL,
+	[CreatedDate] [datetime] NOT NULL,
+	[CreatedBy] [int] NULL,
+	[ModifiedDate] [datetime] NULL,
+	[ModifiedBy] [int] NULL,
+	[IsActive] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [Onwards].[EmergencyContacts]    Script Date: 16-07-2025 13:55:17 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -209,7 +275,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [Onwards].[GenderOptions]    Script Date: 16-07-2025 13:34:21 ******/
+/****** Object:  Table [Onwards].[GenderOptions]    Script Date: 16-07-2025 13:55:17 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -228,7 +294,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [Onwards].[LoginDetails]    Script Date: 16-07-2025 13:34:21 ******/
+/****** Object:  Table [Onwards].[LoginDetails]    Script Date: 16-07-2025 13:55:17 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -249,7 +315,30 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [Onwards].[NationalityOptions]    Script Date: 16-07-2025 13:34:21 ******/
+/****** Object:  Table [Onwards].[MaritalStatus]    Script Date: 16-07-2025 13:55:17 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [Onwards].[MaritalStatus](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[UserId] [int] NOT NULL,
+	[MaritalStatus] [bit] NOT NULL,
+	[titleId] [int] NOT NULL,
+	[Name] [nvarchar](255) NOT NULL,
+	[IsHavingChildrens] [bit] NOT NULL,
+	[CreatedDate] [datetime] NOT NULL,
+	[CreatedBy] [int] NULL,
+	[ModifiedDate] [datetime] NULL,
+	[ModifiedBy] [int] NULL,
+	[IsActive] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [Onwards].[NationalityOptions]    Script Date: 16-07-2025 13:55:17 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -268,7 +357,29 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [Onwards].[Shift]    Script Date: 16-07-2025 13:34:21 ******/
+/****** Object:  Table [Onwards].[PreviousExperienceDetails]    Script Date: 16-07-2025 13:55:17 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [Onwards].[PreviousExperienceDetails](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[UserId] [int] NOT NULL,
+	[CompanyName] [nvarchar](255) NOT NULL,
+	[StartDate] [date] NOT NULL,
+	[EndDate] [date] NULL,
+	[CreatedDate] [datetime] NOT NULL,
+	[CreatedBy] [int] NULL,
+	[ModifiedDate] [datetime] NULL,
+	[ModifiedBy] [int] NULL,
+	[IsActive] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [Onwards].[Shift]    Script Date: 16-07-2025 13:55:17 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -289,7 +400,27 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [Onwards].[UserAddresses]    Script Date: 16-07-2025 13:34:21 ******/
+/****** Object:  Table [Onwards].[Titles]    Script Date: 16-07-2025 13:55:17 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [Onwards].[Titles](
+	[Id] [int] NOT NULL,
+	[Title] [nvarchar](20) NOT NULL,
+	[Description] [nvarchar](100) NULL,
+	[CreatedDate] [datetime] NOT NULL,
+	[CreatedBy] [int] NULL,
+	[ModifiedDate] [datetime] NULL,
+	[ModifiedBy] [int] NULL,
+	[IsActive] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [Onwards].[UserAddresses]    Script Date: 16-07-2025 13:55:17 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -297,24 +428,50 @@ GO
 CREATE TABLE [Onwards].[UserAddresses](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[UserId] [int] NOT NULL,
-	[DoorNo] [nvarchar](50) NOT NULL,
-	[AddressLine] [nvarchar](255) NOT NULL,
-	[State] [nvarchar](100) NOT NULL,
-	[Pincode] [nvarchar](20) NOT NULL,
-	[IsPresentAddress] [bit] NOT NULL,
-	[SameAsPresent] [bit] NOT NULL,
+	[PresentDoorNo] [nvarchar](255) NOT NULL,
+	[PresentAddressLine] [nvarchar](255) NOT NULL,
+	[PresentState] [nvarchar](100) NOT NULL,
+	[PresentPincode] [nvarchar](10) NOT NULL,
+	[IsSameAsPermanent] [bit] NOT NULL,
+	[PermanentDoorNo] [nvarchar](255) NULL,
+	[PermanentAddressLine] [nvarchar](255) NULL,
+	[PermanentState] [nvarchar](100) NULL,
+	[PermanentPincode] [nvarchar](10) NULL,
 	[CreatedDate] [datetime] NULL,
 	[CreatedBy] [int] NULL,
 	[ModifiedDate] [datetime] NULL,
 	[ModifiedBy] [int] NULL,
 	[IsActive] [bit] NOT NULL,
- CONSTRAINT [PK__UserAddr__3214EC0731D0D639] PRIMARY KEY CLUSTERED 
+PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [Onwards].[Users]    Script Date: 16-07-2025 13:34:21 ******/
+/****** Object:  Table [Onwards].[UserDocuments]    Script Date: 16-07-2025 13:55:17 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [Onwards].[UserDocuments](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[UserId] [int] NOT NULL,
+	[DocumentTypeId] [nvarchar](50) NOT NULL,
+	[FileName] [nvarchar](255) NOT NULL,
+	[FilePath] [nvarchar](500) NOT NULL,
+	[CreatedDate] [datetime] NOT NULL,
+	[CreatedBy] [int] NULL,
+	[IsVerified] [bit] NULL,
+	[VerifiedDate] [datetime] NULL,
+	[VerifiedBy] [int] NULL,
+	[IsActive] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [Onwards].[Users]    Script Date: 16-07-2025 13:55:17 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -338,7 +495,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [Onwards].[UserShiftAssignment]    Script Date: 16-07-2025 13:34:21 ******/
+/****** Object:  Table [Onwards].[UserShiftAssignment]    Script Date: 16-07-2025 13:55:17 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -358,7 +515,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [Onwards].[UserShiftLog]    Script Date: 16-07-2025 13:34:21 ******/
+/****** Object:  Table [Onwards].[UserShiftLog]    Script Date: 16-07-2025 13:55:17 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -381,7 +538,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [Onwards].[VaccinationStatusOptions]    Script Date: 16-07-2025 13:34:21 ******/
+/****** Object:  Table [Onwards].[VaccinationStatusOptions]    Script Date: 16-07-2025 13:55:17 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -400,7 +557,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [Onwards].[YesNoOptions]    Script Date: 16-07-2025 13:34:21 ******/
+/****** Object:  Table [Onwards].[YesNoOptions]    Script Date: 16-07-2025 13:55:17 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -420,13 +577,19 @@ PRIMARY KEY CLUSTERED
 ) ON [PRIMARY]
 GO
 SET IDENTITY_INSERT [Onwards].[BankDetails] ON 
-
-INSERT [Onwards].[BankDetails] ([Id], [UserId], [BankAccountNumber], [AccountHolderName], [IFSCCode], [BankName], [BranchName], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (2, 1, N'string', N'string', N'string', N'string', N'string', CAST(N'2025-07-16T13:31:10.457' AS DateTime), 1, CAST(N'2025-07-16T13:32:21.430' AS DateTime), 1, 1)
+GO
+INSERT [Onwards].[BankDetails] ([Id], [UserId], [BankAccountNumber], [AccountHolderName], [IFSCCode], [BankName], [BranchName], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (1, 1, N'asdf', N'asdf', N'asdf', N'sadf', N'asdf', CAST(N'2025-07-15T20:06:38.873' AS DateTime), 1, NULL, NULL, 1)
+GO
+INSERT [Onwards].[BankDetails] ([Id], [UserId], [BankAccountNumber], [AccountHolderName], [IFSCCode], [BankName], [BranchName], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (2, 2, N'string', N'string', N'string', N'string', N'string', CAST(N'2025-07-15T21:14:49.083' AS DateTime), 2, CAST(N'2025-07-15T21:16:10.450' AS DateTime), 2, 1)
+GO
 SET IDENTITY_INSERT [Onwards].[BankDetails] OFF
 GO
 SET IDENTITY_INSERT [Onwards].[BasicDetails] ON 
-
-INSERT [Onwards].[BasicDetails] ([Id], [UserId], [FirstName], [MiddleName], [LastName], [PersonalEmailID], [PrimaryContactNumber], [Gender], [FatherOrHusbandName], [DOB], [Nationality], [DifferentlyAbled], [VaccinationStatus], [BloodGroup], [BloodDonor], [PanNumber], [AadhaarCardno], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (4, 1, N'Praveen                                           ', N'Verma                                             ', N'Kumar                                             ', N'PVK@gmail.com                                     ', 1223, 1, N'DontKnow                                          ', CAST(N'2025-07-16' AS Date), 1, 0, 1, 1, 0, N'12323     ', 123, CAST(N'2025-07-16T13:31:10.290' AS DateTime), 1, CAST(N'2025-07-16T13:32:21.400' AS DateTime), 1, 1)
+GO
+INSERT [Onwards].[BasicDetails] ([Id], [UserId], [FirstName], [MiddleName], [LastName], [PersonalEmailID], [PrimaryContactNumber], [Gender], [FatherOrHusbandName], [DOB], [Nationality], [DifferentlyAbled], [VaccinationStatus], [BloodGroup], [BloodDonor], [PanNumber], [AadhaarCardno], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (3, 1, N'Rohan                                             ', N'Kumar                                             ', N'Sharma                                            ', N'RKS@gmail.com                                     ', 1234, 1, N'Rohith                                            ', CAST(N'2025-07-15' AS Date), 1, 0, 1, 1, 1, N'asdf      ', 1234, CAST(N'2025-07-15T20:06:38.810' AS DateTime), 1, NULL, NULL, 1)
+GO
+INSERT [Onwards].[BasicDetails] ([Id], [UserId], [FirstName], [MiddleName], [LastName], [PersonalEmailID], [PrimaryContactNumber], [Gender], [FatherOrHusbandName], [DOB], [Nationality], [DifferentlyAbled], [VaccinationStatus], [BloodGroup], [BloodDonor], [PanNumber], [AadhaarCardno], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (8, 2, N'string                                            ', N'string                                            ', N'string                                            ', N'string                                            ', 0, 0, N'Ramesh                                            ', CAST(N'2025-07-15' AS Date), 1, 0, 1, 1, 1, N'string    ', 0, CAST(N'2025-07-15T21:14:48.967' AS DateTime), 2, CAST(N'2025-07-15T21:16:10.430' AS DateTime), 2, 1)
+GO
 SET IDENTITY_INSERT [Onwards].[BasicDetails] OFF
 GO
 INSERT [Onwards].[BloodGroupOptions] ([Id], [Value], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (1, N'A+                            ', NULL, NULL, NULL, NULL, 1)
@@ -434,8 +597,11 @@ GO
 INSERT [Onwards].[BloodGroupOptions] ([Id], [Value], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (2, N'A-                            ', NULL, NULL, NULL, NULL, 1)
 GO
 SET IDENTITY_INSERT [Onwards].[Compliance] ON 
-
-INSERT [Onwards].[Compliance] ([Id], [UserId], [PFNo], [UANNo], [ESICNo], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (2, 1, N'string', N'string', N'string', CAST(N'2025-07-16T13:31:10.350' AS DateTime), 1, CAST(N'2025-07-16T13:32:21.423' AS DateTime), 1, 1)
+GO
+INSERT [Onwards].[Compliance] ([Id], [UserId], [PFNo], [UANNo], [ESICNo], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (1, 1, N'asd', N'asd', N'sdf', CAST(N'2025-07-15T20:06:38.863' AS DateTime), 1, NULL, NULL, 1)
+GO
+INSERT [Onwards].[Compliance] ([Id], [UserId], [PFNo], [UANNo], [ESICNo], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (2, 2, N'string', N'string', N'string', CAST(N'2025-07-15T21:14:49.007' AS DateTime), 2, CAST(N'2025-07-15T21:16:10.447' AS DateTime), 2, 1)
+GO
 SET IDENTITY_INSERT [Onwards].[Compliance] OFF
 GO
 SET IDENTITY_INSERT [Onwards].[DocumentTypes] ON 
@@ -453,8 +619,11 @@ GO
 SET IDENTITY_INSERT [Onwards].[DocumentTypes] OFF
 GO
 SET IDENTITY_INSERT [Onwards].[EmergencyContacts] ON 
-
-INSERT [Onwards].[EmergencyContacts] ([Id], [UserId], [ContactName], [ContactRelationship], [PrimaryContactNumber], [SecondaryContactNumber], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (2, 1, N'string', N'string', N'string', N'string', CAST(N'2025-07-16T13:31:10.470' AS DateTime), 1, CAST(N'2025-07-16T13:32:21.440' AS DateTime), 1, 1)
+GO
+INSERT [Onwards].[EmergencyContacts] ([Id], [UserId], [ContactName], [ContactRelationship], [PrimaryContactNumber], [SecondaryContactNumber], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (1, 1, N'asdf', N'asdf', N'asdf', N'asdf', CAST(N'2025-07-15T20:06:38.883' AS DateTime), 1, NULL, NULL, 1)
+GO
+INSERT [Onwards].[EmergencyContacts] ([Id], [UserId], [ContactName], [ContactRelationship], [PrimaryContactNumber], [SecondaryContactNumber], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (2, 2, N'string', N'string', N'string', N'string', CAST(N'2025-07-15T21:14:49.107' AS DateTime), 2, CAST(N'2025-07-15T21:16:10.460' AS DateTime), 2, 1)
+GO
 SET IDENTITY_INSERT [Onwards].[EmergencyContacts] OFF
 GO
 INSERT [Onwards].[GenderOptions] ([Id], [Value], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (0, N'Female    ', NULL, NULL, NULL, NULL, 1)
@@ -482,13 +651,15 @@ GO
 INSERT [Onwards].[Titles] ([Id], [Title], [Description], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (3, N'Miss', N'Unmarried Female', CAST(N'2025-07-16T13:28:54.860' AS DateTime), NULL, NULL, NULL, 1)
 GO
 SET IDENTITY_INSERT [Onwards].[UserAddresses] ON 
-
-INSERT [Onwards].[UserAddresses] ([Id], [UserId], [DoorNo], [AddressLine], [State], [Pincode], [IsPresentAddress], [SameAsPresent], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (1, 1, N'1', N'1', N'1', N'1', 1, 0, CAST(N'2025-07-16T13:31:10.333' AS DateTime), 1, CAST(N'2025-07-16T13:32:21.413' AS DateTime), 1, 1)
-INSERT [Onwards].[UserAddresses] ([Id], [UserId], [DoorNo], [AddressLine], [State], [Pincode], [IsPresentAddress], [SameAsPresent], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (2, 1, N'3', N'2', N'2', N'2', 0, 0, CAST(N'2025-07-16T13:31:10.337' AS DateTime), 1, CAST(N'2025-07-16T13:32:21.417' AS DateTime), 1, 1)
+GO
+INSERT [Onwards].[UserAddresses] ([Id], [UserId], [PresentDoorNo], [PresentAddressLine], [PresentState], [PresentPincode], [IsSameAsPermanent], [PermanentDoorNo], [PermanentAddressLine], [PermanentState], [PermanentPincode], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (1, 1, N'string', N'adf', N'asdf', N'asdf', 1, N'asdf', N'asdf', N'asdf', N'asdf', CAST(N'2025-07-15T20:06:38.850' AS DateTime), 1, NULL, NULL, 1)
+GO
+INSERT [Onwards].[UserAddresses] ([Id], [UserId], [PresentDoorNo], [PresentAddressLine], [PresentState], [PresentPincode], [IsSameAsPermanent], [PermanentDoorNo], [PermanentAddressLine], [PermanentState], [PermanentPincode], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (2, 2, N'string', N'string', N'string', N'string', 1, N'string', N'string', N'string', N'string', CAST(N'2025-07-15T21:14:48.993' AS DateTime), 2, CAST(N'2025-07-15T21:16:10.440' AS DateTime), 2, 1)
+GO
 SET IDENTITY_INSERT [Onwards].[UserAddresses] OFF
 GO
 SET IDENTITY_INSERT [Onwards].[Users] ON 
-
+GO
 INSERT [Onwards].[Users] ([Id], [EmployeeCode], [Password], [FullName], [Email], [Mobile], [CreatedOn], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (1, N'EMP001', N'password', N'Arun Sharma', N'arun.sharma@example.com', N'9876543210', CAST(N'2025-07-07T14:21:09.660' AS DateTime), NULL, NULL, NULL, NULL, 1)
 GO
 INSERT [Onwards].[Users] ([Id], [EmployeeCode], [Password], [FullName], [Email], [Mobile], [CreatedOn], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (2, N'EMP002', N'password', N'Nidhi Mehra', N'nidhi.mehra@example.com', N'9123456780', CAST(N'2025-07-07T14:21:09.660' AS DateTime), NULL, NULL, NULL, NULL, 1)
@@ -517,7 +688,23 @@ INSERT [Onwards].[YesNoOptions] ([Id], [Value], [CreatedDate], [CreatedBy], [Mod
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__Users__1F6425482CF50872]    Script Date: 16-07-2025 13:34:21 ******/
+/****** Object:  Index [UQ__Document__737584F6E1B3D555]    Script Date: 16-07-2025 13:55:18 ******/
+ALTER TABLE [Onwards].[DocumentTypes] ADD UNIQUE NONCLUSTERED 
+(
+	[Name] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [UQ__Titles__2CB664DC1BB3A10D]    Script Date: 16-07-2025 13:55:18 ******/
+ALTER TABLE [Onwards].[Titles] ADD UNIQUE NONCLUSTERED 
+(
+	[Title] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [UQ__Users__1F6425489EA6ED46]    Script Date: 16-07-2025 13:55:18 ******/
 ALTER TABLE [Onwards].[Users] ADD UNIQUE NONCLUSTERED 
 (
 	[EmployeeCode] ASC
@@ -555,9 +742,9 @@ ALTER TABLE [Onwards].[Shift] ADD  DEFAULT (getdate()) FOR [CreatedDate]
 GO
 ALTER TABLE [Onwards].[Shift] ADD  DEFAULT ((1)) FOR [IsActive]
 GO
-ALTER TABLE [Onwards].[UserAddresses] ADD  CONSTRAINT [DF__UserAddre__Creat__3C89F72A]  DEFAULT (getdate()) FOR [CreatedDate]
+ALTER TABLE [Onwards].[Titles] ADD  DEFAULT (getdate()) FOR [CreatedDate]
 GO
-ALTER TABLE [Onwards].[UserAddresses] ADD  CONSTRAINT [DF__UserAddre__IsAct__3D7E1B63]  DEFAULT ((1)) FOR [IsActive]
+ALTER TABLE [Onwards].[Titles] ADD  DEFAULT ((1)) FOR [IsActive]
 GO
 ALTER TABLE [Onwards].[UserAddresses] ADD  DEFAULT ((0)) FOR [IsSameAsPermanent]
 GO
@@ -637,10 +824,10 @@ ALTER TABLE [Onwards].[LoginDetails]  WITH CHECK ADD FOREIGN KEY([UserId])
 REFERENCES [Onwards].[Users] ([Id])
 ON DELETE CASCADE
 GO
-ALTER TABLE [Onwards].[UserAddresses]  WITH CHECK ADD  CONSTRAINT [FK_UserAddresses_Users] FOREIGN KEY([UserId])
+ALTER TABLE [Onwards].[UserAddresses]  WITH CHECK ADD  CONSTRAINT [FK_UserAddresses_UserDetails] FOREIGN KEY([UserId])
 REFERENCES [Onwards].[Users] ([Id])
 GO
-ALTER TABLE [Onwards].[UserAddresses] CHECK CONSTRAINT [FK_UserAddresses_Users]
+ALTER TABLE [Onwards].[UserAddresses] CHECK CONSTRAINT [FK_UserAddresses_UserDetails]
 GO
 ALTER TABLE [Onwards].[UserShiftAssignment]  WITH CHECK ADD FOREIGN KEY([ShiftId])
 REFERENCES [Onwards].[Shift] ([ShiftId])
@@ -648,7 +835,7 @@ GO
 ALTER TABLE [Onwards].[UserShiftLog]  WITH CHECK ADD FOREIGN KEY([ShiftId])
 REFERENCES [Onwards].[Shift] ([ShiftId])
 GO
-/****** Object:  StoredProcedure [Onwards].[GetUserShiftDetails]    Script Date: 16-07-2025 13:34:21 ******/
+/****** Object:  StoredProcedure [Onwards].[DeleteTraining]    Script Date: 16-07-2025 13:55:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -662,7 +849,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [Onwards].[GetTrainingByLocation]    Script Date: 16-07-2025 13:41:39 ******/
+/****** Object:  StoredProcedure [Onwards].[GetTrainingByLocation]    Script Date: 16-07-2025 13:55:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -676,7 +863,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [Onwards].[GetUserShiftDetails]    Script Date: 16-07-2025 13:41:39 ******/
+/****** Object:  StoredProcedure [Onwards].[GetUserShiftDetails]    Script Date: 16-07-2025 13:55:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -688,14 +875,20 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    SELECT 
-        U.FullName,
-        S.ShiftName,
-        S.StartTime,
-        S.EndTime,
-        USL.LoginTime,
-        GETDATE() AS TodayDate,
-        CONVERT(VARCHAR(8), GETDATE(), 108) AS CurrentTime
+    SELECT  
+		FORMAT(GETDATE(), 'dd-MMM-yyyy')  as TodayDate,
+        CONVERT(VARCHAR(8), S.StartTime, 108)  ShiftStartTime,
+        CONVERT(VARCHAR(8), USL.LoginTime, 108)  LoginTime,
+		CONVERT(VARCHAR(8), USL.LogOutTime, 108) LogOutTime ,
+		--DATEDIFF(HOUR, USL.LoginTime, USL.LogOutTime) as Hrs,
+		DATEDIFF(MINUTE, USL.LoginTime, USL.LogOutTime) + '' + DATEDIFF(HOUR, USL.LoginTime, USL.LogOutTime) as TotalLoggedInHours
+		--DATEDIFF(MINUTE, USL.LoginTime, USL.LogOutTime) as Mins,
+        --CONVERT(VARCHAR(8), GETDATE(), 108) AS LoginTime
+
+        --U.FullName,
+        --S.ShiftName,
+        --S.EndTime,
+        --USL.LoginTime,
     FROM Onwards.Users AS U
     INNER JOIN Onwards.UserShiftAssignment AS USA ON U.Id = USA.UserId
     INNER JOIN Onwards.Shift AS S ON USA.ShiftId = S.ShiftId
@@ -703,9 +896,8 @@ BEGIN
     WHERE U.Id = @UserId;
 END;
 
-
 GO
-/****** Object:  StoredProcedure [Onwards].[InsertOrUpdateBasicDetails]    Script Date: 16-07-2025 13:34:21 ******/
+/****** Object:  StoredProcedure [Onwards].[InsertOrUpdateBasicDetails]    Script Date: 16-07-2025 13:55:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -810,20 +1002,23 @@ BEGIN
     END
 END
 GO
-/****** Object:  StoredProcedure [Onwards].[InsertOrUpdateUserAddress]    Script Date: 16-07-2025 13:34:21 ******/
+/****** Object:  StoredProcedure [Onwards].[InsertOrUpdateUserAddress]    Script Date: 16-07-2025 13:55:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE   PROCEDURE [Onwards].[InsertOrUpdateUserAddress]
+CREATE PROCEDURE [Onwards].[InsertOrUpdateUserAddress]
     @UserId INT,
-    @DoorNo NVARCHAR(50),
-    @AddressLine NVARCHAR(255),
-    @State NVARCHAR(100),
-    @Pincode NVARCHAR(20),
-    @IsPresentAddress BIT,
-    @SameAsPresent BIT,
+    @PresentDoorNo NVARCHAR(255),
+    @PresentAddressLine NVARCHAR(255),
+    @PresentState NVARCHAR(100),
+    @PresentPincode NVARCHAR(10),
+    @IsSameAsPermanent BIT,
+    @PermanentDoorNo NVARCHAR(255) = NULL,
+    @PermanentAddressLine NVARCHAR(255) = NULL,
+    @PermanentState NVARCHAR(100) = NULL,
+    @PermanentPincode NVARCHAR(10) = NULL,
     @LoginId INT
 AS
 BEGIN
@@ -833,30 +1028,36 @@ BEGIN
 
     SELECT @ExistingId = Id
     FROM Onwards.UserAddresses
-    WHERE UserId = @UserId AND IsPresentAddress = @IsPresentAddress;
+    WHERE UserId = @UserId;
 
     IF @ExistingId IS NULL
     BEGIN
         INSERT INTO Onwards.UserAddresses (
             UserId,
-            DoorNo,
-            AddressLine,
-            State,
-            Pincode,
-            IsPresentAddress,
-            SameAsPresent,
+            PresentDoorNo,
+            PresentAddressLine,
+            PresentState,
+            PresentPincode,
+            IsSameAsPermanent,
+            PermanentDoorNo,
+            PermanentAddressLine,
+            PermanentState,
+            PermanentPincode,
             CreatedBy,
             CreatedDate,
             IsActive
         )
         VALUES (
             @UserId,
-            @DoorNo,
-            @AddressLine,
-            @State,
-            @Pincode,
-            @IsPresentAddress,
-            @SameAsPresent,
+            @PresentDoorNo,
+            @PresentAddressLine,
+            @PresentState,
+            @PresentPincode,
+            @IsSameAsPermanent,
+            @PermanentDoorNo,
+            @PermanentAddressLine,
+            @PermanentState,
+            @PermanentPincode,
             @LoginId,
             GETDATE(),
             1
@@ -866,19 +1067,22 @@ BEGIN
     BEGIN
         UPDATE Onwards.UserAddresses
         SET
-            DoorNo = @DoorNo,
-            AddressLine = @AddressLine,
-            State = @State,
-            Pincode = @Pincode,
-            SameAsPresent = @SameAsPresent,
+            PresentDoorNo = @PresentDoorNo,
+            PresentAddressLine = @PresentAddressLine,
+            PresentState = @PresentState,
+            PresentPincode = @PresentPincode,
+            IsSameAsPermanent = @IsSameAsPermanent,
+            PermanentDoorNo = @PermanentDoorNo,
+            PermanentAddressLine = @PermanentAddressLine,
+            PermanentState = @PermanentState,
+            PermanentPincode = @PermanentPincode,
             ModifiedBy = @LoginId,
             ModifiedDate = GETDATE()
-        WHERE Id = @ExistingId;
+        WHERE UserId = @UserId;
     END
 END
-
 GO
-/****** Object:  StoredProcedure [Onwards].[InsertOrUpdateUserBankDetails]    Script Date: 16-07-2025 13:34:21 ******/
+/****** Object:  StoredProcedure [Onwards].[InsertOrUpdateUserBankDetails]    Script Date: 16-07-2025 13:55:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -942,7 +1146,7 @@ BEGIN
     END
 END
 GO
-/****** Object:  StoredProcedure [Onwards].[InsertOrUpdateUserCompliance]    Script Date: 16-07-2025 13:34:21 ******/
+/****** Object:  StoredProcedure [Onwards].[InsertOrUpdateUserCompliance]    Script Date: 16-07-2025 13:55:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -998,7 +1202,7 @@ BEGIN
     END
 END
 GO
-/****** Object:  StoredProcedure [Onwards].[InsertOrUpdateUserEmergencyContact]    Script Date: 16-07-2025 13:34:21 ******/
+/****** Object:  StoredProcedure [Onwards].[InsertOrUpdateUserEmergencyContact]    Script Date: 16-07-2025 13:55:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1058,7 +1262,7 @@ BEGIN
     END
 END
 GO
-/****** Object:  StoredProcedure [Onwards].[InsertOrUpdateUserShiftDetails]    Script Date: 16-07-2025 13:41:39 ******/
+/****** Object:  StoredProcedure [Onwards].[InsertOrUpdateUserShiftDetails]    Script Date: 16-07-2025 13:55:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1120,11 +1324,11 @@ BEGIN
         WHERE LogId = @LogId;
 
         SET @ResultLogId = @LogId; -- Return updated LogId
-END
+    END
 END
 
 GO
-/****** Object:  StoredProcedure [Onwards].[InsertOrUpdateUserShiftLog]    Script Date: 16-07-2025 13:34:21 ******/
+/****** Object:  StoredProcedure [Onwards].[InsertOrUpdateUserShiftLog]    Script Date: 16-07-2025 13:55:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1164,17 +1368,14 @@ BEGIN
             UserId,
             ShiftId,
             LoginTime,
-            [Date],CreatedBy,
-			CreatedDate
+            [Date]
         )
         VALUES
         (
             @UserId,
             @ShiftId,
             CAST(GETDATE() AS TIME),
-            GETDATE(),
-			@UserId,
-			GETDATE()
+            GETDATE()
         );
 
         SET @ResultLogId = SCOPE_IDENTITY();  -- Return new LogId
@@ -1185,9 +1386,7 @@ BEGIN
         SET
             UserId = @UserId,
             ShiftId = @ShiftId,  
-            LogOutTime = CAST(GETDATE() AS TIME),
-			ModifiedDate = GETDATE(),
-			ModifiedBy = @UserId
+            LogOutTime = CAST(GETDATE() AS TIME)
         WHERE LogId = @LogId;
 
         SET @ResultLogId = @LogId; -- Return updated LogId
@@ -1195,7 +1394,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [Onwards].[InsertTraining]    Script Date: 16-07-2025 13:41:39 ******/
+/****** Object:  StoredProcedure [Onwards].[InsertTraining]    Script Date: 16-07-2025 13:55:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1212,7 +1411,7 @@ BEGIN
     VALUES (@Name, @TrainingDate, @LocationId, @CreatedBy);
 END
 GO
-/****** Object:  StoredProcedure [Onwards].[sp_DeleteHoliday]    Script Date: 16-07-2025 13:41:39 ******/
+/****** Object:  StoredProcedure [Onwards].[sp_DeleteHoliday]    Script Date: 16-07-2025 13:55:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1231,7 +1430,7 @@ BEGIN
     WHERE HolidayId = @HolidayId;
 END
 GO
-/****** Object:  StoredProcedure [Onwards].[sp_GetAllHolidays]    Script Date: 16-07-2025 13:41:39 ******/
+/****** Object:  StoredProcedure [Onwards].[sp_GetAllHolidays]    Script Date: 16-07-2025 13:55:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1248,7 +1447,7 @@ BEGIN
     ORDER BY HolidayDate;
 END
 GO
-/****** Object:  StoredProcedure [Onwards].[sp_GetHolidayById]    Script Date: 16-07-2025 13:41:39 ******/
+/****** Object:  StoredProcedure [Onwards].[sp_GetHolidayById]    Script Date: 16-07-2025 13:55:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1265,7 +1464,7 @@ BEGIN
     WHERE HolidayId = @HolidayId AND IsActive = 1;
 END
 GO
-/****** Object:  StoredProcedure [Onwards].[sp_GetHolidaysByLocation]    Script Date: 16-07-2025 13:41:39 ******/
+/****** Object:  StoredProcedure [Onwards].[sp_GetHolidaysByLocation]    Script Date: 16-07-2025 13:55:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1283,7 +1482,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [Onwards].[sp_InsertHoliday]    Script Date: 16-07-2025 13:41:39 ******/
+/****** Object:  StoredProcedure [Onwards].[sp_InsertHoliday]    Script Date: 16-07-2025 13:55:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1318,7 +1517,7 @@ BEGIN
     );
 END
 GO
-/****** Object:  StoredProcedure [Onwards].[sp_UpdateHoliday]    Script Date: 16-07-2025 13:41:39 ******/
+/****** Object:  StoredProcedure [Onwards].[sp_UpdateHoliday]    Script Date: 16-07-2025 13:55:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1346,7 +1545,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [Onwards].[sp_UserLogin]    Script Date: 16-07-2025 13:34:21 ******/
+/****** Object:  StoredProcedure [Onwards].[sp_UserLogin]    Script Date: 16-07-2025 13:55:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1361,7 +1560,7 @@ BEGIN
     WHERE EmployeeCode = @EmployeeCode AND Password = @Password;
 END;
 GO
-/****** Object:  StoredProcedure [Onwards].[UpdateTraining]    Script Date: 16-07-2025 13:41:39 ******/
+/****** Object:  StoredProcedure [Onwards].[UpdateTraining]    Script Date: 16-07-2025 13:55:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1383,7 +1582,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [Onwards].[UserLogin]    Script Date: 16-07-2025 13:34:21 ******/
+/****** Object:  StoredProcedure [Onwards].[UserLogin]    Script Date: 16-07-2025 13:55:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1397,10 +1596,4 @@ BEGIN
     FROM Onwards.Users
     WHERE EmployeeCode = @EmployeeCode AND Password = @Password;
 END;
-GO
-
-GO
-USE [master]
-GO
-ALTER DATABASE [Projects] SET  READ_WRITE 
 GO
