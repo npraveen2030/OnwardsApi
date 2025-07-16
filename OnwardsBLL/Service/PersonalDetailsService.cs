@@ -20,32 +20,23 @@ namespace OnwardsBLL.Service
                 MiddleName = personalDetailsDto.MiddleName,
                 LastName = personalDetailsDto.LastName,
                 PersonalEmailID = personalDetailsDto.PersonalEmailID,
-                PrimaryContactNumber = personalDetailsDto.PrimaryContactNumber_BasicDetails,
-                Gender = personalDetailsDto.Gender,
+                PrimaryContactNumber = personalDetailsDto.PrimaryContactNumber_BasicDetails ?? 0,
+                Gender = personalDetailsDto.Gender ?? 0,
                 FatherOrHusbandName = personalDetailsDto.FatherOrHusbandName,
                 DOB = personalDetailsDto.DOB,
-                Nationality = personalDetailsDto.Nationality,
-                DifferentlyAbled = personalDetailsDto.DifferentlyAbled,
-                VaccinationStatus = personalDetailsDto.VaccinationStatus,
-                BloodGroup = personalDetailsDto.BloodGroup,
-                BloodDonor = personalDetailsDto.BloodDonor,
+                Nationality = personalDetailsDto.Nationality ?? 0,
+                DifferentlyAbled = personalDetailsDto.DifferentlyAbled ?? 0,
+                VaccinationStatus = personalDetailsDto.VaccinationStatus ?? 0,
+                BloodGroup = personalDetailsDto.BloodGroup ?? 0,
+                BloodDonor = personalDetailsDto.BloodDonor ?? 0,
                 PanNumber = personalDetailsDto.PanNumber,
-                AadhaarCardno = personalDetailsDto.AadhaarCardno,
+                AadhaarCardno = personalDetailsDto.AadhaarCardno ?? 0,
             };
 
-            var userAddress = new UserAddress
+            var userAddress = new List<UserAddress>
             {
-                UserId = personalDetailsDto.UserId,
-                LoginId = personalDetailsDto.LoginId,
-                PresentDoorNo = personalDetailsDto.PresentDoorNo,
-                PresentAddressLine = personalDetailsDto.PresentAddressLine,
-                PresentState = personalDetailsDto.PresentState,
-                PresentPincode = personalDetailsDto.PresentPincode,
-                IsSameAsPermanent = personalDetailsDto.IsSameAsPermanent,
-                PermanentDoorNo = personalDetailsDto.PermanentDoorNo,
-                PermanentAddressLine = personalDetailsDto.PermanentAddressLine,
-                PermanentState = personalDetailsDto.PermanentState,
-                PermanentPincode = personalDetailsDto.PermanentPincode,
+                personalDetailsDto.UserAddresses[0],
+                personalDetailsDto.UserAddresses[1]
             };
 
             var compliance = new Compliance

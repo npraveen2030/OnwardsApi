@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OnwardsModel.Model;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -26,10 +27,10 @@ namespace OnwardsModel.Dtos
         public string PersonalEmailID { get; set; } = null!;
 
         [Required]
-        public int PrimaryContactNumber_BasicDetails { get; set; }
+        public int? PrimaryContactNumber_BasicDetails { get; set; }
 
         [Required]
-        public int Gender { get; set; }
+        public int? Gender { get; set; }
 
         [Required]
         [StringLength(50)]
@@ -40,57 +41,29 @@ namespace OnwardsModel.Dtos
         public DateTime DOB { get; set; }
 
         [Required]
-        public int Nationality { get; set; }
+        public int? Nationality { get; set; }
 
         [Required]
-        public int DifferentlyAbled { get; set; }
+        public int? DifferentlyAbled { get; set; }
 
         [Required]
-        public int VaccinationStatus { get; set; }
+        public int? VaccinationStatus { get; set; }
 
         [Required]
-        public int BloodGroup { get; set; }
+        public int? BloodGroup { get; set; }
 
         [Required]
-        public int BloodDonor { get; set; }
+        public int? BloodDonor { get; set; }
 
         [Required]
         [StringLength(10)]
         public string PanNumber { get; set; } = null!;
 
         [Required]
-        public int AadhaarCardno { get; set; }
+        public int? AadhaarCardno { get; set; }
 
-        [Required]
-        [StringLength(255)]
-        public string PresentDoorNo { get; set; } = null!;
-
-        [Required]
-        [StringLength(255)]
-        public string PresentAddressLine { get; set; } = null!;
-
-        [Required]
-        [StringLength(100)]
-        public string PresentState { get; set; } = null!;
-
-        [Required]
-        [StringLength(10)]
-        public string PresentPincode { get; set; } = null!;
-
-        [Required]
-        public bool IsSameAsPermanent { get; set; } = false;
-
-        [StringLength(255)]
-        public string? PermanentDoorNo { get; set; }
-
-        [StringLength(255)]
-        public string? PermanentAddressLine { get; set; }
-
-        [StringLength(100)]
-        public string? PermanentState { get; set; }
-
-        [StringLength(10)]
-        public string? PermanentPincode { get; set; }
+        public List<UserAddress> UserAddresses { get; set; } = [new UserAddress() {IsPresentAddress = true },
+            new UserAddress() { IsPresentAddress = false }];
 
         [Required]
         [StringLength(30)]

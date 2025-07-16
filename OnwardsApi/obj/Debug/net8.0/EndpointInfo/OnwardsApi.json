@@ -517,17 +517,12 @@
           "firstName",
           "gender",
           "ifscCode",
-          "isSameAsPermanent",
           "lastName",
           "middleName",
           "nationality",
           "panNumber",
           "personalEmailID",
           "pfNo",
-          "presentAddressLine",
-          "presentDoorNo",
-          "presentPincode",
-          "presentState",
           "primaryContactNumber_BasicDetails",
           "primaryContactNumber_EmergencyContactDetails",
           "uanNo",
@@ -630,51 +625,11 @@
             "type": "integer",
             "format": "int32"
           },
-          "presentDoorNo": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string"
-          },
-          "presentAddressLine": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string"
-          },
-          "presentState": {
-            "maxLength": 100,
-            "minLength": 0,
-            "type": "string"
-          },
-          "presentPincode": {
-            "maxLength": 10,
-            "minLength": 0,
-            "type": "string"
-          },
-          "isSameAsPermanent": {
-            "type": "boolean"
-          },
-          "permanentDoorNo": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "permanentAddressLine": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "permanentState": {
-            "maxLength": 100,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "permanentPincode": {
-            "maxLength": 10,
-            "minLength": 0,
-            "type": "string",
+          "userAddresses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserAddress"
+            },
             "nullable": true
           },
           "pfNo": {
@@ -866,6 +821,80 @@
           "locationId": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserAddress": {
+        "required": [
+          "addressLine",
+          "doorNo",
+          "isPresentAddress",
+          "pincode",
+          "sameAsPresent",
+          "state",
+          "userId"
+        ],
+        "type": "object",
+        "properties": {
+          "userId": {
+            "maximum": 2147483647,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "loginId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdBy": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "modifiedBy": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "modifiedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "doorNo": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "addressLine": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string"
+          },
+          "state": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "pincode": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string"
+          },
+          "isPresentAddress": {
+            "type": "boolean"
+          },
+          "sameAsPresent": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false

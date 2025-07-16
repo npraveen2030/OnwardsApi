@@ -23,31 +23,31 @@ namespace OnwardsDAL.Repository
         private SqlConnection GetConn() =>
             new SqlConnection(_config.GetConnectionString("DefaultConnection"));
 
-        public async Task AddOrUpdateUserAddressAsync(UserAddress address)
+        public async Task AddOrUpdateUserAddressAsync(List<UserAddress> addresses)
         {
             try
             {
                 await using var conn = GetConn();
                 await conn.OpenAsync();
 
-                await using var cmd = new SqlCommand("Onwards.InsertOrUpdateUserAddress", conn)
+                foreach (var address in addresses)
                 {
-                    CommandType = CommandType.StoredProcedure
-                };
+                    await using var cmd = new SqlCommand("Onwards.InsertOrUpdateUserAddress", conn)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
 
-                cmd.Parameters.AddWithValue("@UserId", address.UserId);
-                cmd.Parameters.AddWithValue("@PresentDoorNo", address.PresentDoorNo);
-                cmd.Parameters.AddWithValue("@PresentAddressLine", address.PresentAddressLine);
-                cmd.Parameters.AddWithValue("@PresentState", address.PresentState);
-                cmd.Parameters.AddWithValue("@PresentPincode", address.PresentPincode);
-                cmd.Parameters.AddWithValue("@IsSameAsPermanent", address.IsSameAsPermanent);
-                cmd.Parameters.AddWithValue("@PermanentDoorNo", (object?)address.PermanentDoorNo ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@PermanentAddressLine", (object?)address.PermanentAddressLine ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@PermanentState", (object?)address.PermanentState ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@PermanentPincode", (object?)address.PermanentPincode ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@LoginId", address.LoginId);
+                    cmd.Parameters.AddWithValue("@UserId", address.UserId);
+                    cmd.Parameters.AddWithValue("@DoorNo", address.DoorNo);
+                    cmd.Parameters.AddWithValue("@AddressLine", address.AddressLine);
+                    cmd.Parameters.AddWithValue("@State", address.State);
+                    cmd.Parameters.AddWithValue("@Pincode", address.Pincode);
+                    cmd.Parameters.AddWithValue("@IsPresentAddress", address.IsPresentAddress);
+                    cmd.Parameters.AddWithValue("@SameAsPresent", address.SameAsPresent);
+                    cmd.Parameters.AddWithValue("@LoginId", address.LoginId);
 
-                await cmd.ExecuteNonQueryAsync();
+                    await cmd.ExecuteNonQueryAsync();
+                }
             }
             catch (Exception ex)
             {

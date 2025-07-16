@@ -9,6 +9,6 @@ namespace OnwardsDAL.Interface
 {
     public interface IUserAddressesRepository
     {
-        public Task AddOrUpdateUserAddressAsync(UserAddress address);
+        public Task AddOrUpdateUserAddressAsync(List<UserAddress> addresses);
     }
 }

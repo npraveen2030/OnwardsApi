@@ -91,3 +91,5 @@
 /OnwardsApiUnitTestCases/obj/Debug/net8.0
 /OnwardsApiUnitTestCases/obj
 /OnwardsApi/bin/Debug/net8.0/appsettings.json
+/OnwardsApi/obj/Debug/net8.0/rjsmcshtml.dswa.cache.json
+/OnwardsApi/obj/Debug/net8.0/rjsmrazor.dswa.cache.json
