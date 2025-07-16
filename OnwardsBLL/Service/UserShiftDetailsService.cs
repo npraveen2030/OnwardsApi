@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using OnwardsBLL.Interface;
 using OnwardsDAL.Interface;
 using OnwardsModel.Dtos;
 
 namespace OnwardsBLL.Service
 {
-  public class UserShiftDetailsService
-  {
+  public class UserShiftDetailsService: IUserShiftDetailsService
+    {
     private readonly IUserShiftDetailsRepository _userShiftDetailsRepository;
 
     public UserShiftDetailsService(IUserShiftDetailsRepository userShiftDetailsRepository)

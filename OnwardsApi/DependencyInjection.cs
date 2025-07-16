@@ -5,40 +5,40 @@ using OnwardsDAL.Repository;
 
 namespace OnwardsApi
 {
-  public static class DependencyInjection
-  {
-    public static IServiceCollection AddProjectServices(this IServiceCollection services, IConfiguration configuration)
+    public static class DependencyInjection
     {
-      //// Repositories (DAL)
-      //services.AddScoped<IHolidayListRepository, HolidayListRepository>();
+        public static IServiceCollection AddProjectServices(this IServiceCollection services, IConfiguration configuration)
+        {
+            //// Repositories (DAL)
+            //services.AddScoped<IHolidayListRepository, HolidayListRepository>();
 
-      //// Business Services (BLL)
-      //services.AddScoped<IHolidayListService, HolidayListService>();
+            //// Business Services (BLL)
+            //services.AddScoped<IHolidayListService, HolidayListService>();
 
-      //// Add other services here if needed
-      //// services.AddScoped<IOtherService, OtherService>();
+            //// Add other services here if needed
+            //// services.AddScoped<IOtherService, OtherService>();
 
-      // Register DAL + BLL
-      services.AddScoped<IUserRepository, UserRepository>();
-      services.AddScoped<IUserService, UserService>();
+            // Register DAL + BLL
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserService, UserService>();
 
-      services.AddScoped<IHolidayListRepository, HolidayListRepository>();
-      services.AddScoped<IHolidayListService, HolidayListService>();
+            services.AddScoped<IHolidayListRepository, HolidayListRepository>();
+            services.AddScoped<IHolidayListService, HolidayListService>();
 
-      services.AddScoped<ITrainingRepository, TrainingRepository>();
-      services.AddScoped<ITrainingService, TrainingService>();
+            services.AddScoped<ITrainingRepository, TrainingRepository>();
+            services.AddScoped<ITrainingService, TrainingService>();
 
-      services.AddScoped<IUserShiftDetailsRepository, UserShiftDetailsRepository>();
-            //services.AddScoped<IUserShiftDetailsService, UserShiftDetailsService>();
+            services.AddScoped<IUserShiftDetailsRepository, UserShiftDetailsRepository>();
+            services.AddScoped<IUserShiftDetailsService, UserShiftDetailsService>();
 
-      services.AddScoped<IBasicDetailsRepository, BasicDetailsRepository>();
-      services.AddScoped<IUserAddressesRepository, UserAddressesRepository>();
-      services.AddScoped<IComplianceRepository, ComplianceRepository>();
-      services.AddScoped<IBankDetailsRepository, BankDetailsRepository>();
-      services.AddScoped<IEmergencyContactsRepository, EmergencyContactsRepository>();
-      services.AddScoped<IPersonalDetailsService, PersonalDetailsService>();
+            services.AddScoped<IBasicDetailsRepository, BasicDetailsRepository>();
+            services.AddScoped<IUserAddressesRepository, UserAddressesRepository>();
+            services.AddScoped<IComplianceRepository, ComplianceRepository>();
+            services.AddScoped<IBankDetailsRepository, BankDetailsRepository>();
+            services.AddScoped<IEmergencyContactsRepository, EmergencyContactsRepository>();
+            services.AddScoped<IPersonalDetailsService, PersonalDetailsService>();
 
             return services;
+        }
     }
-  }
 }
