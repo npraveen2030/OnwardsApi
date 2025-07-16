@@ -16,6 +16,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "OnwardsApi.Controllers.BasicDetailsController",
+    "Method": "AddPersonalDetails",
+    "RelativePath": "api/BasicDetails",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "details",
+        "Type": "OnwardsModel.Dtos.BasicDetailsreqDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "OnwardsApi.Controllers.HolidayListController",
     "Method": "Add",
     "RelativePath": "api/HolidayList",

@@ -38,6 +38,37 @@
         }
       }
     },
+    "/api/BasicDetails": {
+      "post": {
+        "tags": [
+          "BasicDetails"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BasicDetailsreqDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BasicDetailsreqDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/BasicDetailsreqDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/HolidayList/location/{locationId}": {
       "get": {
         "tags": [
@@ -426,6 +457,125 @@
   },
   "components": {
     "schemas": {
+      "BasicDetailsreqDto": {
+        "required": [
+          "childName",
+          "companyName",
+          "dateOfBirth",
+          "documentTypeId",
+          "endDate",
+          "fileName",
+          "filePath",
+          "genderId",
+          "isHavingChildren",
+          "maritalStatus",
+          "name",
+          "startDate",
+          "titleId"
+        ],
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "loginId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "modifiedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "companyName": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "maritalStatus": {
+            "type": "boolean"
+          },
+          "titleId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string"
+          },
+          "isHavingChildren": {
+            "type": "boolean"
+          },
+          "childName": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "genderId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "documentTypeId": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "fileName": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string"
+          },
+          "filePath": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string"
+          },
+          "isVerified": {
+            "type": "boolean"
+          },
+          "verifiedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "verifiedBy": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "HolidayListDto": {
         "type": "object",
         "properties": {
