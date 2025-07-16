@@ -97,3 +97,17 @@
 /OnwardsApi/obj/Debug/net8.0/OnwardsApi.GeneratedMSBuildEditorConfig.editorconfig
 /OnwardsModel/obj/Debug/net8.0/OnwardsModel.assets.cache
 /OnwardsModel/obj/Debug/net8.0/OnwardsModel.GeneratedMSBuildEditorConfig.editorconfig
+/OnwardsApi/bin/Debug/net8.0/OnwardsApi.staticwebassets.endpoints.json
+/OnwardsApi/obj/Debug/net8.0/staticwebassets.build.endpoints.json
+/OnwardsApi/obj/OnwardsApi.csproj.nuget.dgspec.json
+/OnwardsApi/obj/OnwardsApi.csproj.nuget.g.props
+/OnwardsApi/obj/project.assets.json
+/OnwardsApi/obj/project.nuget.cache
+/OnwardsBLL/obj/OnwardsBLL.csproj.nuget.dgspec.json
+/OnwardsBLL/obj/OnwardsBLL.csproj.nuget.g.props
+/OnwardsBLL/obj/project.assets.json
+/OnwardsBLL/obj/project.nuget.cache
+/OnwardsModel/obj/OnwardsModel.csproj.nuget.dgspec.json
+/OnwardsModel/obj/OnwardsModel.csproj.nuget.g.props
+/OnwardsModel/obj/project.assets.json
+/OnwardsModel/obj/project.nuget.cache
