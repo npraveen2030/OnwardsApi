@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace OnwardsDAL.Interface
 {
-    public interface IChildrenDetailsRepository
+    public interface IEducationDetailsRepository
     {
-        public Task AddOrUpdateChildAsync(List<ChildrenDetailModel> children);
+        public Task AddOrUpdateEducationDetailsAsync(List<EducationDetailsModel> details);
     }
 }
-

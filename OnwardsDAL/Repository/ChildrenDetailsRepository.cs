@@ -21,25 +21,28 @@ namespace OnwardsDAL.Repository
 
         private SqlConnection GetConn() => new SqlConnection(_config.GetConnectionString("DefaultConnection"));
 
-        public async Task AddOrUpdateChildAsync(ChildrenDetail child)
+        public async Task AddOrUpdateChildAsync(List<ChildrenDetailModel> children)
         {
             try
             {
                 await using var conn = GetConn();
                 await conn.OpenAsync();
 
-                await using var cmd = new SqlCommand("Onwards.InsertOrUpdateChildrenDetails", conn)
+                foreach (var child in children)
                 {
-                    CommandType = CommandType.StoredProcedure
-                };
+                    await using var cmd = new SqlCommand("Onwards.InsertOrUpdateChildrenDetails", conn)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
 
-                cmd.Parameters.AddWithValue("@UserId", child.UserId);
-                cmd.Parameters.AddWithValue("@ChildName", child.ChildName);
-                cmd.Parameters.AddWithValue("@GenderId", child.GenderId);
-                cmd.Parameters.AddWithValue("@DateOfBirth", (object?)child.DateOfBirth ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@LoginId", child.LoginId);
+                    cmd.Parameters.AddWithValue("@UserId", child.UserId);
+                    cmd.Parameters.AddWithValue("@ChildName", child.ChildName);
+                    cmd.Parameters.AddWithValue("@GenderId", child.GenderId);
+                    cmd.Parameters.AddWithValue("@DateOfBirth", (object?)child.DateOfBirth ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@LoginId", child.LoginId);
 
-                await cmd.ExecuteNonQueryAsync();
+                    await cmd.ExecuteNonQueryAsync();
+                } 
             }
             catch (Exception ex)
             {

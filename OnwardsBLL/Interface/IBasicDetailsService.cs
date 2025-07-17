@@ -1,4 +1,5 @@
 ﻿using OnwardsModel.Dtos;
+using OnwardsModel.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace OnwardsBLL.Interface
 {
     public interface IBasicDetailsService
     {
-        public Task AddOrUpdateBasicDetailsAsync(BasicDetailsreqDto dto);
+        public Task AddOrUpdateBasicDetailsAsync(BasicDetilasModel dto);
     }
 }

@@ -9,6 +9,6 @@ namespace OnwardsDAL.Interface
 {
     public interface IPreviousExperienceRepository
     {
-        public Task AddOrUpdatePreviousExperienceAsync(PreviousExperienceDetail experience);
+        public Task AddOrUpdatePreviousExperienceAsync(List<PreviousExperienceDetailModel> experiences);
     }
 }
