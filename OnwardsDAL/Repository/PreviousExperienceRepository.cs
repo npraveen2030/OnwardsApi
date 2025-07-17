@@ -21,25 +21,30 @@ namespace OnwardsDAL.Repository
 
         private SqlConnection GetConn() => new SqlConnection(_config.GetConnectionString("DefaultConnection"));
 
-        public async Task AddOrUpdatePreviousExperienceAsync(PreviousExperienceDetail experience)
+        public async Task AddOrUpdatePreviousExperienceAsync(List<PreviousExperienceDetailModel> experiences)
         {
             try
             {
                 await using var conn = GetConn();
                 await conn.OpenAsync();
 
-                await using var cmd = new SqlCommand("Onwards.InsertOrUpdatePreviousExperienceDetails", conn)
+                foreach (var experience in experiences)
                 {
-                    CommandType = CommandType.StoredProcedure
-                };
+                    await using var cmd = new SqlCommand("Onwards.InsertOrUpdatePreviousExperienceDetails", conn)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
 
-                cmd.Parameters.AddWithValue("@UserId", experience.UserId);
-                cmd.Parameters.AddWithValue("@CompanyName", experience.CompanyName);
-                cmd.Parameters.AddWithValue("@StartDate", experience.StartDate);
-                cmd.Parameters.AddWithValue("@EndDate", (object?)experience.EndDate ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@LoginId", experience.LoginId);
+                    cmd.Parameters.AddWithValue("@UserId", experience.UserId);
+                    cmd.Parameters.AddWithValue("@CompanyName", experience.CompanyName);
+                    cmd.Parameters.AddWithValue("@Designation", experience.Designation);
+                    cmd.Parameters.AddWithValue("@StartDate", experience.StartDate);
+                    cmd.Parameters.AddWithValue("@EndDate", (object?)experience.EndDate ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@LoginId", experience.LoginId);
 
-                await cmd.ExecuteNonQueryAsync();
+                    await cmd.ExecuteNonQueryAsync();
+                }
+                
             }
             catch (Exception ex)
             {

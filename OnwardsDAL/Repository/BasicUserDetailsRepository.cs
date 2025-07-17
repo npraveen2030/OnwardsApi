@@ -12,10 +12,10 @@ using System.Threading.Tasks;
 
 namespace OnwardsDAL.Repository
 {
-    public class BasicDetailsRepository : IBasicDetailsRepository
+    public class BasicUserDetailsRepository : IBasicUserDetailsRepository
     {
         private readonly IConfiguration _config;
-        public BasicDetailsRepository(IConfiguration config)
+        public BasicUserDetailsRepository(IConfiguration config)
         {
             _config = config;
         }
@@ -23,14 +23,14 @@ namespace OnwardsDAL.Repository
         private SqlConnection GetConn() =>
             new SqlConnection(_config.GetConnectionString("DefaultConnection"));
 
-        public async Task AddOrUpdateBasicDetailsAsync(BasicDetail detail)
+        public async Task AddOrUpdateBasicDetailsAsync(BasicUserDetail detail)
         {
             try
             {
                 await using var conn = GetConn();
                 await conn.OpenAsync();
 
-                await using var cmd = new SqlCommand("Onwards.InsertOrUpdateBasicDetails", conn)
+                await using var cmd = new SqlCommand("Onwards.InsertOrUpdateBasicUserDetails", conn)
                 {
                     CommandType = CommandType.StoredProcedure
                 };

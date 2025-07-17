@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace OnwardsModel.Model
 {
     [Table("ChildrenDetails", Schema = "Onwards")]
-    public class ChildrenDetail : BaseModel
+    public class ChildrenDetailModel : BaseModel
     {
         [Required]
         [StringLength(100)]

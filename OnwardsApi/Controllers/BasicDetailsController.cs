@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnwardsBLL.Interface;
 using OnwardsModel.Dtos;
+using OnwardsModel.Model;
 
 namespace OnwardsApi.Controllers
 {
@@ -14,7 +15,7 @@ namespace OnwardsApi.Controllers
             _basicDetailsService = basicDetailsService;
         }
         [HttpPost]
-        public async Task<IActionResult> AddPersonalDetails(BasicDetailsreqDto details)
+        public async Task<IActionResult> AddPersonalDetails(BasicDetilasModel details)
         {
             try
             {

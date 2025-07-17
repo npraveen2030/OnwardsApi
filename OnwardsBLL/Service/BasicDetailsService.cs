@@ -2,10 +2,6 @@
 using OnwardsDAL.Interface;
 using OnwardsModel.Dtos;
 using OnwardsModel.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace OnwardsBLL.Service
@@ -14,19 +10,39 @@ namespace OnwardsBLL.Service
         IPreviousExperienceRepository _previousExperienceRepository,
         IMaritalStatusRepository _maritalStatusRepository,
         IChildrenDetailsRepository _childrenDetailsRepository,
-        IUserDocumentsRepository _userDocumentsRepository
+        IUserDocumentsRepository _userDocumentsRepository,
+        IEducationDetailsRepository _educationDetailsRepository,
+        ICertificationDetailsRepository _certificationDetailsRepository,
+        ISkillDetailsRepository _skillsDetailsRepository,
+        IExperienceDetailsRepository _experienceDetailsRepository
     ) : IBasicDetailsService
     {
-        public async Task AddOrUpdateBasicDetailsAsync(BasicDetailsreqDto dto)
+        public async Task AddOrUpdateBasicDetailsAsync(BasicDetilasModel dto)
         {
-            var previousExperience = new PreviousExperienceDetail
+            var educationalDetails = dto.EducationDetails;
+
+            var certificationDetails = dto.CertificationDetails;
+
+            var skillDetails = new SkillDetailsModel
             {
                 UserId = dto.UserId,
-                LoginId = dto.LoginId,
-                CompanyName = dto.CompanyName,
-                StartDate = dto.StartDate,
-                EndDate = dto.EndDate
+                PrimarySkills = dto.PrimarySkills,
+                SecondarySkills = dto.SecondarySkills
             };
+
+            var experienceDetails = new ExperienceDetailsModel
+            {
+                UserId = dto.UserId,
+                PreviousExperience = dto.PreviousExperience,
+                TotalExperience = dto.TotalExperience,
+                RelevantExperience = dto.RelevantExperience,
+                CurrentEmployer = dto.NameOfCurrentEmployer,
+                CurrentDesignation = dto.CurrentDesignation,
+                PreviousOnwardExperience = dto.PreviousOnwardExperience,
+                PreviousOnwardEmployeeCode = dto.PreviousOnwardEmployeeCode
+            };
+
+            var previousExperience = dto.PreviousExperienceDetail;
 
             var maritalStatus = new MaritalStatus
             {
@@ -38,14 +54,7 @@ namespace OnwardsBLL.Service
                 IsHavingChildren = dto.IsHavingChildren
             };
 
-            var childrenDetail = new ChildrenDetail
-            {
-                UserId = dto.UserId,
-                LoginId = dto.LoginId,
-                ChildName = dto.ChildName,
-                GenderId = dto.GenderId,
-                DateOfBirth = dto.DateOfBirth
-            };
+            var childrenDetail = dto.Children;
 
             var userDocument = new UserDocument
             {
@@ -59,10 +68,15 @@ namespace OnwardsBLL.Service
                 VerifiedBy = dto.VerifiedBy
             };
 
+
+            await _educationDetailsRepository.AddOrUpdateEducationDetailsAsync(educationalDetails);
+            await _certificationDetailsRepository.AddOrUpdateCertificationDetailsAsync(certificationDetails);
+            await _skillsDetailsRepository.AddOrUpdateSkillsAsync(skillDetails);
+            await _experienceDetailsRepository.AddOrUpdateExperienceDetailsAsync(experienceDetails);
             await _previousExperienceRepository.AddOrUpdatePreviousExperienceAsync(previousExperience);
             await _maritalStatusRepository.AddOrUpdateMaritalStatusAsync(maritalStatus);
             await _childrenDetailsRepository.AddOrUpdateChildAsync(childrenDetail);
-            await _userDocumentsRepository.AddOrUpdateDocumentAsync(userDocument);
+            await _userDocumentsRepository.AddOrUpdateDocumentAsync(userDocument);     
         }
     }
 }

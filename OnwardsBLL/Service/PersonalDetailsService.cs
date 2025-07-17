@@ -6,13 +6,13 @@ using OnwardsModel.Model;
 
 namespace OnwardsBLL.Service
 {
-    public class PersonalDetailsService(IBasicDetailsRepository _basicDetailsRepository, IUserAddressesRepository _userAddressesRepository,
+    public class PersonalDetailsService(IBasicUserDetailsRepository _basicDetailsRepository, IUserAddressesRepository _userAddressesRepository,
         IComplianceRepository _complianceRepository, IBankDetailsRepository _bankDetailsRepository,
         IEmergencyContactsRepository _emergencyContactsRepository) : IPersonalDetailsService
     {
         public async Task AddOrUpdatePersonalDetails(PersonalDetailsDto personalDetailsDto)
         {
-            var basicDetail = new BasicDetail
+            var basicDetail = new BasicUserDetail
             {
                 UserId = personalDetailsDto.UserId,
                 LoginId = personalDetailsDto.LoginId,

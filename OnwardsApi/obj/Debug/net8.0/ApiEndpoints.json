@@ -25,7 +25,7 @@
     "Parameters": [
       {
         "Name": "details",
-        "Type": "OnwardsModel.Dtos.BasicDetailsreqDto",
+        "Type": "OnwardsModel.Model.BasicDetilasModel",
         "IsRequired": true
       }
     ],

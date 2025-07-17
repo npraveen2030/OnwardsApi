@@ -9,12 +9,16 @@ using System.Threading.Tasks;
 namespace OnwardsModel.Model
 {
     [Table("PreviousExperienceDetails", Schema = "Onwards")]
-    public class PreviousExperienceDetail : BaseModel
+    public class PreviousExperienceDetailModel : BaseModel
     {
         [Required]
         [StringLength(255)]
         public string CompanyName { get; set; } = null!;
-    
+
+        [Required]
+        [StringLength(255)]
+        public string Designation { get; set; } = null!;
+
         [Required]
         public DateTime StartDate { get; set; }
 

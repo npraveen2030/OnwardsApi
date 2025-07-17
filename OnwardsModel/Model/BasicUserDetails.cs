@@ -1,14 +1,19 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OnwardsModel.Dtos
+namespace OnwardsModel.Model
 {
-    public class BasicDetailsDto : BaseDto
+    [Table("BasicUserDetails", Schema = "Onwards")]
+    public class BasicUserDetail : BaseModel
     {
+        //[Required]
+        //public int UserId { get; set; }
+
         [Required]
         [StringLength(50)]
         public string FirstName { get; set; } = null!;
