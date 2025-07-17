@@ -8,7 +8,7 @@ namespace OnwardsModel.Dtos
 {
   public class HolidayListDto : BaseDto
   {
-    public int HolidayId { get; set; }
+    public int Id { get; set; }
     public DateTime HolidayDate { get; set; }
     public string HolidayName { get; set; }
     public int LocationId { get; set; }

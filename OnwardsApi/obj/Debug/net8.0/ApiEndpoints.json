@@ -33,7 +33,17 @@
   },
   {
     "ContainingType": "OnwardsApi.Controllers.HolidayListController",
-    "Method": "Add",
+    "Method": "GetAllHolidays",
+    "RelativePath": "api/HolidayList",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.HolidayListController",
+    "Method": "InsertOrUpdateHoliday",
     "RelativePath": "api/HolidayList",
     "HttpMethod": "POST",
     "IsController": true,
@@ -41,7 +51,7 @@
     "Parameters": [
       {
         "Name": "holiday",
-        "Type": "OnwardsModel.Dtos.HolidayListDto",
+        "Type": "OnwardsModel.Model.HolidayListModel",
         "IsRequired": true
       }
     ],
@@ -49,9 +59,9 @@
   },
   {
     "ContainingType": "OnwardsApi.Controllers.HolidayListController",
-    "Method": "Update",
+    "Method": "GetHolidayById",
     "RelativePath": "api/HolidayList/{id}",
-    "HttpMethod": "PUT",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -59,18 +69,13 @@
         "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
-      },
-      {
-        "Name": "holiday",
-        "Type": "OnwardsModel.Dtos.HolidayListDto",
-        "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
     "ContainingType": "OnwardsApi.Controllers.HolidayListController",
-    "Method": "Delete",
+    "Method": "DeleteHoliday",
     "RelativePath": "api/HolidayList/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
@@ -86,7 +91,7 @@
   },
   {
     "ContainingType": "OnwardsApi.Controllers.HolidayListController",
-    "Method": "GetByLocation",
+    "Method": "GetHolidayByLocationId",
     "RelativePath": "api/HolidayList/location/{locationId}",
     "HttpMethod": "GET",
     "IsController": true,
