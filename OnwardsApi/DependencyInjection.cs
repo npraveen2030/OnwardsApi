@@ -48,6 +48,9 @@ namespace OnwardsApi
             services.AddScoped<IUserDocumentsRepository, UserDocumentsRepository>();
             services.AddScoped<IBasicDetailsService, BasicDetailsService>();
 
+            services.AddScoped<IUserDetailsRepository, UserDetailsRepository>();
+            services.AddScoped<IUserDetailsService, UserDetailsService>();
+
             return services;
         }
     }
