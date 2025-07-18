@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OnwardsModel.Model
 {
-  public class HolidayListModel : BaseModel
+  public class HolidayListModel1 : BaseModel
   {
     public int HolidayId { get; set; }
     public DateTime HolidayDate { get; set; }
