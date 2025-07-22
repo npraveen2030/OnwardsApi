@@ -81,3 +81,61 @@ BEGIN
     WHERE U.Id = @UserId;
 END;
 GO
+
+-- DELETE (soft delete) a holiday
+CREATE PROCEDURE [Onwards].[DeleteHolidaybyId]
+    @Id INT,
+    @LoginUserId INT
+AS
+BEGIN
+    UPDATE Onwards.HolidayList
+    SET IsActive = 0,
+        ModifiedBy = @LoginUserId,
+        ModifiedDate = GETDATE()
+    WHERE Id = @Id;
+END
+GO
+/****** Object:  StoredProcedure [Onwards].[GetAllHolidays]    Script Date: 22-07-2025 13:48:11 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- GET all active holidays
+CREATE PROCEDURE [Onwards].[GetAllHolidays]
+AS
+BEGIN
+	SET NOCOUNT ON;
+    SELECT * FROM Onwards.HolidayList WHERE IsActive = 1;
+END
+GO
+/****** Object:  StoredProcedure [Onwards].[GetHolidaById]    Script Date: 22-07-2025 13:48:11 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- GET a single holiday by Id
+CREATE PROCEDURE [Onwards].[GetHolidaById]
+    @Id INT
+AS
+BEGIN
+	SET NOCOUNT ON;
+    SELECT * FROM Onwards.HolidayList WHERE Id = @Id AND IsActive = 1;
+END
+GO
+/****** Object:  StoredProcedure [Onwards].[GetHolidaByLocationId]    Script Date: 22-07-2025 13:48:11 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- GET a single holiday by Id
+CREATE PROCEDURE [Onwards].[GetHolidaByLocationId]
+    @LocationId INT
+AS
+BEGIN
+	SET NOCOUNT ON;
+    SELECT * FROM Onwards.HolidayList WHERE LocationId = @LocationId AND IsActive = 1;
+END
+GO
