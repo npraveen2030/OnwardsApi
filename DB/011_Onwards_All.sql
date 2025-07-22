@@ -1,3 +1,75 @@
+CREATE TABLE Onwards.Training (
+    id INT PRIMARY KEY,
+    TrainingDate DATE,
+    Name NVARCHAR(255),
+    locationid INT,
+    createdDate DATETIME,
+    createdBy INT,
+    ModifiedDate DATETIME,
+    ModifiedBy INT,
+    IsActive BIT
+);
+ 
+-- Create a helper table with locations
+CREATE TABLE #Locations (
+    locationid INT PRIMARY KEY,
+    locationName VARCHAR(100)
+);
+
+INSERT INTO #Locations (locationid, locationName)
+VALUES (1, 'Bangalore'), (2, 'Hyderabad');
+
+-- Insert sample records into Onwards.Training
+DECLARE @id INT = 1;
+DECLARE @month INT = 1;
+DECLARE @day INT;
+DECLARE @locationid INT;
+DECLARE @trainingDate DATE;
+DECLARE @createdDate DATETIME;
+DECLARE @modifiedDate DATETIME;
+DECLARE @createdBy INT;
+DECLARE @modifiedBy INT;
+DECLARE @isActive BIT;
+DECLARE @name VARCHAR(100);
+
+WHILE @month <= 12
+BEGIN
+    DECLARE @counter INT = 1;
+    WHILE @counter <= 20
+    BEGIN
+        SET @day = 1 + ABS(CHECKSUM(NEWID())) % 28;
+        SET @trainingDate = DATEFROMPARTS(2025, @month, @day);
+        SET @createdDate = DATEADD(DAY, -1 * (ABS(CHECKSUM(NEWID())) % 10), @trainingDate);
+        SET @modifiedDate = DATEADD(DAY, ABS(CHECKSUM(NEWID())) % 5, @createdDate);
+        SET @createdBy = 1 + ABS(CHECKSUM(NEWID())) % 5;
+        SET @modifiedBy = 1 + ABS(CHECKSUM(NEWID())) % 5;
+        SET @isActive = ABS(CHECKSUM(NEWID())) % 2;
+        SET @name = CONCAT('Training Session ', ABS(CHECKSUM(NEWID())) % 100);
+
+        -- Loop over both locations
+        SET @locationid = 1;
+        WHILE @locationid <= 2
+        BEGIN
+            INSERT INTO Onwards.Training (
+                id, TrainingDate, Name, locationid,
+                createdDate, createdBy, ModifiedDate, ModifiedBy, IsActive
+            )
+            VALUES (
+                @id, @trainingDate, @name, @locationid,
+                @createdDate, @createdBy, @modifiedDate, @modifiedBy, @isActive
+            );
+
+            SET @id = @id + 1;
+            SET @locationid = @locationid + 1;
+        END
+
+        SET @counter = @counter + 1;
+    END
+    SET @month = @month + 1;
+END
+
+-- Drop the helper table
+DROP TABLE #Locations;
 
 --- 22 July-25 
 SET IDENTITY_INSERT [Onwards].[Shift] ON 
