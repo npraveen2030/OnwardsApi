@@ -139,3 +139,43 @@ BEGIN
     SELECT * FROM Onwards.HolidayList WHERE LocationId = @LocationId AND IsActive = 1;
 END
 GO
+
+/****** Object:  Table [Onwards].[HolidayList]    Script Date: 22-07-2025 13:53:44 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [Onwards].[HolidayList](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[HolidayDate] [date] NOT NULL,
+	[Day] [nvarchar](20) NULL,
+	[LocationId] [int] NOT NULL,
+	[HolidayName] [nvarchar](255) NULL,
+	[CreatedDate] [datetime] NOT NULL,
+	[CreatedBy] [int] NULL,
+	[ModifiedDate] [datetime] NULL,
+	[ModifiedBy] [int] NULL,
+	[IsActive] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [Onwards].[HolidayList] ADD  DEFAULT (getdate()) FOR [CreatedDate]
+GO
+
+ALTER TABLE [Onwards].[HolidayList] ADD  DEFAULT ((1)) FOR [IsActive]
+GO
+
+ALTER TABLE [Onwards].[HolidayList]  WITH CHECK ADD  CONSTRAINT [FK_Holidays_Location] FOREIGN KEY([LocationId])
+REFERENCES [Onwards].[Locations] ([Id])
+GO
+
+ALTER TABLE [Onwards].[HolidayList] CHECK CONSTRAINT [FK_Holidays_Location]
+GO
+
+
