@@ -179,3 +179,57 @@ ALTER TABLE [Onwards].[HolidayList] CHECK CONSTRAINT [FK_Holidays_Location]
 GO
 
 
+
+SET IDENTITY_INSERT [Onwards].[HolidayList] ON 
+GO
+INSERT [Onwards].[HolidayList] ([Id], [HolidayDate], [Day], [LocationId], [HolidayName], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (1, CAST(N'2025-01-01' AS Date), N'Wednesday', 1, N'New Years Day', CAST(N'2025-07-16T19:27:11.877' AS DateTime), 1, NULL, NULL, 1)
+GO
+INSERT [Onwards].[HolidayList] ([Id], [HolidayDate], [Day], [LocationId], [HolidayName], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (2, CAST(N'2025-01-26' AS Date), N'Sunday', 1, N'Republic Day', CAST(N'2025-07-16T19:27:11.877' AS DateTime), 1, NULL, NULL, 1)
+GO
+INSERT [Onwards].[HolidayList] ([Id], [HolidayDate], [Day], [LocationId], [HolidayName], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (3, CAST(N'2025-08-15' AS Date), N'Friday', 1, N'Independence Day', CAST(N'2025-07-16T19:27:11.877' AS DateTime), 1, NULL, NULL, 1)
+GO
+INSERT [Onwards].[HolidayList] ([Id], [HolidayDate], [Day], [LocationId], [HolidayName], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (4, CAST(N'2025-10-02' AS Date), N'Thursday', 1, N'Gandhi Jayanti', CAST(N'2025-07-16T19:27:11.877' AS DateTime), 1, NULL, NULL, 1)
+GO
+INSERT [Onwards].[HolidayList] ([Id], [HolidayDate], [Day], [LocationId], [HolidayName], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (5, CAST(N'2025-12-25' AS Date), N'Thursday', 1, N'Christmas Day', CAST(N'2025-07-16T19:27:11.877' AS DateTime), 1, NULL, NULL, 1)
+GO
+INSERT [Onwards].[HolidayList] ([Id], [HolidayDate], [Day], [LocationId], [HolidayName], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (6, CAST(N'2025-01-01' AS Date), N'Wednesday', 2, N'New Years Day', CAST(N'2025-07-16T19:27:11.877' AS DateTime), 2, NULL, NULL, 1)
+GO
+INSERT [Onwards].[HolidayList] ([Id], [HolidayDate], [Day], [LocationId], [HolidayName], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (7, CAST(N'2025-03-17' AS Date), N'Monday', 2, N'St. Patricks Day', CAST(N'2025-07-16T19:27:11.877' AS DateTime), 2, NULL, NULL, 1)
+GO
+INSERT [Onwards].[HolidayList] ([Id], [HolidayDate], [Day], [LocationId], [HolidayName], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (8, CAST(N'2025-07-04' AS Date), N'Friday', 2, N'Independence Day (US)', CAST(N'2025-07-16T19:27:11.877' AS DateTime), 2, NULL, NULL, 1)
+GO
+INSERT [Onwards].[HolidayList] ([Id], [HolidayDate], [Day], [LocationId], [HolidayName], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (9, CAST(N'2025-11-27' AS Date), N'Thursday', 2, N'Thanksgiving', CAST(N'2025-07-16T19:27:11.877' AS DateTime), 2, NULL, NULL, 1)
+GO
+INSERT [Onwards].[HolidayList] ([Id], [HolidayDate], [Day], [LocationId], [HolidayName], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (10, CAST(N'2025-12-25' AS Date), N'Thursday', 2, N'Christmas Day', CAST(N'2025-07-16T19:27:11.877' AS DateTime), 2, NULL, NULL, 1)
+GO
+INSERT [Onwards].[HolidayList] ([Id], [HolidayDate], [Day], [LocationId], [HolidayName], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (11, CAST(N'2024-01-01' AS Date), N'Monday', 1, N'New Years Day', CAST(N'2025-07-16T19:27:11.883' AS DateTime), 1, NULL, NULL, 1)
+GO
+INSERT [Onwards].[HolidayList] ([Id], [HolidayDate], [Day], [LocationId], [HolidayName], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (12, CAST(N'2024-01-26' AS Date), N'Friday', 1, N'Republic Day', CAST(N'2025-07-16T19:27:11.883' AS DateTime), 1, NULL, NULL, 1)
+GO
+INSERT [Onwards].[HolidayList] ([Id], [HolidayDate], [Day], [LocationId], [HolidayName], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (13, CAST(N'2024-08-15' AS Date), N'Thursday', 1, N'Independence Day', CAST(N'2025-07-16T19:27:11.883' AS DateTime), 1, NULL, NULL, 1)
+GO
+INSERT [Onwards].[HolidayList] ([Id], [HolidayDate], [Day], [LocationId], [HolidayName], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (14, CAST(N'2024-10-02' AS Date), N'Wednesday', 1, N'Gandhi Jayanti', CAST(N'2025-07-16T19:27:11.883' AS DateTime), 1, NULL, NULL, 1)
+GO
+INSERT [Onwards].[HolidayList] ([Id], [HolidayDate], [Day], [LocationId], [HolidayName], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (15, CAST(N'2024-12-25' AS Date), N'Wednesday', 1, N'Christmas Day', CAST(N'2025-07-16T19:27:11.883' AS DateTime), 1, NULL, NULL, 1)
+GO
+INSERT [Onwards].[HolidayList] ([Id], [HolidayDate], [Day], [LocationId], [HolidayName], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (16, CAST(N'2024-01-01' AS Date), N'Monday', 2, N'New Years Day', CAST(N'2025-07-16T19:27:11.883' AS DateTime), 2, NULL, NULL, 1)
+GO
+INSERT [Onwards].[HolidayList] ([Id], [HolidayDate], [Day], [LocationId], [HolidayName], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (17, CAST(N'2024-03-17' AS Date), N'Sunday', 2, N'St. Patricks Day', CAST(N'2025-07-16T19:27:11.883' AS DateTime), 2, NULL, NULL, 1)
+GO
+INSERT [Onwards].[HolidayList] ([Id], [HolidayDate], [Day], [LocationId], [HolidayName], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (18, CAST(N'2024-07-04' AS Date), N'Thursday', 2, N'Independence Day (US)', CAST(N'2025-07-16T19:27:11.883' AS DateTime), 2, NULL, NULL, 1)
+GO
+INSERT [Onwards].[HolidayList] ([Id], [HolidayDate], [Day], [LocationId], [HolidayName], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (19, CAST(N'2024-11-28' AS Date), N'Thursday', 2, N'Thanksgiving', CAST(N'2025-07-16T19:27:11.883' AS DateTime), 2, NULL, NULL, 1)
+GO
+INSERT [Onwards].[HolidayList] ([Id], [HolidayDate], [Day], [LocationId], [HolidayName], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy], [IsActive]) VALUES (20, CAST(N'2024-12-25' AS Date), N'Wednesday', 2, N'Christmas Day', CAST(N'2025-07-16T19:27:11.883' AS DateTime), 2, NULL, NULL, 1)
+GO
+SET IDENTITY_INSERT [Onwards].[HolidayList] OFF
+GO
+ALTER TABLE [Onwards].[HolidayList] ADD  DEFAULT (getdate()) FOR [CreatedDate]
+GO
+ALTER TABLE [Onwards].[HolidayList] ADD  DEFAULT ((1)) FOR [IsActive]
+GO
+ALTER TABLE [Onwards].[HolidayList]  WITH CHECK ADD  CONSTRAINT [FK_Holidays_Location] FOREIGN KEY([LocationId])
+REFERENCES [Onwards].[Locations] ([Id])
+GO
+ALTER TABLE [Onwards].[HolidayList] CHECK CONSTRAINT [FK_Holidays_Location]
+GO
