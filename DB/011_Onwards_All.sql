@@ -9,6 +9,7 @@ CREATE TABLE Onwards.ResignationType (
     IsActive BIT
 );
 
+
 -- Insert dummy data into ResignationType
 INSERT INTO Onwards.ResignationType (Id,TypeName, Description)
 VALUES 
