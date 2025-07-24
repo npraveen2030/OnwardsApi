@@ -208,7 +208,8 @@ BEGIN
 		UPDATE Onwards.UserLeaveApplied
 			SET ModifiedBy = @LoginId,ModefiedDate = GETDATE(),LeaveStatusId = @LeaveStatusId
 			WHERE Id = @Id
-		
+		--3=> Rejected  FROM Onwards.LeaveStatus
+		--4=> Cancelled FROM Onwards.LeaveStatus
 		IF (@LeaveStatusId IN (3,4))
 		BEGIN
 			DECLARE @UserId INT;
@@ -503,13 +504,13 @@ GO
 
 
 CREATE TABLE Onwards.ExitInterview(
-Id INT PRIMARY KEY,
-Value NVARCHAR(100) NOT NULL,
-CreatedDate DATETIME NULL,
-CreatedBy INT NULL,
-ModifiedDate DATETIME NULL,
-ModifiedBy INT NULL,
-IsActive BIT NOT NULL DEFAULT 1
+	Id INT PRIMARY KEY,
+	Value NVARCHAR(100) NOT NULL,
+	CreatedDate DATETIME NULL,
+	CreatedBy INT NULL,
+	ModifiedDate DATETIME NULL,
+	ModifiedBy INT NULL,
+	IsActive BIT NOT NULL DEFAULT 1
 )
 
 INSERT INTO Onwards.ExitInterview (Id, Value)
@@ -519,44 +520,44 @@ VALUES
 (3,'Feedback about your manager')
 
 CREATE TABLE Onwards.ExitInterviewQuestions(
-Id INT PRIMARY KEY IDENTITY,
-ExitInterviewId INT NOT NULL,
-Question NVARCHAR(500) NOT NULL,
-HasOptions BIT NOT NULL,
-CreatedDate DATETIME NULL,
-CreatedBy INT NULL,
-ModifiedDate DATETIME NULL,
-ModifiedBy INT NULL,
-IsActive BIT NOT NULL DEFAULT 1,
-CONSTRAINT FK_ExitInterview_ExitInterviewQuestions FOREIGN KEY (ExitInterviewId) REFERENCES Onwards.ExitInterview(Id)
+	Id INT PRIMARY KEY IDENTITY,
+	ExitInterviewId INT NOT NULL,
+	Question NVARCHAR(500) NOT NULL,
+	HasOptions BIT NOT NULL,
+	CreatedDate DATETIME NULL,
+	CreatedBy INT NULL,
+	ModifiedDate DATETIME NULL,
+	ModifiedBy INT NULL,
+	IsActive BIT NOT NULL DEFAULT 1,
+	CONSTRAINT FK_ExitInterview_ExitInterviewQuestions FOREIGN KEY (ExitInterviewId) REFERENCES Onwards.ExitInterview(Id)
 )
 
 CREATE TABLE Onwards.ExitInterviewOptions(
-Id INT PRIMARY KEY IDENTITY, 
-QuestionId INT NOT NULL,
-Description NVARCHAR(100) NOT NULL,
-CreatedDate DATETIME NULL,
-CreatedBy INT NULL,
-ModifiedDate DATETIME NULL,
-ModifiedBy INT NULL,
-IsActive BIT NOT NULL DEFAULT 1,
-CONSTRAINT FK_QUES_OPT FOREIGN KEY (QuestionId) REFERENCES Onwards.ExitInterviewQuestions(Id)
+	Id INT PRIMARY KEY IDENTITY, 
+	QuestionId INT NOT NULL,
+	Description NVARCHAR(100) NOT NULL,
+	CreatedDate DATETIME NULL,
+	CreatedBy INT NULL,
+	ModifiedDate DATETIME NULL,
+	ModifiedBy INT NULL,
+	IsActive BIT NOT NULL DEFAULT 1,
+	CONSTRAINT FK_QUES_OPT FOREIGN KEY (QuestionId) REFERENCES Onwards.ExitInterviewQuestions(Id)
 )
 
 CREATE TABLE Onwards.UserExitInterview(
-Id INT PRIMARY KEY IDENTITY, 
-ExitInterviewId INT NOT NULL,
-QuestionId INT NOT NULL,
-OptionId INT NULL,
-Answer NVARCHAR(500) NULL,
-CreatedDate DATETIME NULL,
-CreatedBy INT NULL,
-ModifiedDate DATETIME NULL,
-ModifiedBy INT NULL,
-IsActive BIT NOT NULL DEFAULT 1,
-CONSTRAINT FK_EI_User FOREIGN KEY (ExitInterviewId) REFERENCES Onwards.ExitInterview(Id),
-CONSTRAINT FK_QUES_User FOREIGN KEY (QuestionId) REFERENCES Onwards.ExitInterviewQuestions(Id),
-CONSTRAINT FK_Opt_User FOREIGN KEY (OptionId) REFERENCES Onwards.ExitInterviewOptions(Id)
+	Id INT PRIMARY KEY IDENTITY, 
+	ExitInterviewId INT NOT NULL,
+	QuestionId INT NOT NULL,
+	OptionId INT NULL,
+	Answer NVARCHAR(500) NULL,
+	CreatedDate DATETIME NULL,
+	CreatedBy INT NULL,
+	ModifiedDate DATETIME NULL,
+	ModifiedBy INT NULL,
+	IsActive BIT NOT NULL DEFAULT 1,
+	CONSTRAINT FK_EI_User FOREIGN KEY (ExitInterviewId) REFERENCES Onwards.ExitInterview(Id),
+	CONSTRAINT FK_QUES_User FOREIGN KEY (QuestionId) REFERENCES Onwards.ExitInterviewQuestions(Id),
+	CONSTRAINT FK_Opt_User FOREIGN KEY (OptionId) REFERENCES Onwards.ExitInterviewOptions(Id)
 )
 
 
@@ -624,10 +625,10 @@ BEGIN
     SET NOCOUNT ON;
 
     INSERT INTO Onwards.UserExitInterview (
-        ExitInterviewId, QuestionId, OptionId, Answer, CreatedDate, CreatedBy, IsActive
+        ExitInterviewId, QuestionId, OptionId, Answer, CreatedDate, CreatedBy
     )
     VALUES (
-        @ExitInterviewId, @QuestionId, @OptionId, @Answer, GETDATE(), @LoginId, 1
+        @ExitInterviewId, @QuestionId, @OptionId, @Answer, GETDATE(), @LoginId
     )
 END
 GO
