@@ -112,7 +112,7 @@ namespace OnwardsDAL.Repository
         }
 
         public async Task DeleteUserAsync(int Id)
-        {
+        {                     
             try
             {
                 await using var conn = GetConnection();

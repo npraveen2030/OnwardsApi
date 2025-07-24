@@ -249,6 +249,38 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "OnwardsApi.Controllers.UserLeaveAppliedController",
+    "Method": "InsertUserLeaveApplied",
+    "RelativePath": "api/UserLeaveApplied/insert",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "leave",
+        "Type": "OnwardsModel.Model.UserLeaveAppliedModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.UserLeaveAppliedController",
+    "Method": "UpdateUserLeaveApplied",
+    "RelativePath": "api/UserLeaveApplied/update",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Modification",
+        "Type": "OnwardsModel.Model.UserLeaveAppliedUpdateModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "OnwardsApi.Controllers.UserShiftDetailsController",
     "Method": "GetUserShiftDetails",
     "RelativePath": "api/UserShiftDetails/GetByUserId/{userId}",

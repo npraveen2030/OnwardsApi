@@ -1,3 +1,226 @@
+-----------------------24july-------------------
+
+ALTER TABLE Onwards.LeavesAdded
+DROP COLUMN AddedDate
+GO
+
+  INSERT INTO Onwards.Roles (Id,RoleName)
+  VALUES
+  (7,'HR'),
+  (8,'Admin')
+  GO
+
+
+
+
+
+USE Projects
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE Onwards.InsertLeavesAdded
+	@LoginId INT,
+	@UserId INT,
+	@LeaveTypeId INT,
+	@NoOfLeaves INT
+AS
+BEGIN
+
+	SET NOCOUNT ON;
+
+    INSERT INTO Onwards.LeavesAdded (UserId,LeaveTypeId,NoOfLeaves,CreatedDate,CreatedBy)
+	VALUES 
+	(@UserId,@LeaveTypeId,@NoOfLeaves,GETDATE(),@LoginId)
+END
+GO
+
+
+
+
+
+
+
+
+USE Projects
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE Onwards.InsertLeaveBalances
+	@LoginId INT,
+	@UserId INT,
+	@LeaveTypeId INT,
+	@Year INT,
+	@RemainingDays INT
+AS
+BEGIN
+
+	SET NOCOUNT ON;
+
+    INSERT INTO Onwards.LeaveBalaLeaveBalances(UserId,LeaveTypeId,Year,RemainingDays,CreatedDate,CreatedBy)
+	VALUES 
+	(@UserId,@LeaveTypeId,@Year,@RemainingDays,GETDATE(),@LoginId)
+END
+GO
+
+
+
+
+
+
+
+
+(ADDED LEAVE TYPE COLUMN) 
+(USERLEAVEAPPLIED TABLE NULL --> NOT NULL)
+
+
+USE [Projects]
+GO
+/****** Object:  StoredProcedure [Onwards].[InsertOrUpdateUserDetails]    Script Date: 22-07-2025 18:24:17 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER PROCEDURE [Onwards].[InsertOrUpdateUserDetails]
+    @LoginId INT,
+	@Password NVARCHAR(100),
+	@FullName NVARCHAR(100),
+	@Email NVARCHAR(100),
+	@Mobile NVARCHAR(20),
+	@DOJ DATETIME,
+    @DOR DATETIME = NULL,
+    @RoleId INT,
+    @GradeId INT,
+    @DepartmentId INT,
+    @ReportingManagerId INT,
+    @AdministrativeManagerId INT,
+	@Return NVARCHAR(100) OUTPUT
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SET XACT_ABORT ON;
+
+	BEGIN TRY
+        BEGIN TRANSACTION;
+
+		DECLARE @IsExist INT;
+		DECLARE @NewId INT;
+
+		SELECT @IsExist = Id
+		FROM Onwards.Users
+		WHERE Email = @Email
+
+		IF (@IsExist IS NULL)
+		BEGIN
+				INSERT INTO Onwards.Users (
+				EmployeeCode,
+				Password,
+				FullName,
+				Email,
+				Mobile,
+				DOJ,
+				DOR,
+				RoleId,
+				GradeId,
+				DepartmentId,
+				ReportingManagerId,
+				AdministrativeManagerId,
+				CreatedDate,
+				CreatedBy,
+				ModifiedDate,
+				ModifiedBy,
+				IsActive
+				)
+				VALUES
+				(
+						'EMP',
+						@Password,
+						@FullName,
+						@Email,
+						@Mobile,
+						@DOJ,
+						@DOR,
+						@RoleId,
+						@GradeId,
+						@DepartmentId,
+						@ReportingManagerId,
+						@AdministrativeManagerId,
+						GETDATE(),     
+						@LoginId,      
+						NULL,         
+						NULL,          
+						1           
+					);
+
+				SET @NewId = SCOPE_IDENTITY(); 
+
+				SET @Return = 'EMP' + CAST(@NewId AS NVARCHAR(100));
+
+				UPDATE Onwards.Users 
+				SET EmployeeCode = @Return
+				WHERE Id = @NewId;
+
+				INSERT INTO Onwards.LeaveBalances(UserId,LeaveTypeId,Year,RemainingDays,CreatedDate,CreatedBy)
+				SELECT @NewId,LeaveTypeName,0,0,GETDATE(),@LoginId
+				FROM Onwards.LeaveTypes 
+
+			END
+			ELSE
+			BEGIN
+				UPDATE Onwards.Users
+				SET 
+					Password = @Password,
+					FullName = @FullName,
+					Email = @Email,
+					Mobile = @Mobile,
+					DOJ = @DOJ,
+					DOR = @DOR,
+					RoleId = @RoleId,
+					GradeId = @GradeId,
+					DepartmentId = @DepartmentId,
+					ReportingManagerId = @ReportingManagerId,
+					AdministrativeManagerId = @AdministrativeManagerId,
+					ModifiedDate = GETDATE(),
+					ModifiedBy = @LoginId
+				WHERE Id = @IsExist;
+
+				SELECT @Return=EmployeeCode 
+				FROM Onwards.Users
+				WHERE Id = @IsExist
+			END
+	END TRY
+    BEGIN CATCH
+        IF XACT_STATE() <> 0
+            ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END
+
+
+UPDATE Onwards.LeaveTypes
+SET MaxDaysPerYear = 12
+WHERE Id IN (1, 2);
+
+UPDATE Onwards.LeaveTypes
+SET MaxDaysPerYear = 6
+WHERE Id = 3;
+-----------------------------------------------------------------------------------------------------
+
 CREATE TABLE Onwards.ResignationType (
     Id INT PRIMARY KEY,
     TypeName NVARCHAR(100) NOT NULL,
