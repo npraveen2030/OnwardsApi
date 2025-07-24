@@ -32,6 +32,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "OnwardsApi.Controllers.ExitInterviewController",
+    "Method": "InsertExitInterview",
+    "RelativePath": "api/ExitInterview/insert",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Questions",
+        "Type": "OnwardsModel.Model.AdminExitInterviewModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "OnwardsApi.Controllers.HolidayListController",
     "Method": "GetAllHolidays",
     "RelativePath": "api/HolidayList",
@@ -106,6 +122,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "OnwardsApi.Controllers.LeavesAddedController",
+    "Method": "InsertLeavesAdded",
+    "RelativePath": "api/LeavesAdded/insert",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "OnwardsModel.Model.LeavesAddedModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "OnwardsApi.Controllers.PersonalDetailsController",
     "Method": "AddPersonalDetails",
     "RelativePath": "api/PersonalDetails",
@@ -116,6 +148,165 @@
       {
         "Name": "details",
         "Type": "OnwardsModel.Dtos.PersonalDetailsDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.ResignationController",
+    "Method": "Delete",
+    "RelativePath": "api/Resignation/delete/{id}/{loginId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "loginId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.ResignationController",
+    "Method": "Insert",
+    "RelativePath": "api/Resignation/insert",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "OnwardsModel.Model.ResignationModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.ResignationController",
+    "Method": "Update",
+    "RelativePath": "api/Resignation/update",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "OnwardsModel.Model.ResignationModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.ResignationReasonController",
+    "Method": "Delete",
+    "RelativePath": "api/ResignationReason/delete/{id}/{loginId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "loginId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.ResignationReasonController",
+    "Method": "Insert",
+    "RelativePath": "api/ResignationReason/insert",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "OnwardsModel.Model.ResignationReasonModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.ResignationReasonController",
+    "Method": "Update",
+    "RelativePath": "api/ResignationReason/update",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "OnwardsModel.Model.ResignationReasonModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.ResignationTypeController",
+    "Method": "Delete",
+    "RelativePath": "api/ResignationType/delete/{id}/{loginId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "loginId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.ResignationTypeController",
+    "Method": "Insert",
+    "RelativePath": "api/ResignationType/insert",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "OnwardsModel.Model.ResignationTypeModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.ResignationTypeController",
+    "Method": "Update",
+    "RelativePath": "api/ResignationType/update",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "OnwardsModel.Model.ResignationTypeModel",
         "IsRequired": true
       }
     ],
