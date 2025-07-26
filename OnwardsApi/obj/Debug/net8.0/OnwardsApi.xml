@@ -11,6 +11,13 @@
             <param name="request">LoginRequest containing EmployeeCode and Password</param>
             <returns>200 OK or 401 Unauthorized</returns>
         </member>
+        <member name="M:OnwardsApi.Controllers.AuthController.ValidateLogin(OnwardsModel.Dtos.LoginRequestDto)">
+            <summary>
+            User login API to validate Employee credentials.
+            </summary>
+            <param name="request">LoginRequest containing EmployeeCode and Password</param>
+            <returns>200 OK or 401 Unauthorized</returns>
+        </member>
         <member name="M:OnwardsApi.Controllers.TrainingController.GetByLocation(System.Int32)">
             <summary>
             Get all training records for a specific location.

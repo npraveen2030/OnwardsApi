@@ -11,6 +11,32 @@
         "Name": "request",
         "Type": "OnwardsModel.Dtos.LoginRequestDto",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.AuthController",
+    "Method": "ValidateLogin",
+    "RelativePath": "api/Auth/ValidateLogin",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "OnwardsModel.Dtos.LoginRequestDto",
+        "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -27,6 +53,11 @@
         "Name": "details",
         "Type": "OnwardsModel.Model.BasicDetilasModel",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -38,7 +69,13 @@
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -53,6 +90,11 @@
         "Name": "Questions",
         "Type": "System.Collections.Generic.List\u00601[[OnwardsModel.Model.AdminExitInterviewModel, OnwardsModel, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -64,7 +106,13 @@
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -79,6 +127,11 @@
         "Name": "holiday",
         "Type": "OnwardsModel.Model.HolidayListModel",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -95,6 +148,11 @@
         "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -111,6 +169,11 @@
         "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -127,6 +190,11 @@
         "Name": "locationId",
         "Type": "System.Int32",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -143,6 +211,11 @@
         "Name": "model",
         "Type": "OnwardsModel.Model.LeavesAddedModel",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -159,6 +232,11 @@
         "Name": "details",
         "Type": "OnwardsModel.Dtos.PersonalDetailsDto",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -180,6 +258,11 @@
         "Name": "loginId",
         "Type": "System.Int32",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -196,6 +279,11 @@
         "Name": "model",
         "Type": "OnwardsModel.Model.ResignationModel",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -212,6 +300,11 @@
         "Name": "model",
         "Type": "OnwardsModel.Model.ResignationModel",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -233,6 +326,11 @@
         "Name": "loginId",
         "Type": "System.Int32",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -249,6 +347,11 @@
         "Name": "model",
         "Type": "OnwardsModel.Model.ResignationReasonModel",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -265,6 +368,11 @@
         "Name": "model",
         "Type": "OnwardsModel.Model.ResignationReasonModel",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -286,6 +394,11 @@
         "Name": "loginId",
         "Type": "System.Int32",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -302,6 +415,11 @@
         "Name": "model",
         "Type": "OnwardsModel.Model.ResignationTypeModel",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -318,6 +436,11 @@
         "Name": "model",
         "Type": "OnwardsModel.Model.ResignationTypeModel",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -334,6 +457,11 @@
         "Name": "model",
         "Type": "OnwardsModel.Dtos.TrainingDto",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -355,6 +483,11 @@
         "Name": "model",
         "Type": "OnwardsModel.Dtos.TrainingDto",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -371,6 +504,11 @@
         "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -387,6 +525,11 @@
         "Name": "locationId",
         "Type": "System.Int32",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -403,6 +546,11 @@
         "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -429,6 +577,11 @@
         "Name": "take",
         "Type": "System.Int32",
         "IsRequired": false
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -445,6 +598,11 @@
         "Name": "details",
         "Type": "OnwardsModel.Model.UserModel",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -461,6 +619,11 @@
         "Name": "leave",
         "Type": "OnwardsModel.Model.UserLeaveAppliedModel",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -477,6 +640,11 @@
         "Name": "Modification",
         "Type": "OnwardsModel.Model.UserLeaveAppliedUpdateModel",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -493,6 +661,11 @@
         "Name": "userId",
         "Type": "System.Int32",
         "IsRequired": true
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
@@ -528,6 +701,11 @@
         "Name": "userId",
         "Type": "System.Int32",
         "IsRequired": false
+      },
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
@@ -550,5 +728,25 @@
         "StatusCode": 400
       }
     ]
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.v1.ProductsController",
+    "Method": "Get",
+    "RelativePath": "api/v1/Products",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.v2.ProductsController",
+    "Method": "Get",
+    "RelativePath": "api/v2/Products",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
   }
 ]

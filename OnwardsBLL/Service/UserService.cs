@@ -4,19 +4,23 @@ using OnwardsModel.Dtos;
 
 namespace OnwardsBLL.Service
 {
-  public class UserService(IUserRepository _userRepository) : IUserService
-  {
-    //private readonly IUserRepository _userRepository;
-
-    //public UserService(IUserRepository userRepository)
-    //{
-    //  _userRepository = userRepository;
-    //}
-
-    public bool ValidateUser(string employeeCode, string password)
+    public class UserService(IUserRepository _userRepository) : IUserService
     {
-      return _userRepository.ValidateUser(employeeCode, password);
+        //private readonly IUserRepository _userRepository;
+
+        //public UserService(IUserRepository userRepository)
+        //{
+        //  _userRepository = userRepository;
+        //}
+
+        public bool ValidateUser(string employeeCode, string password)
+        {
+            return _userRepository.ValidateUser(employeeCode, password);
+        }
+        public UserLoginDto ValidateLogin(string employeeCode, string password)
+        {
+            return _userRepository.ValidateLogin(employeeCode, password);
+        }
+
     }
-   
-  }
 }
