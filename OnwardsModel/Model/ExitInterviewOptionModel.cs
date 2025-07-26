@@ -7,7 +7,7 @@ namespace OnwardsModel.Model
     [Table("ExitInterviewOptions", Schema = "Onwards")]
     public class ExitInterviewOptionModel : BaseModel
     {
-        public int Id { get; set; }
+        public int? Id { get; set; } = null;
 
         [Required]
         public int? QuestionId { get; set; }

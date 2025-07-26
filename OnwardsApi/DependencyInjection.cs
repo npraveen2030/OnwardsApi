@@ -63,6 +63,9 @@ namespace OnwardsApi
             services.AddScoped<IResignationRepository, ResignationRepository>();
             services.AddScoped<IResignationService, ResignationService>();
 
+            services.AddScoped<IExitInterviewQuestionRepository, ExitInterviewQuestionRepository>();
+            services.AddScoped<IExitInterviewService, ExitInterviewService>();
+
             return services;
         }
     }

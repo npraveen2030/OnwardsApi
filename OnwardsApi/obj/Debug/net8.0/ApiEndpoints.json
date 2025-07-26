@@ -33,7 +33,17 @@
   },
   {
     "ContainingType": "OnwardsApi.Controllers.ExitInterviewController",
-    "Method": "InsertExitInterview",
+    "Method": "GetExitInterview",
+    "RelativePath": "api/ExitInterview/get",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.ExitInterviewController",
+    "Method": "InsertOrUpdateExitInterview",
     "RelativePath": "api/ExitInterview/insert",
     "HttpMethod": "POST",
     "IsController": true,
@@ -41,7 +51,7 @@
     "Parameters": [
       {
         "Name": "Questions",
-        "Type": "OnwardsModel.Model.AdminExitInterviewModel",
+        "Type": "System.Collections.Generic.List\u00601[[OnwardsModel.Model.AdminExitInterviewModel, OnwardsModel, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "IsRequired": true
       }
     ],

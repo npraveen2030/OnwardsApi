@@ -17,8 +17,22 @@ namespace OnwardsApi.Controllers
             _exitInterviewService = exitInterviewService;
         }
 
+        [HttpGet("get")]
+        public async Task<IActionResult> GetExitInterview()
+        {
+            try
+            {
+                var questions = await _exitInterviewService.GetExitInterview();
+                return Ok(new { questions });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
         [HttpPost("insert")]
-        public async Task<IActionResult> InsertExitInterview(AdminExitInterviewModel Questions)
+        public async Task<IActionResult> InsertOrUpdateExitInterview(List<AdminExitInterviewModel> Questions)
         {
             try
             {

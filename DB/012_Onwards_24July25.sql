@@ -750,60 +750,26 @@ BEGIN
 END
 GO
 
-CREATE TYPE Onwards.ExitInterviewQuestionType AS TABLE
+CREATE TYPE Onwards.ExitInterviewQuestionsType AS TABLE
 (
+	LoginId INT NOT NULL,
+	Id INT NULL,
     ExitInterviewId INT NOT NULL,
     Question NVARCHAR(500) NOT NULL,
-    HasOptions BIT NOT NULL,
-    LoginId INT NOT NULL
+	HasOptions BIT NOT NULL,
+	IsActive BIT NOT NULL
 )
 
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-ALTER PROCEDURE [Onwards].[InsertExitInterviewQuestion]
-    @Questions Onwards.ExitInterviewQuestionType READONLY
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    INSERT INTO Onwards.ExitInterviewQuestions (
-        ExitInterviewId, Question, HasOptions, CreatedDate, CreatedBy, IsActive
-    )
-    SELECT
-        ExitInterviewId,
-        Question,
-        HasOptions,
-        GETDATE(),
-		LoginId,
-        1
-    FROM @Questions
-END
-
-CREATE TYPE Onwards.ExitInterviewOptionType AS TABLE
+CREATE TYPE Onwards.ExitInterviewOptionsType AS TABLE
 (
+	LoginId INT NOT NULL,
+	Id INT NULL,
     QuestionId INT NOT NULL,
     Description NVARCHAR(100) NOT NULL,
-    LoginId INT NOT NULL
+	IsActive BIT NOT NULL
 )
 
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-ALTER PROCEDURE [Onwards].[InsertExitInterviewOption]
-    @Options Onwards.ExitInterviewOptionType READONLY
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    INSERT INTO Onwards.ExitInterviewOptions (
-        QuestionId, Description, CreatedDate, CreatedBy, IsActive
-    )
-    SELECT QuestionId,Description , GETDATE() , LoginId , 1
-	FROM @Options
-END
-
+CREATE TYPE Onwards.CreatedIdsType AS TABLE
+(
+	Id INT NOT NULL
+)

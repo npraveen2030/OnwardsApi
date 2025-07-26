@@ -1,4 +1,5 @@
-﻿using OnwardsModel.Model;
+﻿using OnwardsModel.Dtos;
+using OnwardsModel.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace OnwardsBLL.Interface
 {
     public interface IExitInterviewService
     {
-        public Task InsertExitInterview(AdminExitInterviewModel Questions);
+        public Task<List<ExitInterviewQuestionDto>> GetExitInterview();
+        public Task InsertExitInterview(List<AdminExitInterviewModel> Questions);
     }
 }
