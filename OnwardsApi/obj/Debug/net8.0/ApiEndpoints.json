@@ -164,6 +164,75 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "OnwardsApi.Controllers.ReimbursementController",
+    "Method": "Add",
+    "RelativePath": "api/Reimbursement/add",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "OnwardsModel.Model.ReimbursementModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.ReimbursementController",
+    "Method": "Delete",
+    "RelativePath": "api/Reimbursement/delete/{id}/{loginId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "loginId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.ReimbursementController",
+    "Method": "Get",
+    "RelativePath": "api/Reimbursement/get",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "filter",
+        "Type": "OnwardsModel.Model.ReimbursementFilterModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.ReimbursementController",
+    "Method": "Update",
+    "RelativePath": "api/Reimbursement/update",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "OnwardsModel.Model.ReimbursementModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "OnwardsApi.Controllers.ResignationController",
     "Method": "Delete",
     "RelativePath": "api/Resignation/delete/{id}/{loginId}",
