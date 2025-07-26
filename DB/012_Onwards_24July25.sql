@@ -560,195 +560,50 @@ CREATE TABLE Onwards.UserExitInterview(
 	CONSTRAINT FK_Opt_User FOREIGN KEY (OptionId) REFERENCES Onwards.ExitInterviewOptions(Id)
 )
 
-
-
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE Onwards.InsertExitInterviewQuestion
-    @ExitInterviewId INT,
-    @Question NVARCHAR(500),
-    @HasOptions BIT,
-    @LoginId INT
+
+CREATE PROCEDURE [Onwards].[GetExitInterviewQuestions]
+
 AS
 BEGIN
-    SET NOCOUNT ON;
 
-    INSERT INTO Onwards.ExitInterviewQuestions (
-        ExitInterviewId, Question, HasOptions, CreatedDate, CreatedBy, IsActive
-    )
-    VALUES (
-        @ExitInterviewId, @Question, @HasOptions, GETDATE(), @LoginId, 1
-    )
+	SET NOCOUNT ON;
+
+    SELECT * 
+	FROM Onwards.ExitInterviewQuestions
+	WHERE IsActive = 1
+
 END
 GO
 
 
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE Onwards.InsertExitInterviewOption
-    @QuestionId INT,
-    @Description NVARCHAR(100),
-    @LoginId INT
+
+CREATE PROCEDURE [Onwards].[GetExitInterviewOptions]
+
 AS
 BEGIN
-    SET NOCOUNT ON;
 
-    INSERT INTO Onwards.ExitInterviewOptions (
-        QuestionId, Description, CreatedDate, CreatedBy, IsActive
-    )
-    VALUES (
-        @QuestionId, @Description, GETDATE(), @LoginId, 1
-    )
+	SET NOCOUNT ON;
+
+    SELECT * 
+	FROM Onwards.ExitInterviewOptions
+	WHERE IsActive = 1
+
 END
 GO
 
 
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE PROCEDURE Onwards.InsertUserExitInterview
-    @ExitInterviewId INT,
-    @QuestionId INT,
-    @OptionId INT = NULL,
-    @Answer NVARCHAR(500) = NULL,
-    @LoginId INT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    INSERT INTO Onwards.UserExitInterview (
-        ExitInterviewId, QuestionId, OptionId, Answer, CreatedDate, CreatedBy
-    )
-    VALUES (
-        @ExitInterviewId, @QuestionId, @OptionId, @Answer, GETDATE(), @LoginId
-    )
-END
-GO
-
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE PROCEDURE Onwards.UpdateExitInterviewQuestion
-    @Id INT,
-    @ExitInterviewId INT,
-    @Question NVARCHAR(500),
-    @HasOptions BIT,
-    @LoginId INT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    UPDATE Onwards.ExitInterviewQuestions
-    SET
-        ExitInterviewId = @ExitInterviewId,
-        Question = @Question,
-        HasOptions = @HasOptions,
-        ModifiedDate = GETDATE(),
-        ModifiedBy = @LoginId
-    WHERE Id = @Id
-END
-GO
-
-CREATE PROCEDURE Onwards.DeleteExitInterviewQuestion
-    @Id INT,
-    @LoginId INT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    UPDATE Onwards.ExitInterviewQuestions
-    SET
-        IsActive = 0,
-        ModifiedDate = GETDATE(),
-        ModifiedBy = @LoginId
-    WHERE Id = @Id
-END
-GO
-
-
-CREATE PROCEDURE Onwards.UpdateExitInterviewOption
-    @Id INT,
-    @QuestionId INT,
-    @Description NVARCHAR(100),
-    @LoginId INT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    UPDATE Onwards.ExitInterviewOptions
-    SET
-        QuestionId = @QuestionId,
-        Description = @Description,
-        ModifiedDate = GETDATE(),
-        ModifiedBy = @LoginId
-    WHERE Id = @Id
-END
-GO
-
-CREATE PROCEDURE Onwards.DeleteExitInterviewOption
-    @Id INT,
-    @LoginId INT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    UPDATE Onwards.ExitInterviewOptions
-    SET
-        IsActive = 0,
-        ModifiedDate = GETDATE(),
-        ModifiedBy = @LoginId
-    WHERE Id = @Id
-END
-GO
-
-CREATE PROCEDURE Onwards.UpdateUserExitInterview
-    @Id INT,
-    @ExitInterviewId INT,
-    @QuestionId INT,
-    @OptionId INT = NULL,
-    @Answer NVARCHAR(500) = NULL,
-    @LoginId INT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    UPDATE Onwards.UserExitInterview
-    SET
-        ExitInterviewId = @ExitInterviewId,
-        QuestionId = @QuestionId,
-        OptionId = @OptionId,
-        Answer = @Answer,
-        ModifiedDate = GETDATE(),
-        ModifiedBy = @LoginId
-    WHERE Id = @Id
-END
-GO
-
-CREATE PROCEDURE Onwards.DeleteUserExitInterview
-    @Id INT,
-    @LoginId INT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    UPDATE Onwards.UserExitInterview
-    SET
-        IsActive = 0,
-        ModifiedDate = GETDATE(),
-        ModifiedBy = @LoginId
-    WHERE Id = @Id
-END
-GO
 
 CREATE TYPE Onwards.ExitInterviewQuestionsType AS TABLE
 (
@@ -769,7 +624,116 @@ CREATE TYPE Onwards.ExitInterviewOptionsType AS TABLE
 	IsActive BIT NOT NULL
 )
 
-CREATE TYPE Onwards.CreatedIdsType AS TABLE
-(
-	Id INT NOT NULL
-)
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [Onwards].[InsertOrUpdateExitInterviewQuestions]
+    @Questions Onwards.ExitInterviewQuestionsType READONLY
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    DECLARE @CreatedIds TABLE (Id INT, RowIndex INT);
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- MERGE for INSERT only (Id IS NULL)
+        MERGE INTO Onwards.ExitInterviewQuestions AS target
+        USING (
+            SELECT *
+            FROM @Questions
+            WHERE Id IS NULL
+        ) AS source
+        ON 1 = 0 -- Always false to force INSERT
+
+        WHEN NOT MATCHED THEN
+        INSERT (ExitInterviewId, Question, HasOptions, CreatedDate, CreatedBy, IsActive)
+        VALUES (source.ExitInterviewId, source.Question, source.HasOptions, GETDATE(), source.LoginId, 1)
+
+        OUTPUT inserted.Id, source.RowIndex INTO @CreatedIds(Id, RowIndex);
+
+        -- UPDATE: Only rows with Id NOT NULL
+        UPDATE q
+        SET
+            q.ExitInterviewId = src.ExitInterviewId,
+            q.Question = src.Question,
+            q.HasOptions = src.HasOptions,
+            q.ModifiedDate = GETDATE(),
+            q.ModifiedBy = src.LoginId,
+            q.IsActive = src.IsActive
+        FROM Onwards.ExitInterviewQuestions q
+        JOIN @Questions src ON q.Id = src.Id
+        WHERE src.Id IS NOT NULL;
+
+        COMMIT TRANSACTION;
+
+        -- Return the mapping of inserted Ids and RowIndex
+        SELECT * FROM @CreatedIds;
+
+    END TRY
+    BEGIN CATCH
+        IF XACT_STATE() <> 0
+            ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END
+
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [Onwards].[InsertOrUpdateExitInterviewOptions]
+    @Options Onwards.ExitInterviewOptionsType READONLY
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- INSERT: Where Id IS NULL
+        INSERT INTO Onwards.ExitInterviewOptions (
+            QuestionId, Description, CreatedDate, CreatedBy, IsActive
+        )
+        SELECT
+            o.QuestionId,
+            o.Description,
+            GETDATE(),
+            o.LoginId,
+            o.IsActive
+        FROM @Options o
+        WHERE o.Id IS NULL;
+
+        -- UPDATE: Where Id IS NOT NULL
+        UPDATE opt
+        SET
+            opt.QuestionId = o.QuestionId,
+            opt.Description = o.Description,
+            opt.ModifiedDate = GETDATE(),
+            opt.ModifiedBy = o.LoginId,
+            opt.IsActive = o.IsActive
+        FROM Onwards.ExitInterviewOptions opt
+        JOIN @Options o ON opt.Id = o.Id
+        WHERE o.Id IS NOT NULL;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        IF XACT_STATE() <> 0
+            ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END;
+GO
