@@ -13,3 +13,94 @@ BEGIN
     AND EmployeeCode = @EmployeeCode AND Password = @Password;
 END;
 
+
+USE [Projects]
+GO
+
+/****** Object:  Table [Onwards].[BasicUserDetails]    Script Date: 29-07-2025 11:42:24 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [Onwards].[BasicUserDetails](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[UserId] [int] NOT NULL,
+	[FirstName] [nchar](50) NOT NULL,
+	[MiddleName] [nchar](50) NOT NULL,
+	[LastName] [nchar](50) NOT NULL,
+	[PersonalEmailID] [nchar](50) NOT NULL,
+	[PrimaryContactNumber] [int] NOT NULL,
+	[Gender] [int] NOT NULL,
+	[FatherOrHusbandName] [nchar](50) NOT NULL,
+	[DOB] [date] NOT NULL,
+	[Nationality] [int] NOT NULL,
+	[DifferentlyAbled] [int] NOT NULL,
+	[VaccinationStatus] [int] NOT NULL,
+	[BloodGroup] [int] NOT NULL,
+	[BloodDonor] [int] NOT NULL,
+	[PanNumber] [nchar](10) NOT NULL,
+	[AadhaarCardno] [int] NOT NULL,
+	[CreatedDate] [datetime] NULL,
+	[CreatedBy] [int] NULL,
+	[ModifiedDate] [datetime] NULL,
+	[ModifiedBy] [int] NULL,
+	[IsActive] [bit] NOT NULL,
+ CONSTRAINT [PK_Basic Details] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [Onwards].[BasicUserDetails]  WITH CHECK ADD  CONSTRAINT [FK_BasicDetails_BloodGroupOptions] FOREIGN KEY([BloodGroup])
+REFERENCES [Onwards].[BloodGroups] ([Id])
+GO
+
+ALTER TABLE [Onwards].[BasicUserDetails] CHECK CONSTRAINT [FK_BasicDetails_BloodGroupOptions]
+GO
+
+ALTER TABLE [Onwards].[BasicUserDetails]  WITH CHECK ADD  CONSTRAINT [FK_BasicDetails_GenderOptions] FOREIGN KEY([Gender])
+REFERENCES [Onwards].[GenderOptions] ([Id])
+GO
+
+ALTER TABLE [Onwards].[BasicUserDetails] CHECK CONSTRAINT [FK_BasicDetails_GenderOptions]
+GO
+
+ALTER TABLE [Onwards].[BasicUserDetails]  WITH CHECK ADD  CONSTRAINT [FK_BasicDetails_NationalityOptions] FOREIGN KEY([Nationality])
+REFERENCES [Onwards].[NationalityOptions] ([Id])
+GO
+
+ALTER TABLE [Onwards].[BasicUserDetails] CHECK CONSTRAINT [FK_BasicDetails_NationalityOptions]
+GO
+
+ALTER TABLE [Onwards].[BasicUserDetails]  WITH CHECK ADD  CONSTRAINT [FK_BasicDetails_Users] FOREIGN KEY([UserId])
+REFERENCES [Onwards].[Users] ([Id])
+GO
+
+ALTER TABLE [Onwards].[BasicUserDetails] CHECK CONSTRAINT [FK_BasicDetails_Users]
+GO
+
+ALTER TABLE [Onwards].[BasicUserDetails]  WITH CHECK ADD  CONSTRAINT [FK_BasicDetails_VaccinationStatusOptions] FOREIGN KEY([VaccinationStatus])
+REFERENCES [Onwards].[VaccinationStatusOptions] ([Id])
+GO
+
+ALTER TABLE [Onwards].[BasicUserDetails] CHECK CONSTRAINT [FK_BasicDetails_VaccinationStatusOptions]
+GO
+
+ALTER TABLE [Onwards].[BasicUserDetails]  WITH CHECK ADD  CONSTRAINT [FK_BasicDetails_YesNoOptions] FOREIGN KEY([DifferentlyAbled])
+REFERENCES [Onwards].[YesNoOptions] ([Id])
+GO
+
+ALTER TABLE [Onwards].[BasicUserDetails] CHECK CONSTRAINT [FK_BasicDetails_YesNoOptions]
+GO
+
+ALTER TABLE [Onwards].[BasicUserDetails]  WITH CHECK ADD  CONSTRAINT [FK_BasicDetails_YesNoOptions1] FOREIGN KEY([BloodDonor])
+REFERENCES [Onwards].[YesNoOptions] ([Id])
+GO
+
+ALTER TABLE [Onwards].[BasicUserDetails] CHECK CONSTRAINT [FK_BasicDetails_YesNoOptions1]
+GO
+
+
