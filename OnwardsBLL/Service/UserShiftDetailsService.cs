@@ -14,7 +14,7 @@ namespace OnwardsBLL.Service
     }
     public UserShiftLogDto GetUserShiftDetails(int userId)
     {
-      _userShiftDetailsRepository.InsertOrUpdateUserShiftDetails(userId);
+      //_userShiftDetailsRepository.InsertOrUpdateUserShiftDetails(userId);
       return _userShiftDetailsRepository.GetUserShiftDetails(userId);
     }
 

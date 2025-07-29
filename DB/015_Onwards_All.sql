@@ -1,13 +1,80 @@
 
+------------------------------------------ 29 July 2025 ------------------------------------------------ 
 
-
-Create PROCEDURE [Onwards].[sp_ValidateUserLogin]
+-- exec [Onwards].[sp_ValidateUserLogin] 'EMP403','password'
+ALTER PROCEDURE [Onwards].[sp_ValidateUserLogin]
     @EmployeeCode NVARCHAR(50),
     @Password NVARCHAR(100)
 AS
 BEGIN
     SELECT U.EmployeeCode,U.FullName, U.Email, R.RoleName FROM Onwards.Users as U
-	INNER JOIN Onwards.BasicDetails as BD ON U.id= BD.Userid
+	LEFT JOIN Onwards.BasicUserDetails as BD ON U.id= BD.Userid
+	LEFT JOIN Onwards.Roles as R on U.RoleId = R.Id 
+			  AND BD.Isactive = 1 and R.isActive =1
+	WHERE U.Isactive = 1 
+    AND EmployeeCode = @EmployeeCode AND Password = @Password;
+END;
+
+-- exec [Onwards].[GetUserShiftDetails] 1
+-- exec [Onwards].[GetUserShiftDetails] 2
+ALTER PROCEDURE [Onwards].[GetUserShiftDetails]
+    @UserId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        U.FullName,
+        S.ShiftName,
+        S.StartTime,
+		CASE 
+			WHEN StartTime IS NULL 
+				THEN FORMAT(GETDATE(), 'hh:mm tt')   
+			 ELSE FORMAT(CAST(CAST(S.StartTime AS datetime) AS datetime), 'hh:mm tt') 
+		END AS ShiftStartTime,
+		CASE 
+			WHEN S.EndTime IS NULL 
+				THEN FORMAT(GETDATE(), 'hh:mm tt')   
+			 ELSE FORMAT(CAST(CAST(S.EndTime AS datetime) AS datetime), 'hh:mm tt') 
+		END AS EndTime,  
+		CASE 
+			WHEN USL.LoginTime IS NULL 
+				THEN FORMAT(GETDATE(), 'hh:mm tt')   
+			 ELSE FORMAT(CAST(CAST(USL.LoginTime AS datetime) AS datetime), 'hh:mm tt') 
+		END AS LoginTime,
+		CASE 
+			WHEN USL.LogOutTime IS NULL 
+				THEN NULL  
+			 ELSE FORMAT(CAST(CAST(USL.LogOutTime AS datetime) AS datetime), 'hh:mm tt') 
+		END AS LogOutTime,
+        GETDATE() AS TodayDate,
+        CONVERT(VARCHAR(8), GETDATE(), 108) AS CurrentTime,
+		0 AS TotalLoggedInHours
+    FROM Onwards.Users AS U
+    LEFT JOIN Onwards.UserShiftAssignment AS USA ON U.Id = USA.UserId
+    LEFT JOIN Onwards.Shift AS S ON USA.ShiftId = S.ShiftId
+    LEFT JOIN Onwards.UserShiftLog AS USL ON U.Id = USL.UserId
+			  AND DAY(Date) = DAY(GETDATE()) AND MONTH(Date) = Month(GETDATE()) AND MONTH(Date) = Month(GETDATE())
+    WHERE U.Id = @UserId
+	
+END;
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ALTER PROCEDURE [Onwards].[sp_ValidateUserLogin]
+    @EmployeeCode NVARCHAR(50),
+    @Password NVARCHAR(100)
+AS
+BEGIN
+    SELECT U.EmployeeCode,U.FullName, U.Email, R.RoleName FROM Onwards.Users as U
+	INNER JOIN Onwards.BasicUserDetails as BD ON U.id= BD.Userid
 	INNER JOIN Onwards.Roles as R on U.RoleId = R.Id 
 	WHERE U.Isactive = 1 AND BD.Isactive = 1 and R.isActive =1
     AND EmployeeCode = @EmployeeCode AND Password = @Password;
