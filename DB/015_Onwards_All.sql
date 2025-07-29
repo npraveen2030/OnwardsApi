@@ -1,5 +1,65 @@
 
 ------------------------------------------ 29 July 2025 ------------------------------------------------ 
+ 
+--exec [Onwards].[InsertOrUpdateUserShiftDetails] 11,NULL
+ALTER PROCEDURE [Onwards].[InsertOrUpdateUserShiftDetails]
+    @UserId INT, 
+    @ResultLogId INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+	DECLARE @ShiftId INT= 0, @LogId INT = 0
+
+	-- Try to get the latest assigned ShiftId for the user (if exists)
+    SELECT TOP 1 @ShiftId = ShiftId
+    FROM Onwards.UserShiftAssignment
+    WHERE UserId = @UserId
+    ORDER BY CreatedDate DESC;
+	 
+	-- If no shift found, raise an error or skip insert
+    IF (@ShiftId IS NULL OR @ShiftId = 0)
+    BEGIN
+        RAISERROR('No ShiftId found for the given UserId.', 16, 1);
+        RETURN;
+    END
+
+
+	SELECT TOP 1 @LogId= Logid from [Onwards].[UserShiftLog]
+	WHERE UserId = @UserId 
+    AND CAST(CreatedDate AS DATE) = CAST(GETDATE() AS DATE)
+
+    IF (@LogId = 0 OR @LogId IS NULL)
+    BEGIN
+        INSERT INTO [Onwards].[UserShiftLog]
+        (
+            UserId,
+            ShiftId,
+            LoginTime,
+            [Date]
+        )
+        VALUES
+        (
+            @UserId,
+            @ShiftId,
+            CAST(GETDATE() AS TIME),
+            GETDATE()
+        );
+
+        SET @ResultLogId = SCOPE_IDENTITY();  -- Return new LogId
+    END
+    ELSE
+    BEGIN
+        UPDATE [Onwards].[UserShiftLog]
+        SET
+            UserId = @UserId,
+            ShiftId = @ShiftId,  
+            LogOutTime = CAST(GETDATE() AS TIME)
+        WHERE LogId = @LogId;
+
+        SET @ResultLogId = @LogId; -- Return updated LogId
+    END
+END
 
 -- exec [Onwards].[sp_ValidateUserLogin] 'EMP403','password'
 ALTER PROCEDURE [Onwards].[sp_ValidateUserLogin]
