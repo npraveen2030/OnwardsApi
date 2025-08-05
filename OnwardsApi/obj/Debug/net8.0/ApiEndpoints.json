@@ -22,6 +22,22 @@
   },
   {
     "ContainingType": "OnwardsApi.Controllers.AuthController",
+    "Method": "LogOut",
+    "RelativePath": "api/Auth/logout",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.AuthController",
     "Method": "ValidateLogin",
     "RelativePath": "api/Auth/ValidateLogin",
     "HttpMethod": "POST",
@@ -781,7 +797,7 @@
   {
     "ContainingType": "OnwardsApi.Controllers.UserShiftDetailsController",
     "Method": "InsertOrUpdate",
-    "RelativePath": "api/UserShiftDetails/InsertOrUpdate",
+    "RelativePath": "api/UserShiftDetails/InsertOrUpdate/{userId}",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -789,7 +805,7 @@
       {
         "Name": "userId",
         "Type": "System.Int32",
-        "IsRequired": false
+        "IsRequired": true
       },
       {
         "Name": "api-version",

@@ -17,10 +17,11 @@ namespace OnwardsBLL.Service
         {
             return _userRepository.ValidateUser(employeeCode, password);
         }
-        public UserLoginDto ValidateLogin(string employeeCode, string password)
+        public async Task<(bool, UserLoginDto)> ValidateLogin(string employeeCode, string password)
         {
-            return _userRepository.ValidateLogin(employeeCode, password);
+            return await _userRepository.ValidateLogin(employeeCode, password);
         }
 
     }
 }
+

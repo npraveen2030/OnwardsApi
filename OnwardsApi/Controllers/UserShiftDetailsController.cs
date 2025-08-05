@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OnwardsBLL.Interface;
@@ -21,7 +22,9 @@ namespace OnwardsApi.Controllers
     /// </summary>
     /// <param name="userId">User ID</param>
     /// <returns>200 OK with LogId or 400 BadRequest with error</returns>
-    [HttpPost("InsertOrUpdate")]
+    [IgnoreAntiforgeryToken]
+    [Authorize]
+    [HttpPost("InsertOrUpdate/{userId}")]
     [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
     public IActionResult InsertOrUpdate(int userId)
@@ -42,6 +45,7 @@ namespace OnwardsApi.Controllers
     /// </summary>
     /// <param name="userId">The user ID.</param>
     /// <returns>User shift details for today.</returns>
+    [Authorize]
     [HttpGet("GetByUserId/{userId}")]
     [ProducesResponseType(typeof(UserShiftLogDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

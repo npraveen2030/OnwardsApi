@@ -11,7 +11,7 @@
             <param name="request">LoginRequest containing EmployeeCode and Password</param>
             <returns>200 OK or 401 Unauthorized</returns>
         </member>
-        <member name="M:OnwardsApi.Controllers.AuthController.ValidateLogin(OnwardsModel.Dtos.LoginRequestDto)">
+        <member name="M:OnwardsApi.Controllers.AuthController.ValidateLogin(OnwardsModel.Dtos.LoginRequestDto,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
             User login API to validate Employee credentials.
             </summary>

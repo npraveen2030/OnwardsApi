@@ -1,4 +1,153 @@
 
+------------------------------------------ 5 August 2025 ------------------------------------------------ 
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER PROCEDURE [Onwards].[InsertOrUpdateUserDetails]
+	@Id INT = NULL,
+    @LoginId INT,
+	@Password NVARCHAR(100),
+	@FullName NVARCHAR(100),
+	@Email NVARCHAR(100),
+	@Mobile NVARCHAR(20),
+	@DOJ DATETIME,
+    @DOR DATETIME = NULL,
+    @RoleId INT,
+    @GradeId INT,
+    @DepartmentId INT,
+    @ReportingManagerId INT,
+    @AdministrativeManagerId INT,
+	@ShiftId INT,
+	@Return NVARCHAR(100) OUTPUT
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SET XACT_ABORT ON;
+
+	BEGIN TRY
+        BEGIN TRANSACTION;
+
+		DECLARE @IsExist INT;
+		DECLARE @NewId INT;
+
+		SELECT @IsExist = Id
+		FROM Onwards.Users
+		WHERE Email = @Email
+
+		IF (@IsExist IS NULL)
+		BEGIN
+				INSERT INTO Onwards.Users (
+				EmployeeCode,
+				Password,
+				FullName,
+				Email,
+				Mobile,
+				DOJ,
+				DOR,
+				RoleId,
+				GradeId,
+				DepartmentId,
+				ReportingManagerId,
+				AdministrativeManagerId,
+				CreatedDate,
+				CreatedBy,
+				ModifiedDate,
+				ModifiedBy,
+				IsActive
+				)
+				VALUES
+				(
+						'EMP',
+						@Password,
+						@FullName,
+						@Email,
+						@Mobile,
+						@DOJ,
+						@DOR,
+						@RoleId,
+						@GradeId,
+						@DepartmentId,
+						@ReportingManagerId,
+						@AdministrativeManagerId,
+						GETDATE(),     
+						@LoginId,      
+						NULL,         
+						NULL,          
+						1           
+					);
+
+				SET @NewId = SCOPE_IDENTITY(); 
+
+				SET @Return = 'EMP' + CAST(@NewId AS NVARCHAR(100));
+
+				UPDATE Onwards.Users 
+				SET EmployeeCode = @Return
+				WHERE Id = @NewId;
+
+				INSERT INTO Onwards.UserShiftAssignment ([UserId],[ShiftId],[CreatedBy],[CreatedDate],[IsActive])
+				VALUES (@NewId,@ShiftId,@LoginId,GETDATE(),1);
+
+				INSERT INTO Onwards.LeaveBalances(UserId,LeaveTypeId,Year,RemainingDays,CreatedDate,CreatedBy)
+				SELECT @NewId,Id,0,0,GETDATE(),@LoginId
+				FROM Onwards.LeaveTypes 
+
+			END
+			ELSE
+			BEGIN
+				UPDATE Onwards.Users
+				SET 
+					Password = @Password,
+					FullName = @FullName,
+					Email = @Email,
+					Mobile = @Mobile,
+					DOJ = @DOJ,
+					DOR = @DOR,
+					RoleId = @RoleId,
+					GradeId = @GradeId,
+					DepartmentId = @DepartmentId,
+					ReportingManagerId = @ReportingManagerId,
+					AdministrativeManagerId = @AdministrativeManagerId,
+					ModifiedDate = GETDATE(),
+					ModifiedBy = @LoginId
+				WHERE Id = @IsExist;
+
+				SELECT @Return=EmployeeCode 
+				FROM Onwards.Users
+				WHERE Id = @IsExist
+			END
+	COMMIT TRANSACTION;
+	END TRY
+    BEGIN CATCH
+        IF XACT_STATE() <> 0
+            ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END
+
+------------------------------------------ 31 July 2025 ------------------------------------------------ 
+
+ALTER PROCEDURE [Onwards].[sp_ValidateUserLogin]
+    @EmployeeCode NVARCHAR(50),
+    @Password NVARCHAR(100)
+AS
+BEGIN
+    SELECT U.EmployeeCode,U.FullName, U.Email, R.RoleName, U.Mobile , RM.EmployeeCode AS ReportingManagerEmpCode
+	, RM.FullName AS ReportingManagerFullName, U.Id
+	FROM Onwards.Users as U
+	LEFT JOIN Onwards.BasicUserDetails as BD ON U.id= BD.Userid AND BD.Isactive = 1 
+	LEFT JOIN Onwards.Roles as R on U.RoleId = R.Id  and R.isActive =1
+	INNER JOIN Onwards.Users as RM ON RM.Id = U.ReportingManagerId AND RM.Isactive = 1 
+	AND U.Isactive = 1 
+	
+	WHERE 
+      U.EmployeeCode = @EmployeeCode AND U.Password = @Password;
+END;
+
+
+
 ------------------------------------------ 29 July 2025 ------------------------------------------------ 
  
 --exec [Onwards].[InsertOrUpdateUserShiftDetails] 11,NULL

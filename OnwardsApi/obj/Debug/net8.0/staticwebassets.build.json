@@ -1,12 +1,1 @@
-{
-  "Version": 1,
-  "Hash": "HBBGkrdZDN9HUducDjj8qsdIVypNcCo9OypxfeM7WhQ=",
-  "Source": "OnwardsApi",
-  "BasePath": "_content/OnwardsApi",
-  "Mode": "Default",
-  "ManifestType": "Build",
-  "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": [],
-  "Endpoints": []
-}
+{"Version":1,"Hash":"HBBGkrdZDN9HUducDjj8qsdIVypNcCo9OypxfeM7WhQ=","Source":"OnwardsApi","BasePath":"_content/OnwardsApi","Mode":"Default","ManifestType":"Build","ReferencedProjectsConfiguration":[],"DiscoveryPatterns":[],"Assets":[],"Endpoints":[]}

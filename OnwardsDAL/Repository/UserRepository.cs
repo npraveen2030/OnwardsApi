@@ -1,5 +1,5 @@
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using OnwardsDAL.Interface;
 using OnwardsModel.Dtos; // ✅ required namespace
@@ -42,47 +42,56 @@ namespace OnwardsDAL.Repository
             }
         }
 
-        public UserLoginDto ValidateLogin(string employeeCode, string password)
+        public async Task<(bool, UserLoginDto)> ValidateLogin(string employeeCode, string password)
         {
-            var UserDetailsDto = new UserLoginDto();
             try
             {
-                var connectionString = _config.GetConnectionString("DefaultConnection");
+                UserLoginDto userDetailsDto = new();
 
-                using var connection = new SqlConnection(connectionString);
-                connection.Open();
+                var connectionString = _config.GetConnectionString("DefaultConnection");
+                await using var connection = new SqlConnection(connectionString);
+                await connection.OpenAsync();
 
                 using var command = new SqlCommand("Onwards.sp_ValidateUserLogin", connection)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
 
-                command.Parameters.AddWithValue("@EmployeeCode", employeeCode);
-                command.Parameters.AddWithValue("@Password", password);
+                command.Parameters.Add("@EmployeeCode", SqlDbType.NVarChar, 50).Value = employeeCode;
+                command.Parameters.Add("@Password", SqlDbType.NVarChar, 100).Value = password;
 
-                //int result = (int)command.ExecuteScalar();
-                //return result > 0;
+                await using var reader = await command.ExecuteReaderAsync(CommandBehavior.SingleRow);
 
-                using (SqlDataReader reader = command.ExecuteReader())
+                if (!await reader.ReadAsync())
                 {
-                    while (reader.Read())
-                    {
-                        UserDetailsDto.EmployeeCode = reader["EmployeeCode"].ToString();
-                        UserDetailsDto.FullName = reader["FullName"].ToString();
-                        UserDetailsDto.Email = reader["Email"].ToString();
-                        UserDetailsDto.RoleName = reader["RoleName"].ToString();
-                    }
+                    return (false, userDetailsDto); 
                 }
-                
-            }
-            catch (SqlException ex)
-            {
-                // Rethrow to the controller or log it
-                throw new ApplicationException(ex.Message);
-            }
-            return UserDetailsDto;
-        }
 
+                int iId = reader.GetOrdinal("Id");
+                int iEmpCode = reader.GetOrdinal("EmployeeCode");
+                int iFullName = reader.GetOrdinal("FullName");
+                int iEmail = reader.GetOrdinal("Email");
+                int iRoleName = reader.GetOrdinal("RoleName");
+                int iMobile = reader.GetOrdinal("Mobile");
+                int iManagerCode = reader.GetOrdinal("ReportingManagerEmpCode");
+                int iManagerName = reader.GetOrdinal("ReportingManagerFullName");
+
+                userDetailsDto.Id = reader.IsDBNull(iId) ? 0 : reader.GetInt32(iId);
+                userDetailsDto.EmployeeCode = reader.IsDBNull(iEmpCode) ? "" : reader.GetString(iEmpCode);
+                userDetailsDto.FullName = reader.IsDBNull(iFullName) ? "" : reader.GetString(iFullName);
+                userDetailsDto.Email = reader.IsDBNull(iEmail) ? "" : reader.GetString(iEmail);
+                userDetailsDto.RoleName = reader.IsDBNull(iRoleName) ? "" : reader.GetString(iRoleName);
+                userDetailsDto.MobileNo = reader.IsDBNull(iMobile) ? "" : reader.GetString(iMobile);
+                userDetailsDto.ReportingManagerEmpCode = reader.IsDBNull(iManagerCode) ? "" : reader.GetString(iManagerCode);
+                userDetailsDto.ReportingManagerName = reader.IsDBNull(iManagerName) ? "" : reader.GetString(iManagerName);
+
+                return (true, userDetailsDto);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Error validating login: {ex.Message}", ex);
+            }
+        }
 
     }
 }
