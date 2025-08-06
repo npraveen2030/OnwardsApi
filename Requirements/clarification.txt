@@ -5,18 +5,34 @@
 		if there is record in UserLog table then make IsActive = 0 ELSE insert the records with IsActive = 0
 
 -------------------------------- discussed points------------------------
+
+* Leave Screen
+     6Aug25 : Current Date is 10Aug and User Applyed Leave from 1 to 5 ( monday to Friday),
+              if user connect on wednesday (3rd Aug) then he need to cancel leave from 1 to 5 then reApply leave from 1 to 2 Aug	
+		Table to Update : UserLog  
+
+     6Aug25 : User can cancel the leave from current date - 30 days
+
+     6Aug25 : WHen user apply for Attendance Regulation, then
+	       in UserLog table , make LogIn= 9AM, LogOut=6Pm and Isactive = 1  
+
+     6Aug25 : When user apply leave 
+		if there is record in UserLog table then make IsActive = 0 ELSE insert the records with IsActive = 0
+
+     6Aug25 : Upon applying a leave we need to check wether is leave is already applied for those dates.( in Stored Procedure)
+
+     6Aug25 : we should not include weekends and holidays(Based on user location) as leaves.
+
 * 6Aug25 : Create Services in DB, will will run early morning 6AM
 	   User/Employee who not logged in Yesterday will mark as Absent
 		Condition check
 			* SHould not be Holiday
 			* Should not be weekend
 			* Should not be Leave 
-* 6Aug25 : User can cancel the leave from current date - 30 days
-* 6Aug25 : WHen user apply for Attendance Regulation, then
-	    in UserLog table , make LogIn= 9AM, LogOut=6Pm and Isactive = 1  
-* 6Aug25 : When user apply leave 
-		if there is record in UserLog table then make IsActive = 0 ELSE insert the records with IsActive = 0
-* 6Aug25 : Upon applying a leave we need to check wether is leave is already applied for those dates.( in Stored Procedure) 
-* 6Aug25 : we should not include weekends and holidays(Based on user location) as leaves.
+* 6Aug25 :  
+* 6Aug25 :  
+* 6Aug25 :  
+* 6Aug25 :   
+* 6Aug25 :  
 
 
