@@ -1,0 +1,8 @@
+
+--------------------------------------Clarification--------------------------------
+1.(6 august 2025) (pg: 29) what is the use of Time based in attendance regularization?
+
+
+-------------------------------- discussed points------------------------
+2.(6 august 2025) Upon applying a leave we need to check wether is leave is already applied for those dates.
+3.(6 august 2025) we should not include weekends and holidays(Based on user location) as leaves.
