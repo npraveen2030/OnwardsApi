@@ -2,6 +2,90 @@
 ALTER TABLE Onwards.UserLeaveApplied
 ADD Action NVARCHAR(300) NULL
 
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER PROCEDURE [Onwards].[InsertOrUpdateUserLeaveApplied]
+	@Id INT = NULL,
+	@LoginId INT= NULL,
+	@UserId INT= NULL,
+	@LeaveTypeId INT= NULL,
+	@Year INT= NULL,
+	@StartDate DATETIME= NULL,
+	@EndDate DATETIME= NULL,
+	@Reason VARCHAR(300)= NULL,
+	@Action NVARCHAR(300) = NULL,
+	@LeaveStatusId INT= NULL
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SET XACT_ABORT ON;
+
+	BEGIN TRY
+	BEGIN TRANSACTION;
+		
+		IF (@Id IS NOT NULL)
+		BEGIN
+			Insert Onwards.UserLeaveApplied ([UserId]
+					  ,[LeaveTypeId]
+					  ,[Year]
+					  ,[StartDate]
+					  ,[EndDate]
+					  ,[Reason]
+					  ,[Action]
+					  ,[LeaveStatusId]
+					  ,[CreatedDate]
+					  ,[CreatedBy]
+					  ,[ModefiedDate]
+					  ,[ModifiedBy]
+					  ,[IsActive])
+				VALUES
+						(@UserId,
+						@LeaveTypeId,
+						@Year,
+						@StartDate,
+						@EndDate,
+						@Reason,
+						@Action,
+						@LeaveStatusId,
+						GETDATE(),
+						@LoginId,
+						NULL,
+						NULL,
+						1);
+
+				UPDATE Onwards.LeaveBalances
+				SET RemainingDays = RemainingDays - (DATEDIFF(DAY, @StartDate, @EndDate) + 1)
+				WHERE UserId = @UserId AND LeaveTypeId = @LeaveTypeId
+		END
+		ELSE 
+		BEGIN 
+			UPDATE Onwards.UserLeaveApplied
+			SET ModifiedBy = @LoginId,ModefiedDate = GETDATE(),LeaveStatusId = @LeaveStatusId, Action = @Action
+			WHERE Id = @Id
+			-- 3: Rejected , 4: Cancelled
+			IF (@LeaveStatusId IN (3,4))
+			BEGIN
+				UPDATE Onwards.LeaveBalances
+				SET RemainingDays = RemainingDays + (DATEDIFF(DAY, @StartDate, @EndDate) + 1)
+				WHERE UserId = @UserId AND LeaveTypeId = @LeaveStatusId
+			END
+		END
+	COMMIT TRANSACTION;
+	END TRY
+	BEGIN CATCH
+        IF XACT_STATE() <> 0
+            ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END
+
+
+
 ------------------------------------------ 6 August 2025 ------------------------------------------------ 
 ALTER TABLE [Onwards].[UserLeaveApplied]
 ADD NoOfDays DECIMAL(9, 2) NOT NULL DEFAULT 0;
