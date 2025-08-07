@@ -1,5 +1,9 @@
 
 --------------------------------------Clarification--------------------------------
+* 7Aug25 : (pg: 23) what does multiple events in title of calender control?
+* 7Aug25 : WHen user apply for Attendance Regulation, then
+	       in UserLog table , make LogIn= 9AM, LogOut=6Pm and Isactive = 1 
+		should we consider based on shift timings or hardcode these values?
 * 6Aug25 : (pg: 29) what is the use of Time based in attendance regularization?
 * 6Aug25 : When user apply leave 
 		if there is record in UserLog table then make IsActive = 0 ELSE insert the records with IsActive = 0
@@ -17,13 +21,13 @@
 	       in UserLog table , make LogIn= 9AM, LogOut=6Pm and Isactive = 1  
 
      6Aug25 : When user apply leave 
-		if there is record in UserLog table then make IsActive = 0 ELSE insert the records with IsActive = 0
+		if there is record in UserLog table then make IsActive = 0 
 
      6Aug25 : Upon applying a leave we need to check wether is leave is already applied for those dates.( in Stored Procedure)
 
      6Aug25 : we should not include weekends and holidays(Based on user location) as leaves.
 
-* 6Aug25 : Create Services in DB, will will run early morning 6AM
+* 6Aug25 : Create Services in DB, will run early morning 6AM
 	   User/Employee who not logged in Yesterday will mark as Absent
 		Condition check
 			* SHould not be Holiday

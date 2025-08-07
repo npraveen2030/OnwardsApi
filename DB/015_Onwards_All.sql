@@ -1,3 +1,209 @@
+------------------------------------------ 7 August 2025 ------------------------------------------------ 
+ALTER TABLE Onwards.UserLeaveApplied
+ADD Action NVARCHAR(300) NULL
+
+------------------------------------------ 6 August 2025 ------------------------------------------------ 
+ALTER TABLE [Onwards].[UserLeaveApplied]
+ADD NoOfDays DECIMAL(9, 2) NOT NULL DEFAULT 0;
+
+UPDATE Onwards.LeaveStatus
+SET Name = 'Requested'
+WHERE Id = 1
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [Onwards].[InsertOrUpdateUserShiftDetails]
+    @UserId INT, 
+    @ResultLogId INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+	DECLARE @ShiftId INT= 0, @LogId INT = 0
+
+	-- Try to get the latest assigned ShiftId for the user (if exists)
+    SELECT TOP 1 @ShiftId = ShiftId
+    FROM Onwards.UserShiftAssignment
+    WHERE UserId = @UserId
+    ORDER BY CreatedDate DESC;
+	 
+	-- If no shift found, raise an error or skip insert
+    IF (@ShiftId IS NULL OR @ShiftId = 0)
+    BEGIN
+        RAISERROR('No ShiftId found for the given UserId.', 16, 1);
+        RETURN;
+    END
+
+
+	SELECT TOP 1 @LogId= Logid from [Onwards].[UserShiftLog]
+	WHERE UserId = @UserId 
+    AND CAST(CreatedDate AS DATE) = CAST(GETDATE() AS DATE)
+
+    IF (@LogId = 0 OR @LogId IS NULL)
+    BEGIN
+        INSERT INTO [Onwards].[UserShiftLog]
+        (
+            UserId,
+            ShiftId,
+            LoginTime,
+            [Date]
+        )
+        VALUES
+        (
+            @UserId,
+            @ShiftId,
+            CAST(GETDATE() AS TIME),
+            GETDATE()
+        );
+
+        SET @ResultLogId = SCOPE_IDENTITY();  -- Return new LogId
+    END
+    ELSE
+    BEGIN
+        UPDATE [Onwards].[UserShiftLog]
+        SET
+            UserId = @UserId,
+            ShiftId = @ShiftId,  
+            LogOutTime = CAST(GETDATE() AS TIME),
+			ModifiedBy = @LogId,
+			ModifiedDate = GETDATE()
+        WHERE LogId = @LogId;
+
+        SET @ResultLogId = @LogId; -- Return updated LogId
+    END
+END
+
+/****** Object:  StoredProcedure [Onwards].[InsertOrUpdateUserDetails]    Script Date: 06-08-2025 19:10:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER PROCEDURE [Onwards].[InsertOrUpdateUserDetails]
+	@Id INT = NULL,
+    @LoginId INT,
+	@Password NVARCHAR(100),
+	@FullName NVARCHAR(100),
+	@Email NVARCHAR(100),
+	@Mobile NVARCHAR(20),
+	@DOJ DATETIME,
+    @DOR DATETIME = NULL,
+    @RoleId INT,
+    @GradeId INT,
+    @DepartmentId INT,
+    @ReportingManagerId INT,
+    @AdministrativeManagerId INT,
+	@ShiftId INT,
+	@Return NVARCHAR(100) OUTPUT
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SET XACT_ABORT ON;
+
+	BEGIN TRY
+        BEGIN TRANSACTION;
+
+		DECLARE @IsExist INT;
+		DECLARE @NewId INT;
+
+		SELECT @IsExist = Id
+		FROM Onwards.Users
+		WHERE Email = @Email
+
+		IF (@IsExist IS NULL)
+		BEGIN
+				INSERT INTO Onwards.Users (
+				EmployeeCode,
+				Password,
+				FullName,
+				Email,
+				Mobile,
+				DOJ,
+				DOR,
+				RoleId,
+				GradeId,
+				DepartmentId,
+				ReportingManagerId,
+				AdministrativeManagerId,
+				CreatedDate,
+				CreatedBy,
+				ModifiedDate,
+				ModifiedBy,
+				IsActive
+				)
+				VALUES
+				(
+						'EMP',
+						@Password,
+						@FullName,
+						@Email,
+						@Mobile,
+						@DOJ,
+						@DOR,
+						@RoleId,
+						@GradeId,
+						@DepartmentId,
+						@ReportingManagerId,
+						@AdministrativeManagerId,
+						GETDATE(),     
+						@LoginId,      
+						NULL,         
+						NULL,          
+						1           
+					);
+
+				SET @NewId = SCOPE_IDENTITY(); 
+
+				SET @Return = 'EMP' + CAST(@NewId AS NVARCHAR(100));
+
+				UPDATE Onwards.Users 
+				SET EmployeeCode = @Return
+				WHERE Id = @NewId;
+
+				INSERT INTO Onwards.UserShiftAssignment ([UserId],[ShiftId],[CreatedBy],[CreatedDate],[IsActive])
+				VALUES (@NewId,@ShiftId,@LoginId,GETDATE(),1);
+
+				INSERT INTO Onwards.LeaveBalances(UserId,LeaveTypeId,Year,RemainingDays,CreatedDate,CreatedBy)
+				SELECT @NewId,Id,0,0,GETDATE(),@LoginId
+				FROM Onwards.LeaveTypes 
+
+			END
+			ELSE
+			BEGIN
+				UPDATE Onwards.Users
+				SET 
+					Password = @Password,
+					FullName = @FullName,
+					Email = @Email,
+					Mobile = @Mobile,
+					DOJ = @DOJ,
+					DOR = @DOR,
+					RoleId = @RoleId,
+					GradeId = @GradeId,
+					DepartmentId = @DepartmentId,
+					ReportingManagerId = @ReportingManagerId,
+					AdministrativeManagerId = @AdministrativeManagerId,
+					ModifiedDate = GETDATE(),
+					ModifiedBy = @LoginId
+				WHERE Id = @IsExist;
+
+				SELECT @Return=EmployeeCode 
+				FROM Onwards.Users
+				WHERE Id = @IsExist
+			END
+	COMMIT TRANSACTION;
+	END TRY
+    BEGIN CATCH
+        IF XACT_STATE() <> 0
+            ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END
+
 
 ------------------------------------------ 5 August 2025 ------------------------------------------------ 
 SET ANSI_NULLS ON
