@@ -1,14 +1,30 @@
 ------------------------------------------ 7 August 2025 ------------------------------------------------ 
-ALTER TABLE Onwards.UserLeaveApplied
-ADD Action NVARCHAR(300) NULL
-
+--ALTER TABLE Onwards.UserLeaveApplied
+--ADD Action NVARCHAR(300) NULL
+ALTER PROCEDURE [Onwards].[sp_ValidateUserLogin]
+    @EmployeeCode NVARCHAR(50),
+    @Password NVARCHAR(100)
+AS
+BEGIN
+    SELECT U.EmployeeCode,U.FullName, U.Email, R.RoleName, U.Mobile , RM.EmployeeCode AS ReportingManagerEmpCode
+	, RM.FullName AS ReportingManagerFullName, U.Id
+	FROM Onwards.Users as U
+	LEFT JOIN Onwards.BasicUserDetails as BD ON U.id= BD.Userid AND BD.Isactive = 1 
+	LEFT JOIN Onwards.Roles as R on U.RoleId = R.Id  and R.isActive =1
+	INNER JOIN Onwards.Users as RM ON RM.Id = U.ReportingManagerId AND RM.Isactive = 1 
+	AND U.Isactive = 1 
+	
+	WHERE 
+      U.EmployeeCode = @EmployeeCode AND U.Password = @Password;
+END;
+GO
 
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-ALTER PROCEDURE [Onwards].[InsertOrUpdateUserLeaveApplied]
+CREATE PROCEDURE [Onwards].[InsertOrUpdateUserLeaveApplied]
 	@Id INT = NULL,
 	@LoginId INT= NULL,
 	@UserId INT= NULL,
@@ -87,8 +103,50 @@ END
 
 
 ------------------------------------------ 6 August 2025 ------------------------------------------------ 
-ALTER TABLE [Onwards].[UserLeaveApplied]
-ADD NoOfDays DECIMAL(9, 2) NOT NULL DEFAULT 0;
+--ALTER TABLE [Onwards].[UserLeaveApplied]
+--ADD NoOfDays DECIMAL(9, 2) NOT NULL DEFAULT 0;
+
+CREATE TABLE [Onwards].[UserLeaveApplied](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[UserId] [int] NOT NULL,
+	[LeaveTypeId] [int] NOT NULL,
+	[Year] [int] NOT NULL,
+	[NoOfDays] [decimal](9, 2) NOT NULL,
+	[StartDate] [datetime] NOT NULL,
+	[EndDate] [datetime] NOT NULL,
+	[Reason] [varchar](300) NULL,
+	[Action] [nvarchar](300) NULL,
+	[LeaveStatusId] [int] NOT NULL,
+	[CreatedDate] [datetime] NULL,
+	[CreatedBy] [int] NULL,
+	[ModefiedDate] [datetime] NULL,
+	[ModifiedBy] [int] NULL,
+	[IsActive] [bit] NOT NULL,
+	[FileName] [nvarchar](255) NULL,
+	[ContentType] [nvarchar](100) NULL,
+	[Data] [varbinary](max) NULL,
+ CONSTRAINT [PK_UserLeav_3214EC0755827368] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [Onwards].[UserLeaveApplied] ADD  CONSTRAINT [DF_UserLeaveNoOfD_2E90DD8E]  DEFAULT ((0)) FOR [NoOfDays]
+GO
+
+ALTER TABLE [Onwards].[UserLeaveApplied]  WITH CHECK ADD  CONSTRAINT [FK_UserLeaveLeave_216BEC9A] FOREIGN KEY([LeaveTypeId])
+REFERENCES [Onwards].[LeaveTypes] ([Id])
+GO
+
+ALTER TABLE [Onwards].[UserLeaveApplied] CHECK CONSTRAINT [FK_UserLeaveLeave_216BEC9A]
+GO
+
+ALTER TABLE [Onwards].[UserLeaveApplied]  WITH CHECK ADD  CONSTRAINT [FK_UserLeaveUserI_2077C861] FOREIGN KEY([UserId])
+REFERENCES [Onwards].[Users] ([Id])
+GO
+
+ALTER TABLE [Onwards].[UserLeaveApplied] CHECK CONSTRAINT [FK_UserLeaveUserI_2077C861]
 
 UPDATE Onwards.LeaveStatus
 SET Name = 'Requested'
@@ -160,13 +218,23 @@ BEGIN
     END
 END
 
+--ALTER TABLE [Onwards].[UserLeaveApplied]
+--ADD NoOfDays DECIMAL(9, 2) NOT NULL DEFAULT 0;
+
+
+ALTER TABLE [Onwards].[LeaveBalances]
+ADD CreatedDate DATETIME NOT NULL DEFAULT NULL;
+
+ALTER TABLE [Onwards].[LeaveBalances]
+ADD CreatedBy INT NOT NULL DEFAULT NULL;
+
 /****** Object:  StoredProcedure [Onwards].[InsertOrUpdateUserDetails]    Script Date: 06-08-2025 19:10:42 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-ALTER PROCEDURE [Onwards].[InsertOrUpdateUserDetails]
+CREATE PROCEDURE [Onwards].[InsertOrUpdateUserDetails]
 	@Id INT = NULL,
     @LoginId INT,
 	@Password NVARCHAR(100),
