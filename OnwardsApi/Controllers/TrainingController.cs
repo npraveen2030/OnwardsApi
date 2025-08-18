@@ -22,7 +22,7 @@ namespace OnwardsApi.Controllers
     /// </summary>
     /// <param name="locationId">The ID of the location.</param>
     /// <returns>List of trainings.</returns> 
-    [HttpGet("location/{locationId}")]
+    [HttpGet("GetTrainingDetailsByLocationId/{locationId}")]
     public IActionResult GetByLocation(int locationId)
     {
       try

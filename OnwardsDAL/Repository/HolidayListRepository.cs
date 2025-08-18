@@ -96,7 +96,9 @@ namespace OnwardsDAL.Repository
                     Id = Convert.ToInt32(reader["Id"]),
                     HolidayName = reader["HolidayName"].ToString(),
                     HolidayDate = Convert.ToDateTime(reader["HolidayDate"]),
-                    LocationId = Convert.ToInt32(reader["LocationId"])
+                    //LocationId = Convert.ToInt32(reader["LocationId"]),
+                    Day = reader["day"].ToString(),
+                    Location = reader["Location"].ToString(),
                 });
             }
             return list;

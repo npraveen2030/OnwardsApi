@@ -28,7 +28,8 @@ namespace OnwardsDAL.Repository
       cmd.Parameters.AddWithValue("@Name", model.Name);
       cmd.Parameters.AddWithValue("@TrainingDate", model.TrainingDate);
       cmd.Parameters.AddWithValue("@LocationId", model.LocationId);
-      cmd.Parameters.AddWithValue("@CreatedBy", model.CreatedBy);
+      //TO DO
+      //cmd.Parameters.AddWithValue("@CreatedBy", model.CreatedBy);
 
       conn.Open();
       cmd.ExecuteNonQuery();
@@ -43,9 +44,10 @@ namespace OnwardsDAL.Repository
       cmd.Parameters.AddWithValue("@Name", model.Name);
       cmd.Parameters.AddWithValue("@TrainingDate", model.TrainingDate);
       cmd.Parameters.AddWithValue("@LocationId", model.LocationId);
-      cmd.Parameters.AddWithValue("@ModifiedBy", model.ModifiedBy);
+            ////TO DO
+            //cmd.Parameters.AddWithValue("@ModifiedBy", model.ModifiedBy);
 
-      conn.Open();
+            conn.Open();
       cmd.ExecuteNonQuery();
     }
 
@@ -74,11 +76,11 @@ namespace OnwardsDAL.Repository
       {
         trainings.Add(new TrainingDto
         {
-          Id = Convert.ToInt32(reader["Id"]),
+          //Id = Convert.ToInt32(reader["Id"]),
           Name = reader["Name"].ToString(),
-          TrainingDate = Convert.ToDateTime(reader["TrainingDate"]),
-          LocationId = Convert.ToInt32(reader["LocationId"]),
-          IsActive = Convert.ToBoolean(reader["IsActive"])
+          //TrainingDate = Convert.ToDateTime(reader["TrainingDate"]),
+          //LocationId = Convert.ToInt32(reader["LocationId"]),
+          //IsActive = Convert.ToBoolean(reader["IsActive"])
         });
       }
       return trainings;
