@@ -3,7 +3,7 @@
 
 
 Training
-	GetTrainingDetailsByLocationId
+	GetTrainingDetailsByLocationId		`${this.apiService}/HolidayList/GetHolidayByLocationId/${locationId}`
 
 HolidayList
-	GetHolidayListByLocationId
+	GetHolidayListByLocationId		`${this.apiService}/Training/GetTrainingDetailsByLocationId/${locationId}`,
