@@ -31,6 +31,27 @@ namespace OnwardsApi.Controllers
             }
         }
 
+        [HttpGet("GetByUserName")]
+        public async Task<ActionResult<IEnumerable<string>>> GetByUserName(
+            [FromQuery] string? first,
+            [FromQuery] string? second)
+        {
+            first = (first ?? string.Empty).Trim();
+            second = (second ?? string.Empty).Trim();
+
+            // If no terms provided, return empty (or you could return top N)
+            if (string.IsNullOrEmpty(first) && string.IsNullOrEmpty(second))
+                return Ok(Array.Empty<string>());
+
+            // Case-insensitive LIKE using lower() (portable across providers)
+            string f = first.ToLowerInvariant();
+            string s = second.ToLowerInvariant();
+
+            var results = await _userDetalilsService.GetUsersByNameAsync(f,s);
+
+            return Ok(results);
+        }
+
         // POST: api/UserDetails/insert
         [HttpPost("insert")]
         public async Task<IActionResult> InsertOrUpdateUserDetails(UserModel details)

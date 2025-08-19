@@ -1,6 +1,40 @@
+------------------------------------------ 18 August 2025 ------------------------------------------------ 
+CREATE PROCEDURE [Onwards].[GetUsersByName]
+	@First NVARCHAR(100) = NULL,
+    @Second NVARCHAR(100) = NULL
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SET XACT_ABORT ON;
+
+	BEGIN TRY
+        BEGIN TRANSACTION;
+			SELECT DISTINCT FullName
+			FROM Users
+			WHERE
+				(@First IS NOT NULL AND FullName LIKE '%' + @First + '%')
+				OR (@Second IS NOT NULL AND FullName LIKE '%' + @Second + '%')
+			ORDER BY FullName;
+		
+		COMMIT TRANSACTION;
+	END TRY
+    BEGIN CATCH
+        IF XACT_STATE() <> 0
+            ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END
+
+
+
 ------------------------------------------ 7 August 2025 ------------------------------------------------ 
+
 ALTER TABLE Onwards.UserLeaveApplied
-ADD Action NVARCHAR(300) NULL
+ADD Action NVARCHAR(300) NULL,
+ FileName NVARCHAR(255) NULL,
+ ContentType NVARCHAR(100),
+ Data VARBINARY(MAX)
 
 
 SET ANSI_NULLS ON
