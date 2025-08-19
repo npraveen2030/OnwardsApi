@@ -1,6 +1,9 @@
 
+
 --------------------------------------Clarification--------------------------------
+* 18Aug25 : (pg : 24) Multiple Users can have same name.
 * 7Aug25 : (pg: 23) what does multiple events in title of calender control?
+
 * 7Aug25 : WHen user apply for Attendance Regulation, then
 	       in UserLog table , make LogIn= 9AM, LogOut=6Pm and Isactive = 1 
 		should we consider based on shift timings or hardcode these values?
@@ -14,7 +17,8 @@
 -------------------------------- discussed points------------------------
 
 * Leave Screen
-	 7Aug2025 : Add 'Action' Column in table : UserLeaveApplyed [ in case if manager rejects the leave ]
+	7Aug2025 : in leave request popup for Employees to be notified impelement autocomplete search dropdown with space based OR condition
+	7Aug2025 : Add 'Action' Column in table : UserLeaveApplyed [ in case if manager rejects the leave ]
 	 
      6Aug25 : Current Date is 10Aug and User Applyed Leave from 1 to 5 ( monday to Friday),
               if user connect on wednesday (3rd Aug) then he need to cancel leave from 1 to 5 then reApply leave from 1 to 2 Aug	

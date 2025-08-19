@@ -70,6 +70,37 @@ namespace OnwardsDAL.Repository
             }
         }
 
+        public async Task<IList<string>> GetUsersByNameAsync(string? first, string? second)
+        {
+            try
+            {
+                var list = new List<string>();
+                await using var conn = GetConnection();
+                await conn.OpenAsync();
+
+                await using var cmd = new SqlCommand("Onwards.GetUsersByName", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                // handle null/empty parameters properly
+                cmd.Parameters.AddWithValue("@First", string.IsNullOrWhiteSpace(first) ? DBNull.Value : first);
+                cmd.Parameters.AddWithValue("@Second", string.IsNullOrWhiteSpace(second) ? DBNull.Value : second);
+
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    list.Add(reader["FullName"].ToString() ?? "");
+                }
+
+                return list;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error occurred while getting users by name.", ex);
+            }
+        }
+
         public async Task<string> InsertOrUpdateUserAsync(UserModel user)
         {
             try

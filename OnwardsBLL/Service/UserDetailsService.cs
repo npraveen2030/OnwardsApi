@@ -24,6 +24,11 @@ namespace OnwardsBLL.Service
         {
             return await _repo.GetAllUserDetailsAsync(filter, skip,take);
         }
+
+        public async Task<IList<string>> GetUsersByNameAsync(string? first, string? second)
+        {
+            return await _repo.GetUsersByNameAsync(first, second);
+        }
         public async Task<string> InsertOrUpdateUserAsync(UserModel user)
         {
             return await _repo.InsertOrUpdateUserAsync(user);
