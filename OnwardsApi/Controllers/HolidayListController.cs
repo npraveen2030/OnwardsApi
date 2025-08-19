@@ -171,7 +171,7 @@ namespace OnwardsApi.Controllers
             }
         }
 
-        [HttpGet("location/{locationId}")]
+        [HttpGet("GetHolidayByLocationId/{locationId}")]
         public async Task<IActionResult> GetHolidayByLocationId(int locationId)
         {
             try

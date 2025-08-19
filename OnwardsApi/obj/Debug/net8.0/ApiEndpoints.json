@@ -197,7 +197,7 @@
   {
     "ContainingType": "OnwardsApi.Controllers.HolidayListController",
     "Method": "GetHolidayByLocationId",
-    "RelativePath": "api/HolidayList/location/{locationId}",
+    "RelativePath": "api/HolidayList/GetHolidayByLocationId/{locationId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -621,7 +621,7 @@
   {
     "ContainingType": "OnwardsApi.Controllers.TrainingController",
     "Method": "GetByLocation",
-    "RelativePath": "api/Training/location/{locationId}",
+    "RelativePath": "api/Training/GetTrainingDetailsByLocationId/{locationId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

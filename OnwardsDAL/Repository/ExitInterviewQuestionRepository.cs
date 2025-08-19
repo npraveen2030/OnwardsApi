@@ -44,10 +44,10 @@ namespace OnwardsDAL.Repository
                         ExitInterviewId = reader.GetInt32(reader.GetOrdinal("ExitInterviewId")),
                         Question = reader.GetString(reader.GetOrdinal("Question")),
                         HasOptions = reader.GetBoolean(reader.GetOrdinal("HasOptions")),
-                        CreatedDate = reader.IsDBNull(reader.GetOrdinal("CreatedDate")) ? null : reader.GetDateTime(reader.GetOrdinal("CreatedDate")),
-                        CreatedBy = reader.IsDBNull(reader.GetOrdinal("CreatedBy")) ? null : reader.GetInt32(reader.GetOrdinal("CreatedBy")),
-                        ModifiedDate = reader.IsDBNull(reader.GetOrdinal("ModifiedDate")) ? null : reader.GetDateTime(reader.GetOrdinal("ModifiedDate")),
-                        ModifiedBy = reader.IsDBNull(reader.GetOrdinal("ModifiedBy")) ? null : reader.GetInt32(reader.GetOrdinal("ModifiedBy")),
+                        //CreatedDate = reader.IsDBNull(reader.GetOrdinal("CreatedDate")) ? null : reader.GetDateTime(reader.GetOrdinal("CreatedDate")),
+                        //CreatedBy = reader.IsDBNull(reader.GetOrdinal("CreatedBy")) ? null : reader.GetInt32(reader.GetOrdinal("CreatedBy")),
+                        //ModifiedDate = reader.IsDBNull(reader.GetOrdinal("ModifiedDate")) ? null : reader.GetDateTime(reader.GetOrdinal("ModifiedDate")),
+                        //ModifiedBy = reader.IsDBNull(reader.GetOrdinal("ModifiedBy")) ? null : reader.GetInt32(reader.GetOrdinal("ModifiedBy")),
                         IsActive = reader.GetBoolean(reader.GetOrdinal("IsActive"))
                     };
 
@@ -71,10 +71,10 @@ namespace OnwardsDAL.Repository
                         Id = readeropt.GetInt32(readeropt.GetOrdinal("Id")),
                         QuestionId = readeropt.GetInt32(readeropt.GetOrdinal("QuestionId")),
                         Description = readeropt.GetString(readeropt.GetOrdinal("Description")),
-                        CreatedDate = readeropt.IsDBNull(readeropt.GetOrdinal("CreatedDate")) ? null : readeropt.GetDateTime(readeropt.GetOrdinal("CreatedDate")),
-                        CreatedBy = readeropt.IsDBNull(readeropt.GetOrdinal("CreatedBy")) ? null : readeropt.GetInt32(readeropt.GetOrdinal("CreatedBy")),
-                        ModifiedDate = readeropt.IsDBNull(readeropt.GetOrdinal("ModifiedDate")) ? null : readeropt.GetDateTime(readeropt.GetOrdinal("ModifiedDate")),
-                        ModifiedBy = readeropt.IsDBNull(readeropt.GetOrdinal("ModifiedBy")) ? null : readeropt.GetInt32(readeropt.GetOrdinal("ModifiedBy")),
+                        //CreatedDate = readeropt.IsDBNull(readeropt.GetOrdinal("CreatedDate")) ? null : readeropt.GetDateTime(readeropt.GetOrdinal("CreatedDate")),
+                        //CreatedBy = readeropt.IsDBNull(readeropt.GetOrdinal("CreatedBy")) ? null : readeropt.GetInt32(readeropt.GetOrdinal("CreatedBy")),
+                        //ModifiedDate = readeropt.IsDBNull(readeropt.GetOrdinal("ModifiedDate")) ? null : readeropt.GetDateTime(readeropt.GetOrdinal("ModifiedDate")),
+                        //ModifiedBy = readeropt.IsDBNull(readeropt.GetOrdinal("ModifiedBy")) ? null : readeropt.GetInt32(readeropt.GetOrdinal("ModifiedBy")),
                         IsActive = readeropt.GetBoolean(readeropt.GetOrdinal("IsActive"))
                     };
 

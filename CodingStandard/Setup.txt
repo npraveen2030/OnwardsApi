@@ -1,2 +1,9 @@
 ...Models ==> for POST
 ....DTO   ==> for GET 
+
+
+Training
+	GetTrainingDetailsByLocationId
+
+HolidayList
+	GetHolidayListByLocationId
