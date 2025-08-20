@@ -1,4 +1,5 @@
-﻿using OnwardsModel.Model;
+﻿using OnwardsModel.Dtos;
+using OnwardsModel.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace OnwardsBLL.Interface
 {
     public interface IUserLeaveAppliedService
     {
-        public Task InsertUserLeaveAppliedAsync(UserLeaveAppliedModel leave);
-        public Task UpdateUserLeaveAppliedAsync(UserLeaveAppliedUpdateModel Modification);
+        public Task<List<UserLeaveAppliedDto>> GetUserLeaveAppliedAsync(int userId);
+        public Task InsertOrUpdateUserLeaveAppliedAsync(UserLeaveAppliedModel leave);
     }
 }

@@ -750,16 +750,16 @@
   },
   {
     "ContainingType": "OnwardsApi.Controllers.UserLeaveAppliedController",
-    "Method": "InsertUserLeaveApplied",
-    "RelativePath": "api/UserLeaveApplied/insert",
-    "HttpMethod": "POST",
+    "Method": "GetUserLeaveApplied",
+    "RelativePath": "api/UserLeaveApplied/get",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "leave",
-        "Type": "OnwardsModel.Model.UserLeaveAppliedModel",
-        "IsRequired": true
+        "Name": "UserId",
+        "Type": "System.Int32",
+        "IsRequired": false
       },
       {
         "Name": "api-version",
@@ -771,15 +771,15 @@
   },
   {
     "ContainingType": "OnwardsApi.Controllers.UserLeaveAppliedController",
-    "Method": "UpdateUserLeaveApplied",
-    "RelativePath": "api/UserLeaveApplied/update",
-    "HttpMethod": "PATCH",
+    "Method": "InsertOrUpdateUserLeaveApplied",
+    "RelativePath": "api/UserLeaveApplied/insertorupdate",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "Modification",
-        "Type": "OnwardsModel.Model.UserLeaveAppliedUpdateModel",
+        "Name": "leave",
+        "Type": "OnwardsModel.Model.UserLeaveAppliedModel",
         "IsRequired": true
       },
       {

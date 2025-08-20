@@ -16,13 +16,13 @@ namespace OnwardsApi.Controllers
             _userLeaveAppliedService = userLeaveAppliedService;
         }
 
-        [HttpPost("insert")]
-        public async Task<IActionResult> InsertUserLeaveApplied(UserLeaveAppliedModel leave)
+        [HttpGet("get")]
+        public async Task<IActionResult> GetUserLeaveApplied(int UserId)
         {
             try
             {
-                await _userLeaveAppliedService.InsertUserLeaveAppliedAsync(leave);
-                return Ok(new { message = "Leave Added successfully."});
+                var details = await _userLeaveAppliedService.GetUserLeaveAppliedAsync(UserId);
+                return Ok(new { details });
             }
             catch (Exception ex)
             {
@@ -30,13 +30,13 @@ namespace OnwardsApi.Controllers
             }
         }
 
-        [HttpPatch("update")]
-        public async Task<IActionResult> UpdateUserLeaveApplied(UserLeaveAppliedUpdateModel Modification)
+        [HttpPost("insertorupdate")]
+        public async Task<IActionResult> InsertOrUpdateUserLeaveApplied(UserLeaveAppliedModel leave)
         {
             try
             {
-                await _userLeaveAppliedService.UpdateUserLeaveAppliedAsync(Modification);
-                return Ok(new { message = "Leave Modified successfully." });
+                await _userLeaveAppliedService.InsertOrUpdateUserLeaveAppliedAsync(leave);
+                return Ok(new { message = "Leave Added successfully."});
             }
             catch (Exception ex)
             {

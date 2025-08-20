@@ -22,58 +22,79 @@ namespace OnwardsDAL.Repository
 
         private SqlConnection GetConnection() =>
             new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
-        public async Task InsertUserLeaveAppliedAsync(UserLeaveAppliedModel leave)
+
+        public async Task<List<UserLeaveAppliedDto>> GetUserLeaveAppliedAsync(int userId)
+        {
+            try
+            {
+                var result = new List<UserLeaveAppliedDto>();
+
+                await using var conn = GetConnection();
+                await conn.OpenAsync();
+
+                await using var cmd = new SqlCommand("Onwards.GetUserLeaveApplied", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.AddWithValue("@UserId", userId);
+
+                await using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    var leave = new UserLeaveAppliedDto
+                    {
+                        Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                        LeaveTypeName = reader.GetString(reader.GetOrdinal("LeaveTypeName")),
+                        NoOfDays = reader.GetDecimal(reader.GetOrdinal("NoOfDays")),
+                        StartDate = reader.GetDateTime(reader.GetOrdinal("StartDate")),
+                        EndDate = reader.GetDateTime(reader.GetOrdinal("EndDate")),
+                        StatusName = reader.GetString(reader.GetOrdinal("Name"))
+                    };
+                    result.Add(leave);
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error occurred while fetching user applied leaves.", ex);
+            }
+        }
+
+        public async Task InsertOrUpdateUserLeaveAppliedAsync(UserLeaveAppliedModel leave)
         {
             try
             {
                 await using var conn = GetConnection();
                 await conn.OpenAsync();
 
-                await using var cmd = new SqlCommand("Onwards.InsertUserLeaveApplied", conn)
+                await using var cmd = new SqlCommand("Onwards.InsertOrUpdateUserLeaveApplied", conn)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
 
-                cmd.Parameters.AddWithValue("@LoginId", leave.LoginId); 
+                // Pass all parameters defined in SP
+                cmd.Parameters.AddWithValue("@Id", leave.Id ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@LoginId", leave.LoginId);
                 cmd.Parameters.AddWithValue("@UserId", leave.UserId);
                 cmd.Parameters.AddWithValue("@LeaveTypeId", leave.LeaveTypeId);
                 cmd.Parameters.AddWithValue("@Year", leave.Year);
                 cmd.Parameters.AddWithValue("@StartDate", leave.StartDate);
                 cmd.Parameters.AddWithValue("@EndDate", leave.EndDate);
-                cmd.Parameters.AddWithValue("@Reason", leave.Reason ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@Reason", (object?)leave.Reason ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Action", (object?)leave.Action ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@FileName", (object?)leave.FileName ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@ContentType", (object?)leave.ContentType ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Data", (object?)leave.Data ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@LeaveStatusId", leave.LeaveStatusId);
 
                 await cmd.ExecuteNonQueryAsync();
             }
             catch (Exception ex)
             {
-                throw new Exception("Error occurred while inserting user leave application.", ex);
+                throw new Exception("Error occurred while inserting or updating user leave application.", ex);
             }
         }
-
-        public async Task UpdateUserLeaveAppliedAsync(UserLeaveAppliedUpdateModel Modification)
-        {
-            try
-            {
-                await using var conn = GetConnection();
-                await conn.OpenAsync();
-
-                await using var cmd = new SqlCommand("Onwards.UpdateUserLeaveApplied", conn)
-                {
-                    CommandType = CommandType.StoredProcedure
-                };
-
-                cmd.Parameters.AddWithValue("@Id", Modification.Id);
-                cmd.Parameters.AddWithValue("@LoginId", Modification.LoginId);
-                cmd.Parameters.AddWithValue("@LeaveStatusId", Modification.LeaveStatusId);
-
-                await cmd.ExecuteNonQueryAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error occurred while updating user leave application.", ex);
-            }
-        }
-
     }
 }

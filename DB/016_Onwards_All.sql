@@ -1,3 +1,143 @@
+ALTER PROCEDURE [Onwards].[InsertOrUpdateUserLeaveApplied]
+	@Id INT = NULL,
+	@LoginId INT= NULL,
+	@UserId INT= NULL,
+	@LeaveTypeId INT= NULL,
+	@Year INT= NULL,
+	@StartDate DATETIME= NULL,
+	@EndDate DATETIME= NULL,
+	@Reason VARCHAR(300)= NULL,
+	@Action NVARCHAR(300) = NULL,
+	@FileName NVARCHAR(255) = NULL,
+	@ContentType NVARCHAR(100) = NULL,
+	@Data VARBINARY(MAX) = NULL,
+	@LeaveStatusId INT= NULL
+	
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SET XACT_ABORT ON;
+
+	BEGIN TRY
+	BEGIN TRANSACTION;
+		
+		IF (@Id IS NOT NULL)
+		BEGIN
+			Insert Onwards.UserLeaveApplied ([UserId]
+					  ,[LeaveTypeId]
+					  ,[Year]
+					  ,[StartDate]
+					  ,[EndDate]
+					  ,[Reason]
+					  ,[Action]
+					  ,[FileName]
+					  ,[ContentType]
+					  ,[Data]
+					  ,[LeaveStatusId]
+					  ,[CreatedDate]
+					  ,[CreatedBy]
+					  ,[ModefiedDate]
+					  ,[ModifiedBy]
+					  ,[IsActive])
+				VALUES
+						(@UserId,
+						@LeaveTypeId,
+						@Year,
+						@StartDate,
+						@EndDate,
+						@Reason,
+						@Action,
+						@FileName,
+						@ContentType,
+						@Data,
+						@LeaveStatusId,
+						GETDATE(),
+						@LoginId,
+						NULL,
+						NULL,
+						1);
+
+				UPDATE Onwards.LeaveBalances
+				SET RemainingDays = RemainingDays - (DATEDIFF(DAY, @StartDate, @EndDate) + 1)
+				WHERE UserId = @UserId AND LeaveTypeId = @LeaveTypeId
+		END
+		ELSE 
+		BEGIN 
+			UPDATE Onwards.UserLeaveApplied
+			SET ModifiedBy = @LoginId,ModefiedDate = GETDATE(),LeaveStatusId = @LeaveStatusId, Action = @Action
+			WHERE Id = @Id
+			-- 3: Rejected , 4: Cancelled
+			IF (@LeaveStatusId IN (3,4))
+			BEGIN
+				UPDATE Onwards.LeaveBalances
+				SET RemainingDays = RemainingDays + (DATEDIFF(DAY, @StartDate, @EndDate) + 1)
+				WHERE UserId = @UserId AND LeaveTypeId = @LeaveStatusId
+			END
+		END
+	COMMIT TRANSACTION;
+	END TRY
+	BEGIN CATCH
+        IF XACT_STATE() <> 0
+            ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END
+
+
+
+CREATE PROCEDURE [Onwards].[GetUserLeaveApplied]
+	@UserId INT
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	SELECT 
+		   u.Id,
+		   t.LeaveTypeName,
+		   u.NoOfDays,
+		   u.StartDate,
+		   u.EndDate,
+		   s.Name
+	FROM Onwards.UserLeaveApplied AS u
+	INNER JOIN Onwards.LeaveTypes AS t ON u.LeaveTypeId = t.Id
+	INNER JOIN Onwards.LeaveStatus AS s ON u.LeaveStatusId = s.Id
+	WHERE u.UserId = @UserId
+	ORDER BY u.CreatedDate DESC
+	OFFSET 0 ROWS FETCH NEXT 15 ROWS ONLY;
+     
+END
+
+CREATE PROCEDURE [Onwards].[GetUsersByName]
+	@First NVARCHAR(100) = NULL,
+    @Second NVARCHAR(100) = NULL
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SET XACT_ABORT ON;
+
+	BEGIN TRY
+        BEGIN TRANSACTION;
+			SELECT DISTINCT FullName
+			FROM Users
+			WHERE
+				(@First IS NOT NULL AND FullName LIKE '%' + @First + '%')
+				OR (@Second IS NOT NULL AND FullName LIKE '%' + @Second + '%')
+			ORDER BY FullName;
+		
+		COMMIT TRANSACTION;
+	END TRY
+    BEGIN CATCH
+        IF XACT_STATE() <> 0
+            ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END
+GO
+------------------------------------------------------------------------------------------------------------------
+
+
 CREATE TABLE [Onwards].[Locations](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [nvarchar](100) NOT NULL,

@@ -1,5 +1,6 @@
 ﻿using OnwardsBLL.Interface;
 using OnwardsDAL.Interface;
+using OnwardsModel.Dtos;
 using OnwardsModel.Model;
 using System;
 using System.Collections.Generic;
@@ -18,14 +19,14 @@ namespace OnwardsBLL.Service
             _repo = repo;
         }
 
-        public async Task InsertUserLeaveAppliedAsync(UserLeaveAppliedModel leave)
+        public async Task<List<UserLeaveAppliedDto>> GetUserLeaveAppliedAsync(int userId)
         {
-            await _repo.InsertUserLeaveAppliedAsync(leave);
+            return await _repo.GetUserLeaveAppliedAsync(userId);
         }
 
-        public async Task UpdateUserLeaveAppliedAsync(UserLeaveAppliedUpdateModel Modification)
+        public async Task InsertOrUpdateUserLeaveAppliedAsync(UserLeaveAppliedModel leave)
         {
-            await _repo.UpdateUserLeaveAppliedAsync(Modification);
+            await _repo.InsertOrUpdateUserLeaveAppliedAsync(leave);
         }
     }
 }

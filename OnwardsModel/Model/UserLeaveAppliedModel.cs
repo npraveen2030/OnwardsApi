@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace OnwardsModel.Model
 {
     public class UserLeaveAppliedModel : BaseModel
     {
+        public int? Id { get; set; }
         public int LeaveTypeId { get; set; }
 
         public int Year { get; set; }
@@ -18,13 +21,14 @@ namespace OnwardsModel.Model
 
         public string? Reason { get; set; }
 
-        public int LeaveStatusId { get; set; }
-    }
+        public string? Action { get; set; }
 
-    public class UserLeaveAppliedUpdateModel
-    {
-        public int Id { get;set;}
-        public int LoginId { get; set; }
+        public string? FileName { get; set; }
+
+        public string? ContentType { get; set; }
+
+        public byte[]? Data { get; set; }
+
         public int LeaveStatusId { get; set; }
     }
 }

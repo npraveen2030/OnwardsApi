@@ -1,6 +1,7 @@
 
 
 --------------------------------------Clarification--------------------------------
+* 19Aug25 : (pg: 23) edit option for leave management system.
 * 18Aug25 : (pg : 24) Multiple Users can have same name.
 * 7Aug25 : (pg: 23) what does multiple events in title of calender control?
 
