@@ -1,9 +1,0 @@
-...Models ==> for POST
-....DTO   ==> for GET 
-
-
-Training
-	GetTrainingDetailsByLocationId		`${this.apiService}/HolidayList/GetHolidayByLocationId/${locationId}`
-
-HolidayList
-	GetHolidayListByLocationId		`${this.apiService}/Training/GetTrainingDetailsByLocationId/${locationId}`,
