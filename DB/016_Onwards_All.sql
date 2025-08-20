@@ -1,4 +1,7 @@
 
+
+---------------------------- 20 Aug 2024 -------------------
+
 UPDATE Onwards.ResignationReason
 SET IsActive = 1
 
