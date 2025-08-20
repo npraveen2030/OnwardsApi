@@ -1,0 +1,25 @@
+
+========================== CSS ============================================================
+background-color: #f4f4f4;
+padding:0.5rem; or 0.65rem;
+
+
+=========================== HTML ===============================================================
+
+
+
+
+=========================== Csharp =========================================================
+
+
+
+WebApi
+
+	...Models ==> for POST
+	....DTO   ==> for GET 
+
+	Training
+		GetTrainingDetailsByLocationId		`${this.apiService}/HolidayList/GetHolidayByLocationId/${locationId}`
+
+	HolidayList
+		GetHolidayListByLocationId		`${this.apiService}/Training/GetTrainingDetailsByLocationId/${locationId}`,

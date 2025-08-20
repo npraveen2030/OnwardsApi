@@ -15,7 +15,7 @@
 				When user apply leave,if there is record in UserLog table then make IsActive = 0 ELSE insert the records with IsActive = 0
   
 			 
--------------------------------- discussed points------------------------
+-------------------------------- Discussed Points------------------------
 
 * Leave Screen
 	7Aug2025 : in leave request popup for Employees to be notified impelement autocomplete search dropdown with space based OR condition
