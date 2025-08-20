@@ -1,3 +1,36 @@
+
+UPDATE Onwards.ResignationReason
+SET IsActive = 1
+
+--Exec [Onwards].[GetResignationReason]
+CREATE PROCEDURE [Onwards].[GetResignationReason] 
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+	SELECT Id,Reason AS Name FROM Onwards.ResignationReason
+	WHERE IsActive = 1 
+END
+  
+  
+
+UPDATE Onwards.ResignationType
+SET IsActive = 1
+
+--EXEC [Onwards].[GetResignationType] 
+CREATE PROCEDURE [Onwards].[GetResignationType] 
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+	SELECT Id,TypeName AS Name FROM Onwards.ResignationType
+	WHERE IsActive = 1 
+END
+  
+  
+  
+
+
 ALTER PROCEDURE [Onwards].[InsertOrUpdateUserLeaveApplied]
 	@Id INT = NULL,
 	@LoginId INT= NULL,
