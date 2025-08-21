@@ -1,4 +1,5 @@
-﻿using OnwardsModel.Model;
+﻿using OnwardsModel.Dtos;
+using OnwardsModel.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace OnwardsDAL.Interface
 {
     public interface IResignationReasonRepository
     {
+        public Task<IEnumerable<ResignationReasonDto>> GetResignationReason();
         public Task InsertResignationReasonAsync(ResignationReasonModel model);
         public Task UpdateResignationReasonAsync(ResignationReasonModel model);
         public Task DeleteResignationReasonAsync(int id, int loginId);

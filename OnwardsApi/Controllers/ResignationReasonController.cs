@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
 using OnwardsBLL.Interface;
+using OnwardsModel.Dtos;
 using OnwardsModel.Model;
 
 namespace OnwardsApi.Controllers
@@ -13,6 +15,20 @@ namespace OnwardsApi.Controllers
         public ResignationReasonController(IResignationReasonService resignationreasonService)
         {
             _resignationreasonService = resignationreasonService;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ResignationReasonDto>>> GetResignationReason()
+        {
+            try
+            {
+                var reasons = await _resignationreasonService.GetResignationReason();
+                return Ok(reasons);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
         }
 
         [HttpPost("insert")]
