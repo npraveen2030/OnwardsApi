@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using OnwardsDAL.Interface;
+using OnwardsModel.Dtos;
 using OnwardsModel.Model;
 using System;
 using System.Data;
@@ -19,6 +20,27 @@ namespace OnwardsDAL.Repository
 
         private SqlConnection GetConnection() =>
             new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+
+        public async Task<IEnumerable<ResignationReasonDto>> GetResignationReason()
+        {
+            var list = new List<ResignationReasonDto>(); 
+            //using var conn = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+
+            await using var conn = GetConnection();
+            await conn.OpenAsync();
+
+            using var cmd = new SqlCommand("[Onwards].[GetResignationReason]", conn) { CommandType = CommandType.StoredProcedure };
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                list.Add(new ResignationReasonDto
+                {
+                    Id = Convert.ToInt32(reader["Id"]),
+                    Reason = reader["Reason"].ToString(),
+                });
+            }
+            return list; 
+        }
 
         public async Task InsertResignationReasonAsync(ResignationReasonModel model)
         {

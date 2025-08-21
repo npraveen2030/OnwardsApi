@@ -1,0 +1,29 @@
+* If you want to be even clearer and follow self-documenting naming, you can prefix the 
+	column with the table context:
+
+	CREATE TABLE [Onwards].[ResignationReason](
+    		[Id] INT NOT NULL PRIMARY KEY,
+    		[ReasonDescription] NVARCHAR(255) NOT NULL
+	);
+	This way, if someone looks at the column outside context (e.g., in a join), 
+	they immediately know what it means.
+
+* Column Naming Standards (General Best Practices)
+	Use singular names for tables (ResignationReason, not ResignationReasons) ✅
+	Use PascalCase or camelCase for columns, but consistency matters more.
+	Column names should describe what they store, not just be generic.
+	Avoid reserved keywords (Name, Value, etc.) unless absolutely necessary.
+
+	Which is better: Reason vs Name?
+		Name → too generic, could apply to anything (employee name, company name, etc.).
+		Reason → specific, tells you the column holds the reason for resignation
+
+* Order By MasterTable 
+	For MasterTable always user order by MainColumnName ASC 
+	e.g Onwards.ResignationReason Order by Reason ASC
+	    Onwards.ResignationType Order by TypeName ASC
+
+* Order By MasterTable ( Users, Resignation )
+	Always follow order by CreatedDate DESC 
+
+* For Get StoredProcedure always use "SET NOCOUNT ON;"

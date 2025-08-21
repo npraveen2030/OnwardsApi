@@ -416,6 +416,32 @@
   },
   {
     "ContainingType": "OnwardsApi.Controllers.ResignationReasonController",
+    "Method": "GetResignationReason",
+    "RelativePath": "api/ResignationReason",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[OnwardsModel.Dtos.ResignationReasonDto, OnwardsModel, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.ResignationReasonController",
     "Method": "Delete",
     "RelativePath": "api/ResignationReason/delete/{id}/{loginId}",
     "HttpMethod": "DELETE",
@@ -481,6 +507,32 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.ResignationTypeController",
+    "Method": "GetResignationType",
+    "RelativePath": "api/ResignationType",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[OnwardsModel.Dtos.ResignationTypeDto, OnwardsModel, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "OnwardsApi.Controllers.ResignationTypeController",

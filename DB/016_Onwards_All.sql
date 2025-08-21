@@ -11,8 +11,8 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-	SELECT Id,Reason AS Name FROM Onwards.ResignationReason
-	WHERE IsActive = 1 
+	SELECT Id,Reason FROM Onwards.ResignationReason
+	WHERE IsActive = 1 ORDER by Reason ASC
 END
   
   
@@ -26,8 +26,8 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-	SELECT Id,TypeName AS Name FROM Onwards.ResignationType
-	WHERE IsActive = 1 
+	SELECT Id,TypeName FROM Onwards.ResignationType
+	WHERE IsActive = 1 ORDER by TypeName ASC
 END
   
   
