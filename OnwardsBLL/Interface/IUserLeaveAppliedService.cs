@@ -11,6 +11,7 @@ namespace OnwardsBLL.Interface
     public interface IUserLeaveAppliedService
     {
         public Task<List<UserLeaveAppliedDto>> GetUserLeaveAppliedAsync(int userId);
+        public Task<List<LeaveTypeDto>> GetLeaveTypesAsync();
         public Task InsertOrUpdateUserLeaveAppliedAsync(UserLeaveAppliedModel leave);
     }
 }

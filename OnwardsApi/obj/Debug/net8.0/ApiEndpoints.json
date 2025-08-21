@@ -771,6 +771,22 @@
   },
   {
     "ContainingType": "OnwardsApi.Controllers.UserLeaveAppliedController",
+    "Method": "GetLeaveTypes",
+    "RelativePath": "api/UserLeaveApplied/getleavetypes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "api-version",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnwardsApi.Controllers.UserLeaveAppliedController",
     "Method": "InsertOrUpdateUserLeaveApplied",
     "RelativePath": "api/UserLeaveApplied/insertorupdate",
     "HttpMethod": "POST",

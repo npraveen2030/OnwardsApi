@@ -24,6 +24,11 @@ namespace OnwardsBLL.Service
             return await _repo.GetUserLeaveAppliedAsync(userId);
         }
 
+        public async Task<List<LeaveTypeDto>> GetLeaveTypesAsync()
+        {
+            return await _repo.GetLeaveTypesAsync();
+        }
+
         public async Task InsertOrUpdateUserLeaveAppliedAsync(UserLeaveAppliedModel leave)
         {
             await _repo.InsertOrUpdateUserLeaveAppliedAsync(leave);

@@ -62,6 +62,40 @@ namespace OnwardsDAL.Repository
             }
         }
 
+        public async Task<List<LeaveTypeDto>> GetLeaveTypesAsync()
+        {
+            try
+            {
+                var result = new List<LeaveTypeDto>();
+
+                await using var conn = GetConnection();
+                await conn.OpenAsync();
+
+                await using var cmd = new SqlCommand("Onwards.GetLeaveTypes", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                await using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    var leaveType = new LeaveTypeDto
+                    {
+                        Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                        LeaveTypeName = reader.GetString(reader.GetOrdinal("LeaveTypeName")),
+                        MaxDaysPerYear = reader.GetInt32(reader.GetOrdinal("MaxDaysPerYear"))
+                    };
+                    result.Add(leaveType);
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error occurred while fetching leave types.", ex);
+            }
+        }
+
         public async Task InsertOrUpdateUserLeaveAppliedAsync(UserLeaveAppliedModel leave)
         {
             try

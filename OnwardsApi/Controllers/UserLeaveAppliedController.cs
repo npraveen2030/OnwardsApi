@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnwardsBLL.Interface;
 using OnwardsBLL.Service;
+using OnwardsModel.Dtos;
 using OnwardsModel.Model;
 
 namespace OnwardsApi.Controllers
@@ -23,6 +24,20 @@ namespace OnwardsApi.Controllers
             {
                 var details = await _userLeaveAppliedService.GetUserLeaveAppliedAsync(UserId);
                 return Ok(new { details });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
+        [HttpGet("getleavetypes")]
+        public async Task<IActionResult> GetLeaveTypes()
+        {
+            try
+            {
+                var details = await _userLeaveAppliedService.GetLeaveTypesAsync();
+                return Ok( details );
             }
             catch (Exception ex)
             {
