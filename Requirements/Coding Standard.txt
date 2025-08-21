@@ -1,0 +1,37 @@
+
+========================== CSS ============================================================
+background-color: #f4f4f4;
+padding:0.5rem; or 0.65rem;
+
+
+=========================== HTML ===============================================================
+
+
+
+
+=========================== Csharp =========================================================
+
+
+
+WebApi
+
+	...Models ==> for POST
+	....DTO   ==> for GET 
+
+	Training
+		GetTrainingDetailsByLocationId		`${this.apiService}/HolidayList/GetHolidayByLocationId/${locationId}`
+
+	HolidayList
+		GetHolidayListByLocationId		`${this.apiService}/Training/GetTrainingDetailsByLocationId/${locationId}`,
+
+
+Extra Best Practices
+
+	Always make your API methods async and return Task<T> (never async void).
+	
+	If pagination or filtering is possible, consider returning a wrapper DTO like:	
+	
+	public class PagedResult<T>
+	{
+    		public IEnumerable<T> Items { get; set; } = Enumerable.Empty<T>();
+    		public int TotalCount { get; set; 

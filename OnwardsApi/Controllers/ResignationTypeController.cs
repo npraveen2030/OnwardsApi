@@ -17,7 +17,8 @@ namespace OnwardsApi.Controllers
             _resignationtypeService = resignationtypeService;
         }
 
-        [HttpGet]
+        //[HttpGet]
+        [HttpGet("GetResignationType")]
         public async Task<ActionResult<IEnumerable<ResignationTypeDto>>> GetResignationType()
         {
             try
