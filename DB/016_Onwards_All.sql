@@ -1,5 +1,21 @@
+---------------------------- 21 Aug 2024 -------------------
+  ALTER TABLE Onwards.Users
+ADD LocationId INT NOT NULL DEFAULT 0;
 
+CREATE PROCEDURE Onwards.GetLeaveTypes 
+	
+AS
+BEGIN
 
+	SET NOCOUNT ON;
+
+    SELECT [Id]
+      ,[LeaveTypeName]
+      ,[MaxDaysPerYear]
+	  FROM Onwards.LeaveTypes
+	  WHERE IsActive = 1
+END
+GO
 ---------------------------- 20 Aug 2024 -------------------
 
 UPDATE Onwards.ResignationReason
