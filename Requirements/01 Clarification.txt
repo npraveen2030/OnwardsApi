@@ -1,6 +1,8 @@
 
 
 --------------------------------------Clarification--------------------------------
+* 22Aug2025 : All the Upload will take only 1 PDF file , no other format are allowed and file size should not be greater than 30MB
+
 * 21Aug25: In the Calender, if Holiday/WeekOff comes in same day then show weekOff color 
 		      e.g : 15Aug25 came on Sunday 
 * 19Aug25 : (pg: 23) edit option for leave management system.
