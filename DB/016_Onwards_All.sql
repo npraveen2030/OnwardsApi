@@ -1,3 +1,135 @@
+---------------------------- 22 Aug 2024 -------------------
+ALTER TABLE Onwards.UserLeaveApplied
+DROP COLUMN ContentType
+
+  ALTER TABLE Onwards.UserLeaveApplied
+  ADD PhoneNo NVARCHAR(20) NOT NULL DEFAULT ''
+
+  ALTER TABLE Onwards.UserLeaveApplied
+ADD NotifiedUserId INT NOT NULL DEFAULT 1;
+
+ALTER TABLE Onwards.UserLeaveApplied
+ADD CONSTRAINT FK_UserLeaveApplied_Users_NotifiedUser
+    FOREIGN KEY (NotifiedUserId) REFERENCES Onwards.Users(Id);
+
+
+
+ALTER PROCEDURE [Onwards].[InsertOrUpdateUserLeaveApplied]
+	@Id INT = NULL,
+	@LoginId INT,
+	@UserId INT,
+	@LeaveTypeId INT,
+	@Year INT= NULL,
+	@PhoneNo NVARCHAR(20) = NULL,
+	@StartDate DATETIME,
+	@EndDate DATETIME,
+	@NoOfDays DECIMAL(9,2) = NULL,
+	@LocationId INT = NULL,
+	@Reason VARCHAR(300)= NULL,
+	@Action NVARCHAR(300) = NULL,
+	@FileName NVARCHAR(255) = NULL,
+	@Data VARBINARY(MAX) = NULL,
+	@LeaveStatusId INT
+	
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SET XACT_ABORT ON;
+
+	BEGIN TRY
+	BEGIN TRANSACTION;
+
+		IF (@Id IS NOT NULL)
+		BEGIN
+
+			DECLARE @WorkingDays INT;
+			;WITH DateSeries AS
+			(
+				SELECT @StartDate AS TheDate
+				UNION ALL
+				SELECT DATEADD(DAY, 1, TheDate)
+				FROM DateSeries
+				WHERE TheDate < @EndDate
+			)
+			SELECT 
+				@WorkingDays = COUNT(*)
+			FROM DateSeries d
+			WHERE 
+				-- Exclude weekends
+				DATENAME(WEEKDAY, d.TheDate) NOT IN ('Saturday', 'Sunday')
+				-- Exclude holidays
+				AND NOT EXISTS (
+					SELECT 1 
+					FROM Onwards.HolidayList h
+					WHERE h.LocationId = @LocationId 
+					  AND h.HolidayDate = d.TheDate
+				)
+			OPTION (MAXRECURSION 0);
+
+			Insert Onwards.UserLeaveApplied ([UserId]
+					  ,[LeaveTypeId]
+					  ,[Year]
+					  ,[NoOfDays]
+					  ,[StartDate]
+					  ,[EndDate]
+					  ,[Reason]
+					  ,[Action]
+					  ,[FileName]
+					  ,[Data]
+					  ,[LeaveStatusId]
+					  ,[CreatedDate]
+					  ,[CreatedBy]
+					  ,[ModefiedDate]
+					  ,[ModifiedBy]
+					  ,[IsActive])
+				VALUES
+						(@UserId,
+						@LeaveTypeId,
+						@Year,
+						@WorkingDays,
+						@StartDate,
+						@EndDate,
+						@Reason,
+						@Action,
+						@FileName,
+						@Data,
+						@LeaveStatusId,
+						GETDATE(),
+						@LoginId,
+						NULL,
+						NULL,
+						1);
+
+				UPDATE Onwards.LeaveBalances
+				SET RemainingDays = RemainingDays - @WorkingDays
+				WHERE UserId = @UserId AND LeaveTypeId = @LeaveTypeId
+		END
+		ELSE 
+		BEGIN 
+			UPDATE Onwards.UserLeaveApplied
+			SET ModifiedBy = @LoginId,ModefiedDate = GETDATE(),LeaveStatusId = @LeaveStatusId, Action = @Action
+			WHERE Id = @Id
+			-- 3: Rejected , 4: Cancelled
+			IF (@LeaveStatusId IN (3,4))
+			BEGIN
+				UPDATE Onwards.LeaveBalances
+				SET RemainingDays = RemainingDays + @NoOfDays
+				WHERE UserId = @UserId AND LeaveTypeId = @LeaveStatusId
+			END
+		END
+	COMMIT TRANSACTION;
+	END TRY
+	BEGIN CATCH
+        IF XACT_STATE() <> 0
+            ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END
+
+
+
+
 ---------------------------- 21 Aug 2024 -------------------
   ALTER TABLE Onwards.Users
 ADD LocationId INT NOT NULL DEFAULT 0;

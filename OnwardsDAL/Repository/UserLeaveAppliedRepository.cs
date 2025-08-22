@@ -108,7 +108,6 @@ namespace OnwardsDAL.Repository
                     CommandType = CommandType.StoredProcedure
                 };
 
-                // Pass all parameters defined in SP
                 cmd.Parameters.AddWithValue("@Id", leave.Id ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@LoginId", leave.LoginId);
                 cmd.Parameters.AddWithValue("@UserId", leave.UserId);
@@ -116,11 +115,21 @@ namespace OnwardsDAL.Repository
                 cmd.Parameters.AddWithValue("@Year", leave.Year);
                 cmd.Parameters.AddWithValue("@StartDate", leave.StartDate);
                 cmd.Parameters.AddWithValue("@EndDate", leave.EndDate);
+                cmd.Parameters.AddWithValue("@NoOfDays", leave.NoOfDays);   
+                cmd.Parameters.AddWithValue("@LocationId", leave.LocationId); 
                 cmd.Parameters.AddWithValue("@Reason", (object?)leave.Reason ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@Action", (object?)leave.Action ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@FileName", (object?)leave.FileName ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@ContentType", (object?)leave.ContentType ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Data", (object?)leave.Data ?? DBNull.Value);
+                if (leave.Data != null)
+                {
+                    using var ms = new MemoryStream();
+                    await leave.Data.CopyToAsync(ms);
+                    cmd.Parameters.AddWithValue("@Data", ms.ToArray());
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@Data", DBNull.Value);
+                }
                 cmd.Parameters.AddWithValue("@LeaveStatusId", leave.LeaveStatusId);
 
                 await cmd.ExecuteNonQueryAsync();

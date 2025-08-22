@@ -46,7 +46,7 @@ namespace OnwardsApi.Controllers
         }
 
         [HttpPost("insertorupdate")]
-        public async Task<IActionResult> InsertOrUpdateUserLeaveApplied(UserLeaveAppliedModel leave)
+        public async Task<IActionResult> InsertOrUpdateUserLeaveApplied([FromForm] UserLeaveAppliedModel leave)
         {
             try
             {

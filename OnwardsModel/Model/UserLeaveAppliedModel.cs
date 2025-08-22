@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mime;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using Microsoft.AspNetCore.Http;
+
 
 namespace OnwardsModel.Model
 {
@@ -19,15 +14,17 @@ namespace OnwardsModel.Model
 
         public DateTime EndDate { get; set; }
 
+        public decimal NoOfDays { get; set; }
+
+        public int LocationId { get; set; }
+
         public string? Reason { get; set; }
 
         public string? Action { get; set; }
 
         public string? FileName { get; set; }
 
-        public string? ContentType { get; set; }
-
-        public byte[]? Data { get; set; }
+        public IFormFile? Data { get; set; }
 
         public int LeaveStatusId { get; set; }
     }
