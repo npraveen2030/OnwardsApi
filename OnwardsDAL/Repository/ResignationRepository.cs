@@ -1,10 +1,14 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Extensions.Configuration;
 using OnwardsDAL.Interface;
+using OnwardsModel.Dtos;
 using OnwardsModel.Model;
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Net;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace OnwardsDAL.Repository
 {
@@ -19,6 +23,58 @@ namespace OnwardsDAL.Repository
 
         private SqlConnection GetConnection() =>
             new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+
+        public async Task<ResignationDto> GetResignationDetailsByUserId(int userId)
+        {
+            ResignationDto? resignation = null;
+
+            await using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+
+            await using var cmd = new SqlCommand("Onwards.GetResignationDetailsByUserId", conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+
+            cmd.Parameters.AddWithValue("@UserId", userId);
+
+            await conn.OpenAsync();
+
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            if (await reader.ReadAsync())
+            {
+                resignation = new ResignationDto
+                {
+                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                    UserId = reader.GetInt32(reader.GetOrdinal("UserId")),
+                    ResignationTypeId = reader.GetInt32(reader.GetOrdinal("ResignationTypeId")),
+                    ResignationReasonId = reader.GetInt32(reader.GetOrdinal("ResignationReasonId")),
+                    ResignationLetterDate = reader.GetDateTime(reader.GetOrdinal("ResignationLetterDate")),
+                    RequestedRelievingDate = reader.GetDateTime(reader.GetOrdinal("RequestedRelievingDate")),
+                    ActualRelievingDate = reader.GetDateTime(reader.GetOrdinal("ActualRelievingDate")),
+                    NoticePeriod = reader.GetInt32(reader.GetOrdinal("NoticePeriod")),
+                    EndOfNoticePeriod = reader.GetInt32(reader.GetOrdinal("EndOfNoticePeriod")),
+                    NextEmployer = reader["NextEmployer"] as string,
+                    MailingAddress = reader["MailingAddress"] as string,
+                    Address = reader["Address"] as string,
+                    PersonalEmailId = reader["PersonalEmailId"] as string,
+                    Comments = reader["Comments"] as string,
+                    AttachmentFile = reader["AttachmentFile"] as string,
+                    PullbackComment = reader["PullbackComment"] as string,
+                    StatusId = reader["StatusId"] as int?,
+                    ApprovedBy = reader["ApprovedBy"] as int?,
+                    ApprovalDate = reader["ApprovalDate"] as DateTime?,
+                    ApproverRemarks = reader["ApproverRemarks"] as string,
+                    //CreatedDate = reader["CreatedDate"] as DateTime?,
+                    //CreatedBy = reader["CreatedBy"] as int?,
+                    //ModifiedDate = reader["ModifiedDate"] as DateTime?,
+                    //ModifiedBy = reader["ModifiedBy"] as int?,
+                    //IsActive = reader["IsActive"] as bool?
+                };
+            }
+
+            return resignation;
+        }
 
         public async Task InsertResignationAsync(ResignationModel model)
         {
@@ -36,9 +92,10 @@ namespace OnwardsDAL.Repository
                 cmd.Parameters.AddWithValue("@ResignationTypeId", model.ResignationTypeId);
                 cmd.Parameters.AddWithValue("@ResignationReasonId", model.ResignationReasonId);
                 cmd.Parameters.AddWithValue("@ResignationLetterDate", model.ResignationLetterDate);
-                cmd.Parameters.AddWithValue("@ResignationRelivingDate", model.ResignationRelivingDate);
-                cmd.Parameters.AddWithValue("@ResignationActualDate", model.ResignationActualDate);
+                cmd.Parameters.AddWithValue("@RequestedRelievingDate", model.RequestedRelievingDate);
+                cmd.Parameters.AddWithValue("@ActualRelievingDate", model.ActualRelievingDate);
                 cmd.Parameters.AddWithValue("@NoticePeriod", model.NoticePeriod);
+                cmd.Parameters.AddWithValue("@NextEmployer", model.NextEmployer);
                 cmd.Parameters.AddWithValue("@EndOfNoticePeriod", model.EndOfNoticePeriod);
                 cmd.Parameters.AddWithValue("@MailingAddress", string.IsNullOrWhiteSpace(model.MailingAddress?.ToString()) ? DBNull.Value : (object)model.MailingAddress);
                 cmd.Parameters.AddWithValue("@Address", string.IsNullOrWhiteSpace(model.Address?.ToString()) ? DBNull.Value : (object)model.Address);
@@ -50,7 +107,7 @@ namespace OnwardsDAL.Repository
                 cmd.Parameters.AddWithValue("@ApprovedBy", model.ApprovedBy ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@ApprovalDate", model.ApprovalDate ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@ApproverRemarks", string.IsNullOrWhiteSpace(model.ApproverRemarks?.ToString()) ? DBNull.Value : (object)model.ApproverRemarks);
-                cmd.Parameters.AddWithValue("@LoginId", model.CreatedBy);
+                cmd.Parameters.AddWithValue("@LoginId", model.LoginId);
 
 
                 await cmd.ExecuteNonQueryAsync();
@@ -78,8 +135,8 @@ namespace OnwardsDAL.Repository
                 cmd.Parameters.AddWithValue("@ResignationTypeId", model.ResignationTypeId);
                 cmd.Parameters.AddWithValue("@ResignationReasonId", model.ResignationReasonId);
                 cmd.Parameters.AddWithValue("@ResignationLetterDate", model.ResignationLetterDate);
-                cmd.Parameters.AddWithValue("@ResignationRelivingDate", model.ResignationRelivingDate);
-                cmd.Parameters.AddWithValue("@ResignationActualDate", model.ResignationActualDate);
+                cmd.Parameters.AddWithValue("@RequestedRelievingDate", model.RequestedRelievingDate);
+                cmd.Parameters.AddWithValue("@ActualRelievingDate", model.ActualRelievingDate);
                 cmd.Parameters.AddWithValue("@NoticePeriod", model.NoticePeriod);
                 cmd.Parameters.AddWithValue("@EndOfNoticePeriod", model.EndOfNoticePeriod);
                 cmd.Parameters.AddWithValue("@MailingAddress", string.IsNullOrWhiteSpace(model.MailingAddress?.ToString()) ? DBNull.Value : (object)model.MailingAddress);
@@ -92,7 +149,7 @@ namespace OnwardsDAL.Repository
                 cmd.Parameters.AddWithValue("@ApprovedBy", model.ApprovedBy ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@ApprovalDate", model.ApprovalDate ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@ApproverRemarks", string.IsNullOrWhiteSpace(model.ApproverRemarks?.ToString()) ? DBNull.Value : (object)model.ApproverRemarks);
-                cmd.Parameters.AddWithValue("@LoginId", model.ModifiedBy);
+                cmd.Parameters.AddWithValue("@LoginId", model.LoginId);
 
 
                 await cmd.ExecuteNonQueryAsync();

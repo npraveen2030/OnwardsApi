@@ -1,5 +1,6 @@
 ﻿using OnwardsBLL.Interface;
 using OnwardsDAL.Interface;
+using OnwardsModel.Dtos;
 using OnwardsModel.Model;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,8 @@ namespace OnwardsBLL.Service
         {
             _repository = repository;
         }
-
+        public async Task<ResignationDto?> GetResignationDetailsByUserId(int userId) =>
+           await _repository.GetResignationDetailsByUserId(userId);
         public Task InsertResignationAsync(ResignationModel model) => _repository.InsertResignationAsync(model);
         public Task UpdateResignationAsync(ResignationModel model) => _repository.UpdateResignationAsync(model);
         public Task DeleteResignationAsync(int id, int loginId) => _repository.DeleteResignationAsync(id, loginId);

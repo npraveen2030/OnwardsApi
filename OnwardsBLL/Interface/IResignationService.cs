@@ -1,4 +1,5 @@
-﻿using OnwardsModel.Model;
+﻿using OnwardsModel.Dtos;
+using OnwardsModel.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace OnwardsBLL.Interface
 {
     public interface IResignationService
     {
+
+        public Task<ResignationDto?> GetResignationDetailsByUserId(int userId);
         Task InsertResignationAsync(ResignationModel model);
         Task UpdateResignationAsync(ResignationModel model);
         Task DeleteResignationAsync(int id, int loginId);

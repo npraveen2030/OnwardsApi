@@ -1,3 +1,206 @@
+
+
+---------------------------- 25 Aug 2024 -------------------
+
+DROP TABLE [Onwards].[Resignation]
+
+CREATE TABLE [Onwards].[Resignation](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[UserId] [int] NOT NULL,
+	[ResignationTypeId] [int] NOT NULL,
+	[ResignationReasonId] [int] NOT NULL,
+	[ResignationLetterDate] [date] NOT NULL,
+	[RequestedRelievingDate] [date] NOT NULL,
+	[ActualRelievingDate] [date] NOT NULL,
+	[NoticePeriod] [int] NOT NULL,
+	[EndOfNoticePeriod] [int] NOT NULL,
+	[NextEmployer] [varchar](500) NULL,
+	[MailingAddress] [varchar](500) NULL,
+	[Address] [varchar](500) NULL,
+	[PersonalEmailid] [varchar](500) NULL,
+	[Comments] [varchar](500) NULL,
+	[AttachmentFile] [varchar](500) NULL,
+	[PullbackComment] [varchar](500) NULL,
+	[StatusId] [int] NULL,
+	[ApprovedBy] [int] NULL,
+	[ApprovalDate] [date] NULL,
+	[ApproverRemarks] [varchar](1000) NULL,
+	[createdDate] [datetime] NULL,
+	[createdBy] [int] NULL,
+	[ModifiedDate] [datetime] NULL,
+	[ModifiedBy] [int] NULL,
+	[IsActive] [bit] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [Onwards].[Resignation]  WITH CHECK ADD FOREIGN KEY([ResignationTypeId])
+REFERENCES [Onwards].[ResignationType] ([Id])
+GO
+
+ALTER TABLE [Onwards].[Resignation]  WITH CHECK ADD FOREIGN KEY([ResignationReasonId])
+REFERENCES [Onwards].[ResignationType] ([Id])
+GO
+
+
+CREATE PROCEDURE Onwards.GetResignationDetailsByUserId
+    @UserId INT
+AS
+BEGIN
+    SELECT *
+    FROM Onwards.Resignation
+    WHERE UserId = @UserId AND IsActive = 1;
+END
+
+
+CREATE PROCEDURE [Onwards].[InsertResignation]
+(
+    @UserId INT,
+    @ResignationTypeId INT,
+    @ResignationReasonId INT,
+    @ResignationLetterDate DATE,
+    @RequestedRelievingDate DATE,
+    @ActualRelievingDate DATE,
+    @NoticePeriod INT,
+    @NextEmployer VARCHAR(500) = NULL,  -- I see you’re passing this in code (not in table earlier?)
+    @EndOfNoticePeriod INT,
+    @MailingAddress VARCHAR(500) = NULL,
+    @Address VARCHAR(500) = NULL,
+    @PersonalEmailid VARCHAR(500) = NULL,
+    @Comments VARCHAR(500) = NULL,
+    @AttachmentFile VARCHAR(500) = NULL,
+    @PullbackComment VARCHAR(500) = NULL,
+    @StatusId INT = NULL,
+    @ApprovedBy INT = NULL,
+    @ApprovalDate DATE = NULL,
+    @ApproverRemarks VARCHAR(1000) = NULL,
+    @LoginId INT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        INSERT INTO [Onwards].[Resignation]
+        (
+            UserId,
+            ResignationTypeId,
+            ResignationReasonId,
+            ResignationLetterDate,
+            RequestedRelievingDate,
+            ActualRelievingDate,
+            NoticePeriod,
+            EndOfNoticePeriod,
+            MailingAddress,
+            Address,
+            PersonalEmailid,
+            Comments,
+            AttachmentFile,
+            PullbackComment,
+            StatusId,
+            ApprovedBy,
+            ApprovalDate,
+            ApproverRemarks,
+            CreatedDate,
+            CreatedBy,
+            IsActive
+        )
+        VALUES
+        (
+            @UserId,
+            @ResignationTypeId,
+            @ResignationReasonId,
+            @ResignationLetterDate,
+            @RequestedRelievingDate,
+            @ActualRelievingDate,
+            @NoticePeriod,
+            @EndOfNoticePeriod,
+            @MailingAddress,
+            @Address,
+            @PersonalEmailid,
+            @Comments,
+            @AttachmentFile,
+            @PullbackComment,
+            @StatusId,
+            @ApprovedBy,
+            @ApprovalDate,
+            @ApproverRemarks,
+            GETDATE(),   -- CreatedDate
+            @LoginId,    -- CreatedBy
+            1            -- IsActive default true
+        );
+    END TRY
+    BEGIN CATCH
+        DECLARE @ErrMsg NVARCHAR(4000), @ErrSeverity INT;
+        SELECT @ErrMsg = ERROR_MESSAGE(), @ErrSeverity = ERROR_SEVERITY();
+        RAISERROR(@ErrMsg, @ErrSeverity, 1);
+    END CATCH
+END
+
+
+CREATE PROCEDURE [Onwards].[UpdateResignation]
+(
+    @Id INT,
+    @UserId INT,
+    @ResignationTypeId INT,
+    @ResignationReasonId INT,
+    @ResignationLetterDate DATE,
+    @RequestedRelievingDate DATE,
+    @ActualRelievingDate DATE,
+    @NoticePeriod INT,
+    @NextEmployer VARCHAR(500) = NULL,  -- keep for future consistency
+    @EndOfNoticePeriod INT,
+    @MailingAddress VARCHAR(500) = NULL,
+    @Address VARCHAR(500) = NULL,
+    @PersonalEmailid VARCHAR(500) = NULL,
+    @Comments VARCHAR(500) = NULL,
+    @AttachmentFile VARCHAR(500) = NULL,
+    @PullbackComment VARCHAR(500) = NULL,
+    @StatusId INT = NULL,
+    @ApprovedBy INT = NULL,
+    @ApprovalDate DATE = NULL,
+    @ApproverRemarks VARCHAR(1000) = NULL,
+    @LoginId INT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        UPDATE [Onwards].[Resignation]
+        SET 
+            UserId = @UserId,
+            ResignationTypeId = @ResignationTypeId,
+            ResignationReasonId = @ResignationReasonId,
+            ResignationLetterDate = @ResignationLetterDate,
+            RequestedRelievingDate = @RequestedRelievingDate,
+            ActualRelievingDate = @ActualRelievingDate,
+            NoticePeriod = @NoticePeriod,
+            EndOfNoticePeriod = @EndOfNoticePeriod,
+            MailingAddress = @MailingAddress,
+            Address = @Address,
+            PersonalEmailid = @PersonalEmailid,
+            Comments = @Comments,
+            AttachmentFile = @AttachmentFile,
+            PullbackComment = @PullbackComment,
+            StatusId = @StatusId,
+            ApprovedBy = @ApprovedBy,
+            ApprovalDate = @ApprovalDate,
+            ApproverRemarks = @ApproverRemarks,
+            ModifiedDate = GETDATE(),
+            ModifiedBy = @LoginId
+        WHERE Id = @Id;
+    END TRY
+    BEGIN CATCH
+        DECLARE @ErrMsg NVARCHAR(4000), @ErrSeverity INT;
+        SELECT @ErrMsg = ERROR_MESSAGE(), @ErrSeverity = ERROR_SEVERITY();
+        RAISERROR(@ErrMsg, @ErrSeverity, 1);
+    END CATCH
+END
+
 ---------------------------- 21 Aug 2024 -------------------
   ALTER TABLE Onwards.Users
 ADD LocationId INT NOT NULL DEFAULT 0;

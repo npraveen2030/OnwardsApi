@@ -19,16 +19,17 @@ namespace OnwardsModel.Model
         public DateTime? ResignationLetterDate { get; set; }
 
         [Required]
-        public DateTime? ResignationRelivingDate { get; set; }
+        public DateTime? RequestedRelievingDate { get; set; }
 
         [Required]
-        public DateTime? ResignationActualDate { get; set; }
+        public DateTime? ActualRelievingDate { get; set; }
 
         [Required]
         public int? NoticePeriod { get; set; }
 
         [Required]
         public int? EndOfNoticePeriod { get; set; }
+        public string? NextEmployer { get; set; }
 
         [StringLength(500)]
         public string? MailingAddress { get; set; }
