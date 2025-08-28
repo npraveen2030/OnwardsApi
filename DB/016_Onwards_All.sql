@@ -1,5 +1,44 @@
 
 
+---------------------------- 28 Aug 2024 -------------------
+
+CREATE TABLE [Onwards].[ResignationStatus] (
+    [Id] INT IDENTITY(1,1) PRIMARY KEY,
+    [StatusName] VARCHAR(100) NOT NULL,   -- e.g. Pending, Approved, Rejected
+    [CreatedDate] DATETIME NOT NULL DEFAULT(GETDATE()),
+    [CreatedBy] INT NOT NULL,             -- FK to Users/Employees table
+    [ModifiedDate] DATETIME NULL,
+    [ModifiedBy] INT NULL,                -- FK to Users/Employees table
+    [IsActive] BIT NOT NULL DEFAULT(1)    -- 1 = Active, 0 = Inactive
+);
+
+
+INSERT INTO [Onwards].[ResignationStatus] 
+    ([StatusName], [CreatedBy])
+VALUES
+    ('Pending', 1),
+    ('Approved', 1),
+    ('Rejected', 1),
+    ('Pullover', 1);
+	
+/****** Object:  StoredProcedure [Onwards].[GetTrainingByLocation]    Script Date: 28-08-2025 11:58:38 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER PROCEDURE [Onwards].[GetTrainingByLocation]
+    @LocationId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT T.Name + ' - From Date (' + CAST(T.StartDate AS VARCHAR(15))  + ' ) - To Date (' + CAST(T.EndDate AS VARCHAR(15))  + ' ) - Contact (' + U.FullName + ')'  Name
+	FROM Onwards.Training AS T
+	INNER JOIN Onwards.Users AS U On T.createdBy = U.Id  
+	WHERE T.LocationId = @LocationId AND T.IsActive = 1  AND U.IsActive = 1;
+END
+  
 ---------------------------- 25 Aug 2024 -------------------
 
 DROP TABLE [Onwards].[Resignation]
