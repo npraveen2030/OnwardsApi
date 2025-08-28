@@ -1,14 +1,9 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using System.Data;
+using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using OnwardsDAL.Interface;
 using OnwardsModel.Dtos;
 using OnwardsModel.Model;
-using System;
-using System.Data;
-using System.Data.SqlClient;
-using System.Net;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace OnwardsDAL.Repository
 {
@@ -64,12 +59,7 @@ namespace OnwardsDAL.Repository
                     StatusId = reader["StatusId"] as int?,
                     ApprovedBy = reader["ApprovedBy"] as int?,
                     ApprovalDate = reader["ApprovalDate"] as DateTime?,
-                    ApproverRemarks = reader["ApproverRemarks"] as string,
-                    //CreatedDate = reader["CreatedDate"] as DateTime?,
-                    //CreatedBy = reader["CreatedBy"] as int?,
-                    //ModifiedDate = reader["ModifiedDate"] as DateTime?,
-                    //ModifiedBy = reader["ModifiedBy"] as int?,
-                    //IsActive = reader["IsActive"] as bool?
+                    ApproverRemarks = reader["ApproverRemarks"] as string
                 };
             }
 
