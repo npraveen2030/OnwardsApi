@@ -2,9 +2,16 @@
 
 ---------------------------- 28 Aug 2024 -------------------
 
+
+
+Update Onwards.Users 
+SET ReportingManagerId = 1
+where id = 2
+
+
 CREATE TABLE [Onwards].[ResignationStatus] (
-    [Id] INT IDENTITY(1,1) PRIMARY KEY,
-    [StatusName] VARCHAR(100) NOT NULL,   -- e.g. Pending, Approved, Rejected
+    [Id] INT  PRIMARY KEY,
+    [Status] VARCHAR(100) NOT NULL,   -- e.g. Pending, Approved, Rejected
     [CreatedDate] DATETIME NOT NULL DEFAULT(GETDATE()),
     [CreatedBy] INT NOT NULL,             -- FK to Users/Employees table
     [ModifiedDate] DATETIME NULL,
@@ -14,13 +21,14 @@ CREATE TABLE [Onwards].[ResignationStatus] (
 
 
 INSERT INTO [Onwards].[ResignationStatus] 
-    ([StatusName], [CreatedBy])
+    (Id,[Status], [CreatedBy])
 VALUES
-    ('Pending', 1),
-    ('Approved', 1),
-    ('Rejected', 1),
-    ('Pullover', 1);
-	
+    (1,'Pending', 1),
+    (2,'Approved', 1),
+    (3,'Rejected', 1),
+    (4,'Pullover', 1);
+
+ 
 /****** Object:  StoredProcedure [Onwards].[GetTrainingByLocation]    Script Date: 28-08-2025 11:58:38 ******/
 SET ANSI_NULLS ON
 GO
@@ -39,6 +47,39 @@ BEGIN
 	WHERE T.LocationId = @LocationId AND T.IsActive = 1  AND U.IsActive = 1;
 END
   
+  
+  
+CREATE OR ALTER PROCEDURE Onwards.GetAllResignations
+    @UserId INT  -- The manager's user ID
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @ReportingManagerId INT;
+
+    -- Get the ReportingManagerId for the logged-in user
+    SELECT @ReportingManagerId = ReportingManagerId
+    FROM Onwards.Users
+    WHERE Id = @UserId; 
+
+    -- Get resignations of employees reporting to this manager
+    SELECT 
+        r.UserId,
+        u.FullName AS EmployeeName,
+        r.CreatedDate,
+        r.CreatedBy,
+        r.ModifiedDate,
+        r.ModifiedBy,
+        r.IsActive ,
+		rs.Status 
+    FROM Onwards.Resignation r
+    INNER JOIN Onwards.Users u ON r.UserId = u.Id
+	INNER JOIN Onwards.ResignationStatus rs  ON R.StatusId = rs.id
+    WHERE u.ReportingManagerId = @ReportingManagerId
+    ORDER BY r.CreatedDate DESC;
+END;
+GO
+
 ---------------------------- 25 Aug 2024 -------------------
 
 DROP TABLE [Onwards].[Resignation]

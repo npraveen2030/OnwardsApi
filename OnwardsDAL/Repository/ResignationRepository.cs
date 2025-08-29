@@ -172,5 +172,61 @@ namespace OnwardsDAL.Repository
                 throw new Exception("Error while deleting resignation.", ex);
             }
         }
+
+        //public async Task<IEnumerable<ResignationDto>> GetAllResignations(int userId)
+        //{
+        //    using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+        //    {
+        //        var parameters = new { UserId = userId };
+
+        //        var result = await connection.QueryAsync<ResignationDto>(
+        //            "Onwards.GetAllResignations",
+        //            parameters,
+        //            commandType: CommandType.StoredProcedure);
+
+        //        return result.ToList();
+        //    }
+        //}
+
+        public async Task<IEnumerable<ResignationDto>> GetAllResignations(int userId)
+        {
+            var resignations = new List<ResignationDto>();
+
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            using (var command = new SqlCommand("Onwards.GetAllResignations", connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@UserId", userId);
+
+                await connection.OpenAsync();
+
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        var resignation = new ResignationDto
+                        {
+                            UserId = reader.GetInt32(reader.GetOrdinal("UserId")),
+                            FullName = reader.GetString(reader.GetOrdinal("EmployeeName")),
+                            //CreatedDate = reader.GetDateTime(reader.GetOrdinal("CreatedDate")),
+                            //CreatedBy = reader.GetInt32(reader.GetOrdinal("CreatedBy")),
+                            //ModifiedDate = reader.IsDBNull(reader.GetOrdinal("ModifiedDate"))
+                            //                ? null
+                            //                : reader.GetDateTime(reader.GetOrdinal("ModifiedDate")),
+                            //ModifiedBy = reader.IsDBNull(reader.GetOrdinal("ModifiedBy"))
+                            //                ? null
+                            //                : reader.GetInt32(reader.GetOrdinal("ModifiedBy")),
+                            //IsActive = reader.GetBoolean(reader.GetOrdinal("IsActive")),
+                            Status = reader.GetString(reader.GetOrdinal("Status"))
+                        };
+
+                        resignations.Add(resignation);
+                    }
+                }
+            }
+
+            return resignations;
+        }
+
     }
 }

@@ -27,3 +27,10 @@
 	Always follow order by CreatedDate DESC 
 
 * For Get StoredProcedure always use "SET NOCOUNT ON;"
+
+* Don't user StatusName column , use Status 
+
+	  CREATE TABLE [Onwards].[ResignationStatus] (
+		[Id] INT IDENTITY(1,1) PRIMARY KEY,
+		[Status] VARCHAR(100) NOT NULL,   -- e.g. Pending, Approved, Rejected 
+	);

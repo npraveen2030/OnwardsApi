@@ -33,5 +33,9 @@ namespace OnwardsModel.Dtos
         //public DateTime? ModifiedDate { get; set; }
         //public int? ModifiedBy { get; set; }
         //public bool? IsActive { get; set; }
+
+
+        public string FullName { get; set; }
+        public string Status { get; set; }
     }
 }

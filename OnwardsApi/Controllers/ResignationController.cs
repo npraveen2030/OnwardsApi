@@ -82,5 +82,17 @@ namespace OnwardsApi.Controllers
                 return StatusCode(500, new { error = ex.Message });
             }
         }
+
+        // GET: api/resignation/all/2
+        [HttpGet("GetAllResignations/{userId}")]
+        public async Task<IActionResult> GetAllResignations(int userId)
+        {
+            var result = await _resignationService.GetAllResignations(userId);
+
+            //if (result == null || !result.Any())
+            //    return NotFound("No resignations found.");
+
+            return Ok(result);
+        }
     }
 }
