@@ -1,284 +1,285 @@
-CREATE PROCEDURE [Onwards].[GetExitInterviewQuestions]
 
-AS
-BEGIN
 
-	SET NOCOUNT ON;
+---------------------------- 28 Aug 2024 -------------------
 
-    SELECT * 
-	FROM Onwards.ExitInterviewQuestions
-	WHERE IsActive = 1
 
-END
+
+Update Onwards.Users 
+SET ReportingManagerId = 1
+where id = 2
+
+
+CREATE TABLE [Onwards].[ResignationStatus] (
+    [Id] INT  PRIMARY KEY,
+    [Status] VARCHAR(100) NOT NULL,   -- e.g. Pending, Approved, Rejected
+    [CreatedDate] DATETIME NOT NULL DEFAULT(GETDATE()),
+    [CreatedBy] INT NOT NULL,             -- FK to Users/Employees table
+    [ModifiedDate] DATETIME NULL,
+    [ModifiedBy] INT NULL,                -- FK to Users/Employees table
+    [IsActive] BIT NOT NULL DEFAULT(1)    -- 1 = Active, 0 = Inactive
+);
+
+
+INSERT INTO [Onwards].[ResignationStatus] 
+    (Id,[Status], [CreatedBy])
+VALUES
+    (1,'Pending', 1),
+    (2,'Approved', 1),
+    (3,'Rejected', 1),
+    (4,'Pullover', 1);
+
+ 
+/****** Object:  StoredProcedure [Onwards].[GetTrainingByLocation]    Script Date: 28-08-2025 11:58:38 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [Onwards].[GetExitInterviewOptions]
-
-AS
-BEGIN
-
-	SET NOCOUNT ON;
-
-    SELECT * 
-	FROM Onwards.ExitInterviewOptions
-	WHERE IsActive = 1
-
-END
-GO
-
-CREATE PROCEDURE [Onwards].[InsertOrUpdateExitInterviewQuestions]
-    @Questions Onwards.ExitInterviewQuestionsType READONLY
+ALTER PROCEDURE [Onwards].[GetTrainingByLocation]
+    @LocationId INT
 AS
 BEGIN
     SET NOCOUNT ON;
-    SET XACT_ABORT ON;
 
-    DECLARE @CreatedIds TABLE (Id INT, RowIndex INT);
-
-    BEGIN TRY
-        BEGIN TRANSACTION;
-
-        -- MERGE for INSERT only (Id IS NULL)
-        MERGE INTO Onwards.ExitInterviewQuestions AS target
-        USING (
-            SELECT *
-            FROM @Questions
-            WHERE Id IS NULL
-        ) AS source
-        ON 1 = 0 -- Always false to force INSERT
-
-        WHEN NOT MATCHED THEN
-        INSERT (ExitInterviewId, Question, HasOptions, CreatedDate, CreatedBy, IsActive)
-        VALUES (source.ExitInterviewId, source.Question, source.HasOptions, GETDATE(), source.LoginId, 1)
-
-        OUTPUT inserted.Id, source.RowIndex INTO @CreatedIds(Id, RowIndex);
-
-        -- UPDATE: Only rows with Id NOT NULL
-        UPDATE q
-        SET
-            q.ExitInterviewId = src.ExitInterviewId,
-            q.Question = src.Question,
-            q.HasOptions = src.HasOptions,
-            q.ModifiedDate = GETDATE(),
-            q.ModifiedBy = src.LoginId,
-            q.IsActive = src.IsActive
-        FROM Onwards.ExitInterviewQuestions q
-        JOIN @Questions src ON q.Id = src.Id
-        WHERE src.Id IS NOT NULL;
-
-        COMMIT TRANSACTION;
-
-        -- Return the mapping of inserted Ids and RowIndex
-        SELECT * FROM @CreatedIds;
-
-    END TRY
-    BEGIN CATCH
-        IF XACT_STATE() <> 0
-            ROLLBACK TRANSACTION;
-
-        THROW;
-    END CATCH
+    SELECT T.Name + ' - From Date (' + CAST(T.StartDate AS VARCHAR(15))  + ' ) - To Date (' + CAST(T.EndDate AS VARCHAR(15))  + ' ) - Contact (' + U.FullName + ')'  Name
+	FROM Onwards.Training AS T
+	INNER JOIN Onwards.Users AS U On T.createdBy = U.Id  
+	WHERE T.LocationId = @LocationId AND T.IsActive = 1  AND U.IsActive = 1;
 END
-
-GO
-
-
-CREATE PROCEDURE [Onwards].[InsertOrUpdateExitInterviewOptions]
-    @Options Onwards.ExitInterviewOptionsType READONLY
+  
+  
+  
+CREATE OR ALTER PROCEDURE Onwards.GetAllResignations
+    @UserId INT  -- The manager's user ID
 AS
 BEGIN
     SET NOCOUNT ON;
-    SET XACT_ABORT ON;
+
+    DECLARE @ReportingManagerId INT;
+
+    -- Get the ReportingManagerId for the logged-in user
+    SELECT @ReportingManagerId = ReportingManagerId
+    FROM Onwards.Users
+    WHERE Id = @UserId; 
+
+    -- Get resignations of employees reporting to this manager
+    SELECT 
+        r.UserId,
+        u.FullName AS EmployeeName,
+        r.CreatedDate,
+        r.CreatedBy,
+        r.ModifiedDate,
+        r.ModifiedBy,
+        r.IsActive ,
+		rs.Status 
+    FROM Onwards.Resignation r
+    INNER JOIN Onwards.Users u ON r.UserId = u.Id
+	INNER JOIN Onwards.ResignationStatus rs  ON R.StatusId = rs.id
+    WHERE u.ReportingManagerId = @ReportingManagerId
+    ORDER BY r.CreatedDate DESC;
+END;
+GO
+
+---------------------------- 25 Aug 2024 -------------------
+
+DROP TABLE [Onwards].[Resignation]
+
+CREATE TABLE [Onwards].[Resignation](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[UserId] [int] NOT NULL,
+	[ResignationTypeId] [int] NOT NULL,
+	[ResignationReasonId] [int] NOT NULL,
+	[ResignationLetterDate] [date] NOT NULL,
+	[RequestedRelievingDate] [date] NOT NULL,
+	[ActualRelievingDate] [date] NOT NULL,
+	[NoticePeriod] [int] NOT NULL,
+	[EndOfNoticePeriod] [int] NOT NULL,
+	[NextEmployer] [varchar](500) NULL,
+	[MailingAddress] [varchar](500) NULL,
+	[Address] [varchar](500) NULL,
+	[PersonalEmailid] [varchar](500) NULL,
+	[Comments] [varchar](500) NULL,
+	[AttachmentFile] [varchar](500) NULL,
+	[PullbackComment] [varchar](500) NULL,
+	[StatusId] [int] NULL,
+	[ApprovedBy] [int] NULL,
+	[ApprovalDate] [date] NULL,
+	[ApproverRemarks] [varchar](1000) NULL,
+	[createdDate] [datetime] NULL,
+	[createdBy] [int] NULL,
+	[ModifiedDate] [datetime] NULL,
+	[ModifiedBy] [int] NULL,
+	[IsActive] [bit] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [Onwards].[Resignation]  WITH CHECK ADD FOREIGN KEY([ResignationTypeId])
+REFERENCES [Onwards].[ResignationType] ([Id])
+GO
+
+ALTER TABLE [Onwards].[Resignation]  WITH CHECK ADD FOREIGN KEY([ResignationReasonId])
+REFERENCES [Onwards].[ResignationType] ([Id])
+GO
+
+
+CREATE PROCEDURE Onwards.GetResignationDetailsByUserId
+    @UserId INT
+AS
+BEGIN
+    SELECT *
+    FROM Onwards.Resignation
+    WHERE UserId = @UserId AND IsActive = 1;
+END
+
+
+CREATE PROCEDURE [Onwards].[InsertResignation]
+(
+    @UserId INT,
+    @ResignationTypeId INT,
+    @ResignationReasonId INT,
+    @ResignationLetterDate DATE,
+    @RequestedRelievingDate DATE,
+    @ActualRelievingDate DATE,
+    @NoticePeriod INT,
+    @NextEmployer VARCHAR(500) = NULL,  -- I see you’re passing this in code (not in table earlier?)
+    @EndOfNoticePeriod INT,
+    @MailingAddress VARCHAR(500) = NULL,
+    @Address VARCHAR(500) = NULL,
+    @PersonalEmailid VARCHAR(500) = NULL,
+    @Comments VARCHAR(500) = NULL,
+    @AttachmentFile VARCHAR(500) = NULL,
+    @PullbackComment VARCHAR(500) = NULL,
+    @StatusId INT = NULL,
+    @ApprovedBy INT = NULL,
+    @ApprovalDate DATE = NULL,
+    @ApproverRemarks VARCHAR(1000) = NULL,
+    @LoginId INT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
 
     BEGIN TRY
-        BEGIN TRANSACTION;
-
-        -- INSERT: Where Id IS NULL
-        INSERT INTO Onwards.ExitInterviewOptions (
-            QuestionId, Description, CreatedDate, CreatedBy, IsActive
+        INSERT INTO [Onwards].[Resignation]
+        (
+            UserId,
+            ResignationTypeId,
+            ResignationReasonId,
+            ResignationLetterDate,
+            RequestedRelievingDate,
+            ActualRelievingDate,
+            NoticePeriod,
+            EndOfNoticePeriod,
+            MailingAddress,
+            Address,
+            PersonalEmailid,
+            Comments,
+            AttachmentFile,
+            PullbackComment,
+            StatusId,
+            ApprovedBy,
+            ApprovalDate,
+            ApproverRemarks,
+            CreatedDate,
+            CreatedBy,
+            IsActive
         )
-        SELECT
-            o.QuestionId,
-            o.Description,
-            GETDATE(),
-            o.LoginId,
-            o.IsActive
-        FROM @Options o
-        WHERE o.Id IS NULL;
-
-        -- UPDATE: Where Id IS NOT NULL
-        UPDATE opt
-        SET
-            opt.QuestionId = o.QuestionId,
-            opt.Description = o.Description,
-            opt.ModifiedDate = GETDATE(),
-            opt.ModifiedBy = o.LoginId,
-            opt.IsActive = o.IsActive
-        FROM Onwards.ExitInterviewOptions opt
-        JOIN @Options o ON opt.Id = o.Id
-        WHERE o.Id IS NOT NULL;
-
-        COMMIT TRANSACTION;
+        VALUES
+        (
+            @UserId,
+            @ResignationTypeId,
+            @ResignationReasonId,
+            @ResignationLetterDate,
+            @RequestedRelievingDate,
+            @ActualRelievingDate,
+            @NoticePeriod,
+            @EndOfNoticePeriod,
+            @MailingAddress,
+            @Address,
+            @PersonalEmailid,
+            @Comments,
+            @AttachmentFile,
+            @PullbackComment,
+            @StatusId,
+            @ApprovedBy,
+            @ApprovalDate,
+            @ApproverRemarks,
+            GETDATE(),   -- CreatedDate
+            @LoginId,    -- CreatedBy
+            1            -- IsActive default true
+        );
     END TRY
     BEGIN CATCH
-        IF XACT_STATE() <> 0
-            ROLLBACK TRANSACTION;
-
-        THROW;
-    END CATCH
-END;
-GO
-
-
-
----------------------------- 22 Aug 2024 -------------------
-ALTER PROCEDURE [Onwards].[sp_ValidateUserLogin]
-    @EmployeeCode NVARCHAR(50),
-    @Password NVARCHAR(100)
-AS
-BEGIN
-    SELECT U.EmployeeCode,U.FullName, U.Email, R.RoleName, U.Mobile , RM.EmployeeCode AS ReportingManagerEmpCode
-	, RM.FullName AS ReportingManagerFullName, U.Id , U.LocationId
-	FROM Onwards.Users as U
-	LEFT JOIN Onwards.BasicUserDetails as BD ON U.id= BD.Userid AND BD.Isactive = 1 
-	LEFT JOIN Onwards.Roles as R on U.RoleId = R.Id  and R.isActive =1
-	LEFT JOIN Onwards.Users as RM ON RM.Id = U.ReportingManagerId AND RM.Isactive = 1 
-	AND U.Isactive = 1 
-	
-	WHERE 
-      U.EmployeeCode = @EmployeeCode AND U.Password = @Password;
-END;
-
-ALTER TABLE Onwards.UserLeaveApplied
-DROP COLUMN ContentType
-
-  ALTER TABLE Onwards.UserLeaveApplied
-  ADD PhoneNo NVARCHAR(20) NOT NULL DEFAULT ''
-
-  ALTER TABLE Onwards.UserLeaveApplied
-ADD NotifiedUserId INT NOT NULL DEFAULT 1;
-
-ALTER TABLE Onwards.UserLeaveApplied
-ADD CONSTRAINT FK_UserLeaveApplied_Users_NotifiedUser
-    FOREIGN KEY (NotifiedUserId) REFERENCES Onwards.Users(Id);
-
-
-
-ALTER PROCEDURE [Onwards].[InsertOrUpdateUserLeaveApplied]
-	@Id INT = NULL,
-	@LoginId INT,
-	@UserId INT,
-	@LeaveTypeId INT,
-	@Year INT= NULL,
-	@PhoneNo NVARCHAR(20) = NULL,
-	@StartDate DATETIME,
-	@EndDate DATETIME,
-	@NoOfDays DECIMAL(9,2) = NULL,
-	@LocationId INT = NULL,
-	@Reason VARCHAR(300)= NULL,
-	@Action NVARCHAR(300) = NULL,
-	@FileName NVARCHAR(255) = NULL,
-	@Data VARBINARY(MAX) = NULL,
-	@LeaveStatusId INT
-	
-AS
-BEGIN
-	SET NOCOUNT ON;
-	SET XACT_ABORT ON;
-
-	BEGIN TRY
-	BEGIN TRANSACTION;
-
-		IF (@Id IS NOT NULL)
-		BEGIN
-
-			DECLARE @WorkingDays INT;
-			;WITH DateSeries AS
-			(
-				SELECT @StartDate AS TheDate
-				UNION ALL
-				SELECT DATEADD(DAY, 1, TheDate)
-				FROM DateSeries
-				WHERE TheDate < @EndDate
-			)
-			SELECT 
-				@WorkingDays = COUNT(*)
-			FROM DateSeries d
-			WHERE 
-				-- Exclude weekends
-				DATENAME(WEEKDAY, d.TheDate) NOT IN ('Saturday', 'Sunday')
-				-- Exclude holidays
-				AND NOT EXISTS (
-					SELECT 1 
-					FROM Onwards.HolidayList h
-					WHERE h.LocationId = @LocationId 
-					  AND h.HolidayDate = d.TheDate
-				)
-			OPTION (MAXRECURSION 0);
-
-			Insert Onwards.UserLeaveApplied ([UserId]
-					  ,[LeaveTypeId]
-					  ,[Year]
-					  ,[NoOfDays]
-					  ,[StartDate]
-					  ,[EndDate]
-					  ,[Reason]
-					  ,[Action]
-					  ,[FileName]
-					  ,[Data]
-					  ,[LeaveStatusId]
-					  ,[CreatedDate]
-					  ,[CreatedBy]
-					  ,[ModefiedDate]
-					  ,[ModifiedBy]
-					  ,[IsActive])
-				VALUES
-						(@UserId,
-						@LeaveTypeId,
-						@Year,
-						@WorkingDays,
-						@StartDate,
-						@EndDate,
-						@Reason,
-						@Action,
-						@FileName,
-						@Data,
-						@LeaveStatusId,
-						GETDATE(),
-						@LoginId,
-						NULL,
-						NULL,
-						1);
-
-				UPDATE Onwards.LeaveBalances
-				SET RemainingDays = RemainingDays - @WorkingDays
-				WHERE UserId = @UserId AND LeaveTypeId = @LeaveTypeId
-		END
-		ELSE 
-		BEGIN 
-			UPDATE Onwards.UserLeaveApplied
-			SET ModifiedBy = @LoginId,ModefiedDate = GETDATE(),LeaveStatusId = @LeaveStatusId, Action = @Action
-			WHERE Id = @Id
-			-- 3: Rejected , 4: Cancelled
-			IF (@LeaveStatusId IN (3,4))
-			BEGIN
-				UPDATE Onwards.LeaveBalances
-				SET RemainingDays = RemainingDays + @NoOfDays
-				WHERE UserId = @UserId AND LeaveTypeId = @LeaveStatusId
-			END
-		END
-	COMMIT TRANSACTION;
-	END TRY
-	BEGIN CATCH
-        IF XACT_STATE() <> 0
-            ROLLBACK TRANSACTION;
-
-        THROW;
+        DECLARE @ErrMsg NVARCHAR(4000), @ErrSeverity INT;
+        SELECT @ErrMsg = ERROR_MESSAGE(), @ErrSeverity = ERROR_SEVERITY();
+        RAISERROR(@ErrMsg, @ErrSeverity, 1);
     END CATCH
 END
 
 
+CREATE PROCEDURE [Onwards].[UpdateResignation]
+(
+    @Id INT,
+    @UserId INT,
+    @ResignationTypeId INT,
+    @ResignationReasonId INT,
+    @ResignationLetterDate DATE,
+    @RequestedRelievingDate DATE,
+    @ActualRelievingDate DATE,
+    @NoticePeriod INT,
+    @NextEmployer VARCHAR(500) = NULL,  -- keep for future consistency
+    @EndOfNoticePeriod INT,
+    @MailingAddress VARCHAR(500) = NULL,
+    @Address VARCHAR(500) = NULL,
+    @PersonalEmailid VARCHAR(500) = NULL,
+    @Comments VARCHAR(500) = NULL,
+    @AttachmentFile VARCHAR(500) = NULL,
+    @PullbackComment VARCHAR(500) = NULL,
+    @StatusId INT = NULL,
+    @ApprovedBy INT = NULL,
+    @ApprovalDate DATE = NULL,
+    @ApproverRemarks VARCHAR(1000) = NULL,
+    @LoginId INT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
 
+    BEGIN TRY
+        UPDATE [Onwards].[Resignation]
+        SET 
+            UserId = @UserId,
+            ResignationTypeId = @ResignationTypeId,
+            ResignationReasonId = @ResignationReasonId,
+            ResignationLetterDate = @ResignationLetterDate,
+            RequestedRelievingDate = @RequestedRelievingDate,
+            ActualRelievingDate = @ActualRelievingDate,
+            NoticePeriod = @NoticePeriod,
+            EndOfNoticePeriod = @EndOfNoticePeriod,
+            MailingAddress = @MailingAddress,
+            Address = @Address,
+            PersonalEmailid = @PersonalEmailid,
+            Comments = @Comments,
+            AttachmentFile = @AttachmentFile,
+            PullbackComment = @PullbackComment,
+            StatusId = @StatusId,
+            ApprovedBy = @ApprovedBy,
+            ApprovalDate = @ApprovalDate,
+            ApproverRemarks = @ApproverRemarks,
+            ModifiedDate = GETDATE(),
+            ModifiedBy = @LoginId
+        WHERE Id = @Id;
+    END TRY
+    BEGIN CATCH
+        DECLARE @ErrMsg NVARCHAR(4000), @ErrSeverity INT;
+        SELECT @ErrMsg = ERROR_MESSAGE(), @ErrSeverity = ERROR_SEVERITY();
+        RAISERROR(@ErrMsg, @ErrSeverity, 1);
+    END CATCH
+END
 
 ---------------------------- 21 Aug 2024 -------------------
   ALTER TABLE Onwards.Users

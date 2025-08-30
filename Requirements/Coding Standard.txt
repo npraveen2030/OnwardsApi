@@ -23,3 +23,15 @@ WebApi
 
 	HolidayList
 		GetHolidayListByLocationId		`${this.apiService}/Training/GetTrainingDetailsByLocationId/${locationId}`,
+
+
+Extra Best Practices
+
+	Always make your API methods async and return Task<T> (never async void).
+	
+	If pagination or filtering is possible, consider returning a wrapper DTO like:	
+	
+	public class PagedResult<T>
+	{
+    		public IEnumerable<T> Items { get; set; } = Enumerable.Empty<T>();
+    		public int TotalCount { get; set; 

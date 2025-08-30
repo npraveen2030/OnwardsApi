@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnwardsBLL.Interface;
-using OnwardsBLL.Service;
-using OnwardsModel.Dtos;
 using OnwardsModel.Model;
 
 namespace OnwardsApi.Controllers

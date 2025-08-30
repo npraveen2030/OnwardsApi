@@ -8,3 +8,6 @@ WebApi
 
 	HolidayList
 		GetHolidayListByLocationId		`${this.apiService}/Training/GetTrainingDetailsByLocationId/${locationId}`,
+
+
+Use : loginId for inserting and Updating the SP
