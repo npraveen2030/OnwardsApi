@@ -59,7 +59,8 @@ namespace OnwardsDAL.Repository
                         Grade = reader["GradeValue"].ToString() ?? "",
                         Department = reader["DepartmentName"].ToString() ?? "",
                         ReportingManager = reader["ReportingManagerName"].ToString() ?? "",
-                        AdministrativeManager = reader["AdministrativeManagerName"].ToString() ?? ""
+                        AdministrativeManager = reader["AdministrativeManagerName"].ToString() ?? "",
+                        LocationId = reader["LocationId"].ToString()?? ""
                     });
                 }
                 return list;

@@ -1,4 +1,154 @@
+CREATE PROCEDURE [Onwards].[GetExitInterviewQuestions]
+
+AS
+BEGIN
+
+	SET NOCOUNT ON;
+
+    SELECT * 
+	FROM Onwards.ExitInterviewQuestions
+	WHERE IsActive = 1
+
+END
+GO
+
+CREATE PROCEDURE [Onwards].[GetExitInterviewOptions]
+
+AS
+BEGIN
+
+	SET NOCOUNT ON;
+
+    SELECT * 
+	FROM Onwards.ExitInterviewOptions
+	WHERE IsActive = 1
+
+END
+GO
+
+CREATE PROCEDURE [Onwards].[InsertOrUpdateExitInterviewQuestions]
+    @Questions Onwards.ExitInterviewQuestionsType READONLY
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    DECLARE @CreatedIds TABLE (Id INT, RowIndex INT);
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- MERGE for INSERT only (Id IS NULL)
+        MERGE INTO Onwards.ExitInterviewQuestions AS target
+        USING (
+            SELECT *
+            FROM @Questions
+            WHERE Id IS NULL
+        ) AS source
+        ON 1 = 0 -- Always false to force INSERT
+
+        WHEN NOT MATCHED THEN
+        INSERT (ExitInterviewId, Question, HasOptions, CreatedDate, CreatedBy, IsActive)
+        VALUES (source.ExitInterviewId, source.Question, source.HasOptions, GETDATE(), source.LoginId, 1)
+
+        OUTPUT inserted.Id, source.RowIndex INTO @CreatedIds(Id, RowIndex);
+
+        -- UPDATE: Only rows with Id NOT NULL
+        UPDATE q
+        SET
+            q.ExitInterviewId = src.ExitInterviewId,
+            q.Question = src.Question,
+            q.HasOptions = src.HasOptions,
+            q.ModifiedDate = GETDATE(),
+            q.ModifiedBy = src.LoginId,
+            q.IsActive = src.IsActive
+        FROM Onwards.ExitInterviewQuestions q
+        JOIN @Questions src ON q.Id = src.Id
+        WHERE src.Id IS NOT NULL;
+
+        COMMIT TRANSACTION;
+
+        -- Return the mapping of inserted Ids and RowIndex
+        SELECT * FROM @CreatedIds;
+
+    END TRY
+    BEGIN CATCH
+        IF XACT_STATE() <> 0
+            ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END
+
+GO
+
+
+CREATE PROCEDURE [Onwards].[InsertOrUpdateExitInterviewOptions]
+    @Options Onwards.ExitInterviewOptionsType READONLY
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- INSERT: Where Id IS NULL
+        INSERT INTO Onwards.ExitInterviewOptions (
+            QuestionId, Description, CreatedDate, CreatedBy, IsActive
+        )
+        SELECT
+            o.QuestionId,
+            o.Description,
+            GETDATE(),
+            o.LoginId,
+            o.IsActive
+        FROM @Options o
+        WHERE o.Id IS NULL;
+
+        -- UPDATE: Where Id IS NOT NULL
+        UPDATE opt
+        SET
+            opt.QuestionId = o.QuestionId,
+            opt.Description = o.Description,
+            opt.ModifiedDate = GETDATE(),
+            opt.ModifiedBy = o.LoginId,
+            opt.IsActive = o.IsActive
+        FROM Onwards.ExitInterviewOptions opt
+        JOIN @Options o ON opt.Id = o.Id
+        WHERE o.Id IS NOT NULL;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        IF XACT_STATE() <> 0
+            ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END;
+GO
+
+
+
 ---------------------------- 22 Aug 2024 -------------------
+ALTER PROCEDURE [Onwards].[sp_ValidateUserLogin]
+    @EmployeeCode NVARCHAR(50),
+    @Password NVARCHAR(100)
+AS
+BEGIN
+    SELECT U.EmployeeCode,U.FullName, U.Email, R.RoleName, U.Mobile , RM.EmployeeCode AS ReportingManagerEmpCode
+	, RM.FullName AS ReportingManagerFullName, U.Id , U.LocationId
+	FROM Onwards.Users as U
+	LEFT JOIN Onwards.BasicUserDetails as BD ON U.id= BD.Userid AND BD.Isactive = 1 
+	LEFT JOIN Onwards.Roles as R on U.RoleId = R.Id  and R.isActive =1
+	LEFT JOIN Onwards.Users as RM ON RM.Id = U.ReportingManagerId AND RM.Isactive = 1 
+	AND U.Isactive = 1 
+	
+	WHERE 
+      U.EmployeeCode = @EmployeeCode AND U.Password = @Password;
+END;
+
 ALTER TABLE Onwards.UserLeaveApplied
 DROP COLUMN ContentType
 

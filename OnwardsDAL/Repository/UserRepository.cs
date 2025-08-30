@@ -75,6 +75,7 @@ namespace OnwardsDAL.Repository
                 int iMobile = reader.GetOrdinal("Mobile");
                 int iManagerCode = reader.GetOrdinal("ReportingManagerEmpCode");
                 int iManagerName = reader.GetOrdinal("ReportingManagerFullName");
+                int iLocationId = reader.GetOrdinal("LocationId");
 
                 userDetailsDto.Id = reader.IsDBNull(iId) ? 0 : reader.GetInt32(iId);
                 userDetailsDto.EmployeeCode = reader.IsDBNull(iEmpCode) ? "" : reader.GetString(iEmpCode);
@@ -82,6 +83,7 @@ namespace OnwardsDAL.Repository
                 userDetailsDto.Email = reader.IsDBNull(iEmail) ? "" : reader.GetString(iEmail);
                 userDetailsDto.RoleName = reader.IsDBNull(iRoleName) ? "" : reader.GetString(iRoleName);
                 userDetailsDto.MobileNo = reader.IsDBNull(iMobile) ? "" : reader.GetString(iMobile);
+                userDetailsDto.LocationId = reader.IsDBNull(iLocationId) ? 0 : reader.GetInt32(iLocationId);
                 userDetailsDto.ReportingManagerEmpCode = reader.IsDBNull(iManagerCode) ? "" : reader.GetString(iManagerCode);
                 userDetailsDto.ReportingManagerName = reader.IsDBNull(iManagerName) ? "" : reader.GetString(iManagerName);
 

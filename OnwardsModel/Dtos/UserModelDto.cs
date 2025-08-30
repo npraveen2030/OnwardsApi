@@ -19,6 +19,7 @@ namespace OnwardsModel.Dtos
         public string Department { get; set; } = null!;
         public string ReportingManager { get; set; } = null!;
         public string AdministrativeManager { get; set; } = null!;
+        public string LocationId { get; set; } = null!;
     };
 
     public class UserModelFilter

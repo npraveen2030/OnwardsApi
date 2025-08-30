@@ -14,6 +14,8 @@ namespace OnwardsModel.Dtos
         public string Email { get; set; } = null!;
         public string RoleName { get; set; } = null!;
         public string MobileNo { get;set;} = null!;
+
+        public int LocationId { get; set; } 
         public string ReportingManagerEmpCode { get;set;} = null!;
         public string ReportingManagerName { get;set;} = null!;
     }
