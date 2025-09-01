@@ -1,3 +1,38 @@
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER   PROCEDURE [Onwards].[GetAllResignations]
+    @UserId INT  -- The manager's user ID
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @ReportingManagerId INT;
+
+    -- Get the ReportingManagerId for the logged-in user
+    SELECT @ReportingManagerId = ReportingManagerId
+    FROM Onwards.Users
+    WHERE Id = @UserId; 
+
+    -- Get resignations of employees reporting to this manager
+    SELECT 
+        r.UserId,
+        u.FullName AS EmployeeName,
+        r.CreatedDate,
+        r.CreatedBy,
+        r.ModifiedDate,
+        r.ModifiedBy,
+        r.IsActive ,
+		rs.Status 
+    FROM Onwards.Resignation r
+    INNER JOIN Onwards.Users u ON r.UserId = u.Id
+	INNER JOIN Onwards.ResignationStatus rs  ON R.StatusId = rs.id
+    WHERE u.ReportingManagerId = @ReportingManagerId AND r.StatusId = 1
+    ORDER BY r.CreatedDate DESC;
+END;
+
 ALTER TABLE Onwards.Resignation
 ADD AttachmentFileName NVARCHAR(300) NULL;
 

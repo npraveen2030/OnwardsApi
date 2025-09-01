@@ -46,34 +46,6 @@ namespace OnwardsApi.Controllers
             }
         }
 
-        //[HttpPost("update")]
-        //public async Task<asdfIActionResult> Update(ResignationModel model)
-        //{
-        //    try
-        //    {
-        //        await _resignationService.UpdateResignationAsync(model);
-        //        return Ok(new { message = "Resignation updated successfully." });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, new { error = ex.Message });
-        //    }
-        //}
-
-        //[HttpPut("update")]
-        //public async Task<IActionResult> Update(ResignationModel model)
-        //{
-        //    try
-        //    {
-        //        await _resignationService.UpdateResignationAsync(model);
-        //        return Ok(new { message = "Resignation updated successfully." });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, new { error = ex.Message });
-        //    }
-        //}
-
         [HttpDelete("delete/{id}/{loginId}")]
         public async Task<IActionResult> Delete(int id, int loginId)
         {

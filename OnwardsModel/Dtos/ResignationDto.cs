@@ -22,7 +22,8 @@ namespace OnwardsModel.Dtos
         public string Address { get; set; }
         public string PersonalEmailId { get; set; }
         public string Comments { get; set; }
-        public string AttachmentFile { get; set; }
+        public string? AttachmentFileName { get; set; }
+        public byte[]? AttachmentFile { get; set; }
         public string PullbackComment { get; set; }
         public int? StatusId { get; set; }
         public int? ApprovedBy { get; set; }
