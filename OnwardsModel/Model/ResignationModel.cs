@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,25 +10,18 @@ namespace OnwardsModel.Model
     {
         public int Id { get; set; }
 
-        [Required]
         public int? ResignationTypeId { get; set; }
 
-        [Required]
         public int? ResignationReasonId { get; set; }
 
-        [Required]
         public DateTime? ResignationLetterDate { get; set; }
 
-        [Required]
         public DateTime? RequestedRelievingDate { get; set; }
 
-        [Required]
         public DateTime? ActualRelievingDate { get; set; }
 
-        [Required]
         public int? NoticePeriod { get; set; }
 
-        [Required]
         public int? EndOfNoticePeriod { get; set; }
         public string? NextEmployer { get; set; }
 
@@ -38,13 +32,13 @@ namespace OnwardsModel.Model
         public string? Address { get; set; }
 
         [StringLength(500)]
-        public string? PersonalEmailid { get; set; }
+        public string? PersonalEmailId { get; set; }
 
         [StringLength(500)]
         public string? Comments { get; set; }
 
-        [StringLength(500)]
-        public string? AttachmentFile { get; set; }
+        public string? AttachmentFileName { get;set;}
+        public IFormFile? AttachmentFile { get; set; }
 
         [StringLength(500)]
         public string? PullbackComment { get; set; }

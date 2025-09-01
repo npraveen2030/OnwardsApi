@@ -12,8 +12,7 @@ namespace OnwardsBLL.Interface
     {
 
         public Task<ResignationDto?> GetResignationDetailsByUserId(int userId);
-        Task InsertResignationAsync(ResignationModel model);
-        Task UpdateResignationAsync(ResignationModel model);
+        Task InsertOrUpdateResignationAsync(ResignationModel model);
         Task DeleteResignationAsync(int id, int loginId);
 
         Task<IEnumerable<ResignationDto>> GetAllResignations(int userId);

@@ -66,18 +66,61 @@ namespace OnwardsDAL.Repository
             return resignation;
         }
 
-        public async Task InsertResignationAsync(ResignationModel model)
+        //public async Task InsertResignationAsync(ResignationModel model)
+        //{
+        //    try
+        //    {
+        //        await using var conn = GetConnection();
+        //        await conn.OpenAsync();
+
+        //        await using var cmd = new SqlCommand("Onwards.InsertResignation", conn)
+        //        {
+        //            CommandType = CommandType.StoredProcedure
+        //        };
+
+        //        cmd.Parameters.AddWithValue("@UserId", model.UserId);
+        //        cmd.Parameters.AddWithValue("@ResignationTypeId", model.ResignationTypeId);
+        //        cmd.Parameters.AddWithValue("@ResignationReasonId", model.ResignationReasonId);
+        //        cmd.Parameters.AddWithValue("@ResignationLetterDate", model.ResignationLetterDate);
+        //        cmd.Parameters.AddWithValue("@RequestedRelievingDate", model.RequestedRelievingDate);
+        //        cmd.Parameters.AddWithValue("@ActualRelievingDate", model.ActualRelievingDate);
+        //        cmd.Parameters.AddWithValue("@NoticePeriod", model.NoticePeriod);
+        //        cmd.Parameters.AddWithValue("@NextEmployer", model.NextEmployer);
+        //        cmd.Parameters.AddWithValue("@EndOfNoticePeriod", model.EndOfNoticePeriod);
+        //        cmd.Parameters.AddWithValue("@MailingAddress", string.IsNullOrWhiteSpace(model.MailingAddress?.ToString()) ? DBNull.Value : (object)model.MailingAddress);
+        //        cmd.Parameters.AddWithValue("@Address", string.IsNullOrWhiteSpace(model.Address?.ToString()) ? DBNull.Value : (object)model.Address);
+        //        cmd.Parameters.AddWithValue("@PersonalEmailid", string.IsNullOrWhiteSpace(model.PersonalEmailid?.ToString()) ? DBNull.Value : (object)model.PersonalEmailid);
+        //        cmd.Parameters.AddWithValue("@Comments", string.IsNullOrWhiteSpace(model.Comments?.ToString()) ? DBNull.Value : (object)model.Comments);
+        //        cmd.Parameters.AddWithValue("@AttachmentFile", string.IsNullOrWhiteSpace(model.AttachmentFile?.ToString()) ? DBNull.Value : (object)model.AttachmentFile);
+        //        cmd.Parameters.AddWithValue("@PullbackComment", string.IsNullOrWhiteSpace(model.PullbackComment?.ToString()) ? DBNull.Value : (object)model.PullbackComment);
+        //        cmd.Parameters.AddWithValue("@StatusId", model.StatusId ?? (object)DBNull.Value);
+        //        cmd.Parameters.AddWithValue("@ApprovedBy", model.ApprovedBy ?? (object)DBNull.Value);
+        //        cmd.Parameters.AddWithValue("@ApprovalDate", model.ApprovalDate ?? (object)DBNull.Value);
+        //        cmd.Parameters.AddWithValue("@ApproverRemarks", string.IsNullOrWhiteSpace(model.ApproverRemarks?.ToString()) ? DBNull.Value : (object)model.ApproverRemarks);
+        //        cmd.Parameters.AddWithValue("@LoginId", model.LoginId);
+
+
+        //        await cmd.ExecuteNonQueryAsync();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("Error while inserting resignation.", ex);
+        //    }
+        //}
+
+        public async Task InsertOrUpdateResignationAsync(ResignationModel model)
         {
             try
             {
                 await using var conn = GetConnection();
                 await conn.OpenAsync();
 
-                await using var cmd = new SqlCommand("Onwards.InsertResignation", conn)
+                await using var cmd = new SqlCommand("Onwards.InsertOrUpdateResignation", conn)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
 
+                cmd.Parameters.AddWithValue("@Id", model.Id != 0 ? model.Id : DBNull.Value);
                 cmd.Parameters.AddWithValue("@UserId", model.UserId);
                 cmd.Parameters.AddWithValue("@ResignationTypeId", model.ResignationTypeId);
                 cmd.Parameters.AddWithValue("@ResignationReasonId", model.ResignationReasonId);
@@ -85,55 +128,26 @@ namespace OnwardsDAL.Repository
                 cmd.Parameters.AddWithValue("@RequestedRelievingDate", model.RequestedRelievingDate);
                 cmd.Parameters.AddWithValue("@ActualRelievingDate", model.ActualRelievingDate);
                 cmd.Parameters.AddWithValue("@NoticePeriod", model.NoticePeriod);
-                cmd.Parameters.AddWithValue("@NextEmployer", model.NextEmployer);
                 cmd.Parameters.AddWithValue("@EndOfNoticePeriod", model.EndOfNoticePeriod);
                 cmd.Parameters.AddWithValue("@MailingAddress", string.IsNullOrWhiteSpace(model.MailingAddress?.ToString()) ? DBNull.Value : (object)model.MailingAddress);
                 cmd.Parameters.AddWithValue("@Address", string.IsNullOrWhiteSpace(model.Address?.ToString()) ? DBNull.Value : (object)model.Address);
-                cmd.Parameters.AddWithValue("@PersonalEmailid", string.IsNullOrWhiteSpace(model.PersonalEmailid?.ToString()) ? DBNull.Value : (object)model.PersonalEmailid);
+                cmd.Parameters.AddWithValue("@PersonalEmailid", string.IsNullOrWhiteSpace(model.PersonalEmailId?.ToString()) ? DBNull.Value : (object)model.PersonalEmailId);
                 cmd.Parameters.AddWithValue("@Comments", string.IsNullOrWhiteSpace(model.Comments?.ToString()) ? DBNull.Value : (object)model.Comments);
-                cmd.Parameters.AddWithValue("@AttachmentFile", string.IsNullOrWhiteSpace(model.AttachmentFile?.ToString()) ? DBNull.Value : (object)model.AttachmentFile);
-                cmd.Parameters.AddWithValue("@PullbackComment", string.IsNullOrWhiteSpace(model.PullbackComment?.ToString()) ? DBNull.Value : (object)model.PullbackComment);
-                cmd.Parameters.AddWithValue("@StatusId", model.StatusId ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@ApprovedBy", model.ApprovedBy ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@ApprovalDate", model.ApprovalDate ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@ApproverRemarks", string.IsNullOrWhiteSpace(model.ApproverRemarks?.ToString()) ? DBNull.Value : (object)model.ApproverRemarks);
-                cmd.Parameters.AddWithValue("@LoginId", model.LoginId);
-
-
-                await cmd.ExecuteNonQueryAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while inserting resignation.", ex);
-            }
-        }
-
-        public async Task UpdateResignationAsync(ResignationModel model)
-        {
-            try
-            {
-                await using var conn = GetConnection();
-                await conn.OpenAsync();
-
-                await using var cmd = new SqlCommand("Onwards.UpdateResignation", conn)
+                cmd.Parameters.AddWithValue("@AttachmentFileName", string.IsNullOrWhiteSpace(model.AttachmentFileName?.ToString()) ? DBNull.Value : (object)model.AttachmentFileName);
+                byte[]? fileBytes = null;
+                if (model.AttachmentFile != null && model.AttachmentFile.Length > 0)
                 {
-                    CommandType = CommandType.StoredProcedure
-                };
+                    using (var ms = new MemoryStream())
+                    {
+                        model.AttachmentFile.CopyTo(ms);
+                        fileBytes = ms.ToArray();
+                    }
+                }
 
-                cmd.Parameters.AddWithValue("@Id", model.Id);
-                cmd.Parameters.AddWithValue("@UserId", model.UserId);
-                cmd.Parameters.AddWithValue("@ResignationTypeId", model.ResignationTypeId);
-                cmd.Parameters.AddWithValue("@ResignationReasonId", model.ResignationReasonId);
-                cmd.Parameters.AddWithValue("@ResignationLetterDate", model.ResignationLetterDate);
-                cmd.Parameters.AddWithValue("@RequestedRelievingDate", model.RequestedRelievingDate);
-                cmd.Parameters.AddWithValue("@ActualRelievingDate", model.ActualRelievingDate);
-                cmd.Parameters.AddWithValue("@NoticePeriod", model.NoticePeriod);
-                cmd.Parameters.AddWithValue("@EndOfNoticePeriod", model.EndOfNoticePeriod);
-                cmd.Parameters.AddWithValue("@MailingAddress", string.IsNullOrWhiteSpace(model.MailingAddress?.ToString()) ? DBNull.Value : (object)model.MailingAddress);
-                cmd.Parameters.AddWithValue("@Address", string.IsNullOrWhiteSpace(model.Address?.ToString()) ? DBNull.Value : (object)model.Address);
-                cmd.Parameters.AddWithValue("@PersonalEmailid", string.IsNullOrWhiteSpace(model.PersonalEmailid?.ToString()) ? DBNull.Value : (object)model.PersonalEmailid);
-                cmd.Parameters.AddWithValue("@Comments", string.IsNullOrWhiteSpace(model.Comments?.ToString()) ? DBNull.Value : (object)model.Comments);
-                cmd.Parameters.AddWithValue("@AttachmentFile", string.IsNullOrWhiteSpace(model.AttachmentFile?.ToString()) ? DBNull.Value : (object)model.AttachmentFile);
+                cmd.Parameters.AddWithValue(
+                    "@AttachmentFile",
+                    (object?)fileBytes ?? DBNull.Value
+                );
                 cmd.Parameters.AddWithValue("@PullbackComment", string.IsNullOrWhiteSpace(model.PullbackComment?.ToString()) ? DBNull.Value : (object)model.PullbackComment);
                 cmd.Parameters.AddWithValue("@StatusId", model.StatusId ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@ApprovedBy", model.ApprovedBy ?? (object)DBNull.Value);

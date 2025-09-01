@@ -20,8 +20,7 @@ namespace OnwardsBLL.Service
         }
         public async Task<ResignationDto?> GetResignationDetailsByUserId(int userId) =>
            await _repository.GetResignationDetailsByUserId(userId);
-        public Task InsertResignationAsync(ResignationModel model) => _repository.InsertResignationAsync(model);
-        public Task UpdateResignationAsync(ResignationModel model) => _repository.UpdateResignationAsync(model);
+        public Task InsertOrUpdateResignationAsync(ResignationModel model) => _repository.InsertOrUpdateResignationAsync(model);
         public Task DeleteResignationAsync(int id, int loginId) => _repository.DeleteResignationAsync(id, loginId);
 
         public async Task<IEnumerable<ResignationDto>> GetAllResignations(int userId)

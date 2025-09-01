@@ -1,3 +1,33 @@
+CREATE TABLE [Onwards].[ExitInterviewQuestions](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[ExitInterviewId] [int] NOT NULL,
+	[Question] [nvarchar](500) NOT NULL,
+	[HasOptions] [bit] NOT NULL,
+	[CreatedDate] [datetime] NULL,
+	[CreatedBy] [int] NULL,
+	[ModifiedDate] [datetime] NULL,
+	[ModifiedBy] [int] NULL,
+	[IsActive] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [Onwards].[ExitInterviewQuestions] ADD  DEFAULT ((1)) FOR [IsActive]
+GO
+
+ALTER TABLE [Onwards].[ExitInterviewQuestions]  WITH CHECK ADD  CONSTRAINT [FK_ExitInterview_ExitInterviewQuestions] FOREIGN KEY([ExitInterviewId])
+REFERENCES [Onwards].[ExitInterview] ([Id])
+GO
+
+ALTER TABLE [Onwards].[ExitInterviewQuestions] CHECK CONSTRAINT [FK_ExitInterview_ExitInterviewQuestions]
+GO
+
+
+
+
 CREATE PROCEDURE [Onwards].[InsertOrUpdateExitInterviewQuestions]
     @Questions Onwards.ExitInterviewQuestionsType READONLY
 AS

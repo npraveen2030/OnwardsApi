@@ -27,12 +27,17 @@ namespace OnwardsApi.Controllers
             return Ok(resignation);
         }
 
-        [HttpPost("insert")]
-        public async Task<IActionResult> Insert(ResignationModel model)
+        [HttpPost("insertorupdate")]
+        public async Task<IActionResult> InsertOrUpdate([FromForm] ResignationModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
-                await _resignationService.InsertResignationAsync(model);
+                await _resignationService.InsertOrUpdateResignationAsync(model);
                 return Ok(new { message = "Resignation inserted successfully." });
             }
             catch (Exception ex)
@@ -41,19 +46,19 @@ namespace OnwardsApi.Controllers
             }
         }
 
-        [HttpPost("update")]
-        public async Task<IActionResult> Update(ResignationModel model)
-        {
-            try
-            {
-                await _resignationService.UpdateResignationAsync(model);
-                return Ok(new { message = "Resignation updated successfully." });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { error = ex.Message });
-            }
-        }
+        //[HttpPost("update")]
+        //public async Task<asdfIActionResult> Update(ResignationModel model)
+        //{
+        //    try
+        //    {
+        //        await _resignationService.UpdateResignationAsync(model);
+        //        return Ok(new { message = "Resignation updated successfully." });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, new { error = ex.Message });
+        //    }
+        //}
 
         //[HttpPut("update")]
         //public async Task<IActionResult> Update(ResignationModel model)
