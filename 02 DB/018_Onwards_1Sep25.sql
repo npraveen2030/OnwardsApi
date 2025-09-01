@@ -3,6 +3,28 @@ Update Onwards.users
 SET LocationId= 1
 where  LocationId= 0
 
+
+CREATE TYPE [Onwards].[ExitInterviewOptionsType] AS TABLE(
+	[LoginId] [int] NOT NULL,
+	[Id] [int] NULL,
+	[QuestionId] [int] NOT NULL,
+	[Description] [nvarchar](100) NOT NULL,
+	[IsActive] [bit] NOT NULL
+)
+GO
+
+
+CREATE TYPE [Onwards].[ExitInterviewQuestionsType] AS TABLE(
+	[RowIndex] [int] NOT NULL,
+	[LoginId] [int] NOT NULL,
+	[Id] [int] NULL,
+	[ExitInterviewId] [int] NOT NULL,
+	[Question] [nvarchar](500) NOT NULL,
+	[HasOptions] [bit] NOT NULL,
+	[IsActive] [bit] NOT NULL
+)
+GO
+
 /****** Object:  StoredProcedure [Onwards].[sp_ValidateUserLogin]    Script Date: 01-09-2025 12:16:36 ******/
 SET ANSI_NULLS ON
 GO
@@ -232,25 +254,4 @@ CREATE TABLE [Onwards].[ExitInterview](
 GO
 
 ALTER TABLE [Onwards].[ExitInterview] ADD  DEFAULT ((1)) FOR [IsActive]
-GO
-
-CREATE TYPE [Onwards].[ExitInterviewOptionsType] AS TABLE(
-	[LoginId] [int] NOT NULL,
-	[Id] [int] NULL,
-	[QuestionId] [int] NOT NULL,
-	[Description] [nvarchar](100) NOT NULL,
-	[IsActive] [bit] NOT NULL
-)
-GO
-
-
-CREATE TYPE [Onwards].[ExitInterviewQuestionsType] AS TABLE(
-	[RowIndex] [int] NOT NULL,
-	[LoginId] [int] NOT NULL,
-	[Id] [int] NULL,
-	[ExitInterviewId] [int] NOT NULL,
-	[Question] [nvarchar](500) NOT NULL,
-	[HasOptions] [bit] NOT NULL,
-	[IsActive] [bit] NOT NULL
-)
 GO
