@@ -162,6 +162,56 @@ BEGIN
 	
 END
 
+
+/****** Object:  StoredProcedure [Onwards].[GetAllResignations]    Script Date: 01-09-2025 19:02:08 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE   PROCEDURE [Onwards].[GetAllResignations]
+    @UserId INT  -- The manager's user ID
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @ReportingManagerId INT;
+
+    -- Get the ReportingManagerId for the logged-in user
+    SELECT @ReportingManagerId = ReportingManagerId
+    FROM Onwards.Users
+    WHERE Id = @UserId; 
+
+    -- Get resignations of employees reporting to this manager
+    SELECT 
+        r.UserId,
+        u.FullName AS EmployeeName,
+        r.CreatedDate,
+        r.CreatedBy,
+        r.ModifiedDate,
+        r.ModifiedBy,
+        r.IsActive ,
+		rs.Status 
+    FROM Onwards.Resignation r
+    INNER JOIN Onwards.Users u ON r.UserId = u.Id
+	INNER JOIN Onwards.ResignationStatus rs  ON R.StatusId = rs.id
+    WHERE u.ReportingManagerId = @ReportingManagerId
+    ORDER BY r.CreatedDate DESC;
+END;
+
+
+CREATE PROCEDURE [Onwards].[GetResignationDetailsByUserId]
+    @UserId INT
+AS
+BEGIN
+    SELECT *
+    FROM Onwards.Resignation
+    WHERE UserId = @UserId AND IsActive = 1;
+END
+
+
+
+
 Update Onwards.users
 SET LocationId= 1
 where  LocationId= 0
