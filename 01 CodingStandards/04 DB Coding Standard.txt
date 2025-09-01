@@ -34,3 +34,9 @@
 		[Id] INT IDENTITY(1,1) PRIMARY KEY,
 		[Status] VARCHAR(100) NOT NULL,   -- e.g. Pending, Approved, Rejected 
 	);
+	
+* Try to create one SP for Insert and Update
+
+   Note: If the update is inserting in multiple tables then create different SP for Insert and Update 
+
+*    
