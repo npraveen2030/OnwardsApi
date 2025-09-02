@@ -2,6 +2,6 @@
 {
     public class ResignationApprovalModel : BaseModel
     {
-        public int[] Ids { get; set; } = [];
+        public List<int> Ids { get; set; } = [];
     }
 }
