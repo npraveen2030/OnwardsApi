@@ -1,3 +1,6 @@
+
+
+--------------------------2 Sep 25-----------------------------------------
 ALTER TABLE Onwards.Resignation
 ADD NextEmployer VARCHAR(300) NULL
 

@@ -39,4 +39,14 @@
 
    Note: If the update is inserting in multiple tables then create different SP for Insert and Update 
 
-*    
+* Write comment code to identify the status
+
+	e.g : StatusId = 2,--Accepted(onwards.ResignationStatus)
+
+	UPDATE Onwards.Resignation
+	SET
+		StatusId = 2,--Accepted
+		IsActive = 0,
+		ModifiedDate = GETDATE(),
+		ModifiedBy = @LoginId
+	WHERE UserId IN (SELECT Id FROM @Ids)
