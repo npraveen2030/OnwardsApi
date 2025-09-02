@@ -16,5 +16,6 @@ namespace OnwardsBLL.Interface
         Task DeleteResignationAsync(int id, int loginId);
 
         Task<IEnumerable<ResignationDto>> GetAllResignations(int userId);
+        Task ApproveResignationsAsync(ResignationApprovalModel approvals);
     }
 }

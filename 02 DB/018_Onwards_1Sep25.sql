@@ -1,3 +1,41 @@
+DROP PROCEDURE Onwards.DeleteResignation
+
+CREATE TYPE [dbo].[IntList] AS TABLE
+(
+    Id INT NOT NULL
+);
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [Onwards].[AcceptResignation]
+	@Ids dbo.IntList READONLY,
+	@LoginId INT
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	UPDATE Onwards.Resignation
+	SET
+		StatusId = 2,
+		IsActive = 0,
+		ModifiedDate = GETDATE(),
+		ModifiedBy = @LoginId
+	WHERE UserId IN (SELECT Id FROM @Ids)
+
+	UPDATE Onwards.Users
+	SET 
+		IsActive = 0,
+		ModifiedDate = GETDATE(),
+		ModifiedBy = @LoginId
+	WHERE Id IN (SELECT Id FROM @Ids)
+END
+
+
+
+--------------------------2 Sep 25-----------------------------------------
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON

@@ -153,21 +153,6 @@ namespace OnwardsDAL.Repository
             }
         }
 
-        //public async Task<IEnumerable<ResignationDto>> GetAllResignations(int userId)
-        //{
-        //    using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
-        //    {
-        //        var parameters = new { UserId = userId };
-
-        //        var result = await connection.QueryAsync<ResignationDto>(
-        //            "Onwards.GetAllResignations",
-        //            parameters,
-        //            commandType: CommandType.StoredProcedure);
-
-        //        return result.ToList();
-        //    }
-        //}
-
         public async Task<IEnumerable<ResignationDto>> GetAllResignations(int userId)
         {
             try
@@ -208,6 +193,41 @@ namespace OnwardsDAL.Repository
                 }
 
                 return resignations;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while deleting resignation.", ex);
+            }
+        }
+
+        public async Task ApproveResignationsAsync(ResignationApprovalModel approvals)
+        {
+            try
+            {
+                await using var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+
+                await using var cmd = new SqlCommand("Onwards.AcceptResignation", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                DataTable table = new DataTable();
+                table.Columns.Add("Id", typeof(int));
+
+                foreach (int i in  approvals.Ids)
+                {
+                    table.Rows.Add(i);
+                }
+
+                SqlParameter param = cmd.Parameters.AddWithValue("@Ids", table);
+                param.SqlDbType = SqlDbType.Structured;
+                param.TypeName = "dbo.IntList";
+                cmd.Parameters.AddWithValue("@LoginId", approvals.LoginId);
+
+                await conn.OpenAsync();
+
+                await cmd.ExecuteNonQueryAsync();
+
             }
             catch (Exception ex)
             {

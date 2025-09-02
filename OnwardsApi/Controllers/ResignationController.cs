@@ -46,6 +46,20 @@ namespace OnwardsApi.Controllers
             }
         }
 
+        [HttpPost("approve")]
+        public async Task<IActionResult> ApproveResignations([FromBody] ResignationApprovalModel approvals)
+        {
+            try
+            {
+                await _resignationService.ApproveResignationsAsync(approvals);
+                return Ok(new { message = "Resignations Approved successfully." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
         [HttpDelete("delete/{id}/{loginId}")]
         public async Task<IActionResult> Delete(int id, int loginId)
         {
