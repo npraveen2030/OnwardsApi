@@ -14,5 +14,6 @@ namespace OnwardsDAL.Interface
         public Task InsertOrUpdateResignationAsync(ResignationModel model);
         public Task DeleteResignationAsync(int id, int loginId);
         public Task<IEnumerable<ResignationDto>> GetAllResignations(int userId);
+        public Task ApproveResignationsAsync(ResignationApprovalModel approvals);
     }
 }

@@ -28,5 +28,6 @@ namespace OnwardsBLL.Service
             // Add business logic if needed (e.g. validation, filtering)
             return await _repository.GetAllResignations(userId);
         }
+        public Task ApproveResignationsAsync(ResignationApprovalModel approvals) => _repository.ApproveResignationsAsync(approvals);
     }
 }
