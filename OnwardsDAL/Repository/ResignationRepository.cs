@@ -52,23 +52,64 @@ namespace OnwardsDAL.Repository
                                                       .ToString("yyyy-MM-dd"),
                         ActualRelievingDate = reader.GetDateTime(reader.GetOrdinal("ActualRelievingDate"))
                                                       .ToString("yyyy-MM-dd"),
-                        NoticePeriod = reader.GetInt32(reader.GetOrdinal("NoticePeriod")),
-                        EndOfNoticePeriod = reader.GetInt32(reader.GetOrdinal("EndOfNoticePeriod")),
-                        NextEmployer = reader["NextEmployer"] as string,
-                        MailingAddress = reader["MailingAddress"] as string,
-                        Address = reader["Address"] as string,
-                        PersonalEmailId = reader["PersonalEmailId"] as string,
-                        Comments = reader["Comments"] as string,
-                        AttachmentFileName = reader["AttachmentFileName"] as string,
-                        AttachmentFile = reader["AttachmentFile"] as byte[],
-                        PullbackComment = reader["PullbackComment"] as string,
-                        StatusId = reader["StatusId"] as int?,
-                        ApprovedBy = reader["ApprovedBy"] as int?,
+                        NoticePeriod = reader.IsDBNull(reader.GetOrdinal("NoticePeriod"))
+                                        ? 0
+                                        : reader.GetInt32(reader.GetOrdinal("NoticePeriod")),
+
+                        EndOfNoticePeriod = reader.IsDBNull(reader.GetOrdinal("EndOfNoticePeriod"))
+                                        ? 0
+                                        : reader.GetInt32(reader.GetOrdinal("EndOfNoticePeriod")),
+
+                        NextEmployer = reader.IsDBNull(reader.GetOrdinal("NextEmployer"))
+                                        ? string.Empty
+                                        : reader.GetString(reader.GetOrdinal("NextEmployer")),
+
+                        MailingAddress = reader.IsDBNull(reader.GetOrdinal("MailingAddress"))
+                                        ? string.Empty
+                                        : reader.GetString(reader.GetOrdinal("MailingAddress")),
+
+                        Address = reader.IsDBNull(reader.GetOrdinal("Address"))
+                                        ? string.Empty
+                                        : reader.GetString(reader.GetOrdinal("Address")),
+
+                        PersonalEmailId = reader.IsDBNull(reader.GetOrdinal("PersonalEmailId"))
+                                        ? string.Empty
+                                        : reader.GetString(reader.GetOrdinal("PersonalEmailId")),
+
+                        Comments = reader.IsDBNull(reader.GetOrdinal("Comments"))
+                                        ? string.Empty
+                                        : reader.GetString(reader.GetOrdinal("Comments")),
+
+                        AttachmentFileName = reader.IsDBNull(reader.GetOrdinal("AttachmentFileName"))
+                                        ? null
+                                        : reader.GetString(reader.GetOrdinal("AttachmentFileName")),
+
+                        AttachmentFile = reader.IsDBNull(reader.GetOrdinal("AttachmentFile"))
+                                        ? null
+                                        : (byte[])reader["AttachmentFile"],
+
+                        PullbackComment = reader.IsDBNull(reader.GetOrdinal("PullbackComment"))
+                                        ? string.Empty
+                                        : reader.GetString(reader.GetOrdinal("PullbackComment")),
+
+                        StatusId = reader.IsDBNull(reader.GetOrdinal("StatusId"))
+                                        ? null
+                                        : reader.GetInt32(reader.GetOrdinal("StatusId")),
+
+                        ApprovedBy = reader.IsDBNull(reader.GetOrdinal("ApprovedBy"))
+                                        ? null
+                                        : reader.GetInt32(reader.GetOrdinal("ApprovedBy")),
+
                         ApprovalDate = reader.IsDBNull(reader.GetOrdinal("ApprovalDate"))
-                                            ? null
-                                            : DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("ApprovalDate")))
-                                                      .ToString("yyyy-MM-dd"),
-                        ApproverRemarks = reader["ApproverRemarks"] as string
+                                        ? null
+                                        : DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("ApprovalDate")))
+                                                 .ToString("yyyy-MM-dd"),
+
+                        ApproverRemarks = reader.IsDBNull(reader.GetOrdinal("ApproverRemarks"))
+                                        ? string.Empty
+                                        : reader.GetString(reader.GetOrdinal("ApproverRemarks"))
+
+
                     };
                 }
 
