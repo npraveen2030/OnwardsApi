@@ -21,8 +21,8 @@ namespace OnwardsApi.Controllers
         {
             var resignation = await _resignationService.GetResignationDetailsByUserId(userId);
 
-            if (resignation is null)
-                return NotFound(new { Message = "No resignation details found for this user." });
+            //if (resignation is null)
+            //    return NotFound(new { Message = "No resignation details found for this user." });
 
             return Ok(resignation);
         }
