@@ -46,12 +46,15 @@ namespace OnwardsDAL.Repository
                         UserId = reader.GetInt32(reader.GetOrdinal("UserId")),
                         ResignationTypeId = reader.GetInt32(reader.GetOrdinal("ResignationTypeId")),
                         ResignationReasonId = reader.GetInt32(reader.GetOrdinal("ResignationReasonId")),
-                        ResignationLetterDate = reader.GetDateTime(reader.GetOrdinal("ResignationLetterDate")),
-                        RequestedRelievingDate = reader.GetDateTime(reader.GetOrdinal("RequestedRelievingDate")),
-                        ActualRelievingDate = reader.GetDateTime(reader.GetOrdinal("ActualRelievingDate")),
+                        ResignationLetterDate = reader.GetDateTime(reader.GetOrdinal("ResignationLetterDate"))
+                                                      .ToString("yyyy-MM-dd"),
+                        RequestedRelievingDate = reader.GetDateTime(reader.GetOrdinal("RequestedRelievingDate"))
+                                                      .ToString("yyyy-MM-dd"),
+                        ActualRelievingDate = reader.GetDateTime(reader.GetOrdinal("ActualRelievingDate"))
+                                                      .ToString("yyyy-MM-dd"),
                         NoticePeriod = reader.GetInt32(reader.GetOrdinal("NoticePeriod")),
                         EndOfNoticePeriod = reader.GetInt32(reader.GetOrdinal("EndOfNoticePeriod")),
-                        NextEmployer =  "" ,
+                        NextEmployer = reader["NextEmployer"] as string,
                         MailingAddress = reader["MailingAddress"] as string,
                         Address = reader["Address"] as string,
                         PersonalEmailId = reader["PersonalEmailId"] as string,
@@ -61,7 +64,10 @@ namespace OnwardsDAL.Repository
                         PullbackComment = reader["PullbackComment"] as string,
                         StatusId = reader["StatusId"] as int?,
                         ApprovedBy = reader["ApprovedBy"] as int?,
-                        ApprovalDate = reader["ApprovalDate"] as DateTime?,
+                        ApprovalDate = reader.IsDBNull(reader.GetOrdinal("ApprovalDate"))
+                                            ? null
+                                            : DateOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("ApprovalDate")))
+                                                      .ToString("yyyy-MM-dd"),
                         ApproverRemarks = reader["ApproverRemarks"] as string
                     };
                 }
@@ -110,16 +116,20 @@ namespace OnwardsDAL.Repository
                     }
                 }
 
-                cmd.Parameters.AddWithValue(
-                    "@AttachmentFile",
-                    (object?)fileBytes ?? DBNull.Value
-                );
+                // Explicitly define VarBinary(MAX) instead of letting AddWithValue guess
+                var attachmentParam = new SqlParameter("@AttachmentFile", SqlDbType.VarBinary, -1)
+                {
+                    Value = (object?)fileBytes ?? DBNull.Value
+                };
+                cmd.Parameters.Add(attachmentParam);
                 cmd.Parameters.AddWithValue("@PullbackComment", string.IsNullOrWhiteSpace(model.PullbackComment?.ToString()) ? DBNull.Value : (object)model.PullbackComment);
                 cmd.Parameters.AddWithValue("@StatusId", model.StatusId ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@ApprovedBy", model.ApprovedBy ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@ApprovalDate", model.ApprovalDate ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@ApproverRemarks", string.IsNullOrWhiteSpace(model.ApproverRemarks?.ToString()) ? DBNull.Value : (object)model.ApproverRemarks);
                 cmd.Parameters.AddWithValue("@LoginId", model.LoginId);
+                cmd.Parameters.AddWithValue("@NextEmployer", string.IsNullOrWhiteSpace(model.NextEmployer?.ToString()) ? DBNull.Value : (object)model.NextEmployer);
+
 
 
                 await cmd.ExecuteNonQueryAsync();

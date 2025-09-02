@@ -12,9 +12,9 @@ namespace OnwardsModel.Dtos
         public int UserId { get; set; }
         public int ResignationTypeId { get; set; }
         public int ResignationReasonId { get; set; }
-        public DateTime ResignationLetterDate { get; set; }
-        public DateTime RequestedRelievingDate { get; set; }
-        public DateTime ActualRelievingDate { get; set; }
+        public string ResignationLetterDate { get; set; }
+        public string RequestedRelievingDate { get; set; }
+        public string ActualRelievingDate { get; set; }
         public int NoticePeriod { get; set; }
         public int EndOfNoticePeriod { get; set; }
         public string NextEmployer { get; set; }
@@ -27,7 +27,7 @@ namespace OnwardsModel.Dtos
         public string PullbackComment { get; set; }
         public int? StatusId { get; set; }
         public int? ApprovedBy { get; set; }
-        public DateTime? ApprovalDate { get; set; }
+        public string? ApprovalDate { get; set; }
         public string ApproverRemarks { get; set; }
         //public DateTime? CreatedDate { get; set; }
         //public int? CreatedBy { get; set; }

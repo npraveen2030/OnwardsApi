@@ -1,3 +1,101 @@
+ALTER TABLE Onwards.Resignation
+ADD NextEmployer VARCHAR(300) NULL
+
+ALTER PROCEDURE [Onwards].[sp_ValidateUserLogin]
+    @EmployeeCode NVARCHAR(50),
+    @Password NVARCHAR(100)
+AS
+BEGIN
+    SELECT U.EmployeeCode,U.FullName, U.Email, R.RoleName, U.Mobile , RM.EmployeeCode AS ReportingManagerEmpCode
+	, RM.FullName AS ReportingManagerFullName, U.Id , U.LocationId
+	FROM Onwards.Users as U
+	LEFT JOIN Onwards.BasicUserDetails as BD ON U.id= BD.Userid AND BD.Isactive = 1 
+	LEFT JOIN Onwards.Roles as R on U.RoleId = R.Id  and R.isActive =1
+	LEFT JOIN Onwards.Users as RM ON RM.Id = U.ReportingManagerId AND RM.Isactive = 1 
+	AND U.Isactive = 1 
+	
+	WHERE 
+      U.EmployeeCode = @EmployeeCode AND U.Password = @Password AND U.IsActive = 1;
+END;
+
+
+ALTER PROCEDURE [Onwards].[InsertOrUpdateResignation]
+    @Id INT = NULL,
+	@LoginId INT,
+	@UserId INT,
+	@ResignationTypeId INT,
+	@ResignationReasonId INT,
+	@ResignationLetterDate DATE,
+	@RequestedRelievingDate DATE,
+	@ActualRelievingDate DATE,
+	@NoticePeriod INT,
+	@EndOfNoticePeriod INT,
+	@MailingAddress VARCHAR(500) = NULL,
+	@Address VARCHAR(500) = NULL,
+	@PersonalEmailid VARCHAR(500) = NULL,
+	@Comments VARCHAR(500) = NULL,
+	@AttachmentFileName VARCHAR(300) = NULL,
+	@AttachmentFile VARBINARY(MAX) = NULL,
+	@PullbackComment VARCHAR(500) = NULL,
+	@StatusId INT = NULL,
+	@ApprovedBy INT = NULL,
+	@ApprovalDate DATE = NULL,
+	@ApproverRemarks VARCHAR(1000) = NULL,
+	@NextEmployer VARCHAR(300) = NULL
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	IF (@Id IS NULL)
+	BEGIN
+		INSERT INTO Onwards.Resignation (
+			UserId, ResignationTypeId, ResignationReasonId,
+			ResignationLetterDate, RequestedRelievingDate, ActualRelievingDate,
+			NoticePeriod, EndOfNoticePeriod, MailingAddress, Address,
+			PersonalEmailid, Comments,AttachmentFileName, AttachmentFile, PullbackComment,
+			StatusId, ApprovedBy, ApprovalDate, ApproverRemarks,NextEmployer,
+			createdDate, createdBy, IsActive
+		)
+		VALUES (
+			@UserId, @ResignationTypeId, @ResignationReasonId,
+			@ResignationLetterDate, @RequestedRelievingDate, @ActualRelievingDate,
+			@NoticePeriod, @EndOfNoticePeriod, @MailingAddress, @Address,
+			@PersonalEmailid, @Comments,@AttachmentFileName, @AttachmentFile, @PullbackComment,
+			@StatusId, @ApprovedBy, @ApprovalDate, @ApproverRemarks, @NextEmployer,
+			GETDATE(), @LoginId, 1
+		)
+	END
+	ELSE
+	BEGIN
+		UPDATE Onwards.Resignation
+		SET
+			UserId = @UserId,
+			ResignationTypeId = @ResignationTypeId,
+			ResignationReasonId = @ResignationReasonId,
+			ResignationLetterDate = @ResignationLetterDate,
+			RequestedRelievingDate = @RequestedRelievingDate,
+			ActualRelievingDate = @ActualRelievingDate,
+			NoticePeriod = @NoticePeriod,
+			EndOfNoticePeriod = @EndOfNoticePeriod,
+			MailingAddress = @MailingAddress,
+			Address = @Address,
+			PersonalEmailid = @PersonalEmailid,
+			Comments = @Comments,
+			AttachmentFileName = @AttachmentFileName,
+			AttachmentFile = @AttachmentFile,
+			PullbackComment = @PullbackComment,
+			StatusId = @StatusId,
+			ApprovedBy = @ApprovedBy,
+			ApprovalDate = @ApprovalDate,
+			ApproverRemarks = @ApproverRemarks,
+			NextEmployer = @NextEmployer,
+			ModifiedDate = GETDATE(),
+			ModifiedBy = @LoginId
+		WHERE Id = @Id
+	END
+END
+
+
 DROP PROCEDURE Onwards.DeleteResignation
 
 CREATE TYPE [dbo].[IntList] AS TABLE
