@@ -2,11 +2,6 @@
 using OnwardsDAL.Interface;
 using OnwardsModel.Dtos;
 using OnwardsModel.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OnwardsBLL.Service
 {
@@ -19,6 +14,21 @@ namespace OnwardsBLL.Service
         public async Task InsertExitInterview(List<AdminExitInterviewModel> Questions)
         {
             await _repoQuestions.InsertExitInterviewQuestionAsync(Questions);
+        }
+
+        public async Task InsertOrUpdateUserExitInterviewAsync(List<UserExitInterviewModel> model)
+        {
+            await _repoQuestions.InsertOrUpdateUserExitInterviewAsync(model);
+        }
+
+        public async Task DeleteUserExitInterviewAsync(int id, int loginId)
+        {
+            await _repoQuestions.DeleteUserExitInterviewAsync(id, loginId);
+        }
+
+        public async Task<List<UserExitInterviewModel>> GetUserExitInterviewAsync(int userId)
+        {
+            return await _repoQuestions.GetUserExitInterviewAsync(userId);
         }
     }
 }
