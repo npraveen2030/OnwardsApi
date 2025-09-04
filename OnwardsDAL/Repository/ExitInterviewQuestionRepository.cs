@@ -42,13 +42,9 @@ namespace OnwardsDAL.Repository
                     {
                         Id = reader.GetInt32(reader.GetOrdinal("Id")),
                         ExitInterviewId = reader.GetInt32(reader.GetOrdinal("ExitInterviewId")),
+                        ExitInterviewName = reader.GetString(reader.GetOrdinal("Value")),
                         Question = reader.GetString(reader.GetOrdinal("Question")),
-                        HasOptions = reader.GetBoolean(reader.GetOrdinal("HasOptions")),
-                        //CreatedDate = reader.IsDBNull(reader.GetOrdinal("CreatedDate")) ? null : reader.GetDateTime(reader.GetOrdinal("CreatedDate")),
-                        //CreatedBy = reader.IsDBNull(reader.GetOrdinal("CreatedBy")) ? null : reader.GetInt32(reader.GetOrdinal("CreatedBy")),
-                        //ModifiedDate = reader.IsDBNull(reader.GetOrdinal("ModifiedDate")) ? null : reader.GetDateTime(reader.GetOrdinal("ModifiedDate")),
-                        //ModifiedBy = reader.IsDBNull(reader.GetOrdinal("ModifiedBy")) ? null : reader.GetInt32(reader.GetOrdinal("ModifiedBy")),
-                        IsActive = reader.GetBoolean(reader.GetOrdinal("IsActive"))
+                        HasOptions = reader.GetBoolean(reader.GetOrdinal("HasOptions"))
                     };
 
                     questions.Add(question);
@@ -70,12 +66,7 @@ namespace OnwardsDAL.Repository
                     {
                         Id = readeropt.GetInt32(readeropt.GetOrdinal("Id")),
                         QuestionId = readeropt.GetInt32(readeropt.GetOrdinal("QuestionId")),
-                        Description = readeropt.GetString(readeropt.GetOrdinal("Description")),
-                        //CreatedDate = readeropt.IsDBNull(readeropt.GetOrdinal("CreatedDate")) ? null : readeropt.GetDateTime(readeropt.GetOrdinal("CreatedDate")),
-                        //CreatedBy = readeropt.IsDBNull(readeropt.GetOrdinal("CreatedBy")) ? null : readeropt.GetInt32(readeropt.GetOrdinal("CreatedBy")),
-                        //ModifiedDate = readeropt.IsDBNull(readeropt.GetOrdinal("ModifiedDate")) ? null : readeropt.GetDateTime(readeropt.GetOrdinal("ModifiedDate")),
-                        //ModifiedBy = readeropt.IsDBNull(readeropt.GetOrdinal("ModifiedBy")) ? null : readeropt.GetInt32(readeropt.GetOrdinal("ModifiedBy")),
-                        IsActive = readeropt.GetBoolean(readeropt.GetOrdinal("IsActive"))
+                        Description = readeropt.GetString(readeropt.GetOrdinal("Description"))
                     };
 
                     questions.FirstOrDefault(q => q.Id == option.QuestionId)?.exitInterviewOptions.Add(option);
@@ -96,7 +87,6 @@ namespace OnwardsDAL.Repository
                 await using var conn = GetConnection();
                 await conn.OpenAsync();
 
-                // InsertingOrUpdatingQuestions
                 await using var cmdQuestion = new SqlCommand("Onwards.InsertOrUpdateExitInterviewQuestions", conn)
                 {
                     CommandType = CommandType.StoredProcedure
@@ -211,5 +201,124 @@ namespace OnwardsDAL.Repository
                 throw new Exception("Error occurred while inserting ExitInterviewQuestion.", ex);
             }
         }
+
+        public async Task InsertOrUpdateUserExitInterviewAsync(List<UserExitInterviewModel> answers)
+        {
+            try
+            {
+                await using var conn = GetConnection();
+                await conn.OpenAsync();
+
+                await using var cmd = new SqlCommand("Onwards.InsertOrUpdateUserExitInterview", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                // Create DataTable matching Onwards.AnswerType
+                var dataTableAnswers = new DataTable();
+                dataTableAnswers.Columns.Add("UserId", typeof(int));
+                dataTableAnswers.Columns.Add("QuestionId", typeof(int));
+                dataTableAnswers.Columns.Add("OptionId", typeof(int));
+                dataTableAnswers.Columns.Add("Answer", typeof(string));
+                dataTableAnswers.Columns.Add("LoginId", typeof(int));
+
+                // Populate rows
+                foreach (var answer in answers)
+                {
+                    dataTableAnswers.Rows.Add(
+                        answer.UserId,
+                        answer.QuestionId,
+                        answer.OptionId ?? (object)DBNull.Value,
+                        string.IsNullOrEmpty(answer.Answer) ? (object)DBNull.Value : answer.Answer,
+                        answer.LoginId
+                    );
+                }
+
+                // Create structured TVP parameter
+                var tvpParam = new SqlParameter("@Answers", SqlDbType.Structured)
+                {
+                    TypeName = "Onwards.AnswerType",
+                    Value = dataTableAnswers
+                };
+
+                cmd.Parameters.Add(tvpParam);
+
+                await cmd.ExecuteNonQueryAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error occurred while inserting or updating User Exit Interview answers.", ex);
+            }
+        }
+
+
+
+        public async Task DeleteUserExitInterviewAsync(int id, int loginId)
+        {
+            try
+            {
+                await using var conn = GetConnection();
+                await conn.OpenAsync();
+
+                await using var cmd = new SqlCommand("Onwards.DeleteUserExitInterview", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.AddWithValue("@Id", id);
+                cmd.Parameters.AddWithValue("@LoginId", loginId);
+
+                await cmd.ExecuteNonQueryAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error occurred while deleting UserExitInterview.", ex);
+            }
+        }
+
+        public async Task<List<UserExitInterviewModel>> GetUserExitInterviewAsync(int userId)
+        {
+            try
+            {
+                var answers = new List<UserExitInterviewModel>();
+
+                await using var conn = GetConnection();
+                await conn.OpenAsync();
+
+                await using var cmd = new SqlCommand("Onwards.GetUserExitInterview", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                // Add parameter
+                cmd.Parameters.AddWithValue("@UserId", userId);
+
+                // Execute reader
+                await using var reader = await cmd.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    var answer = new UserExitInterviewModel
+                    {
+                        QuestionId = reader.GetInt32(reader.GetOrdinal("QuestionId")),
+                        OptionId = reader.IsDBNull(reader.GetOrdinal("OptionId"))
+                                    ? (int?)null
+                                    : reader.GetInt32(reader.GetOrdinal("OptionId")),
+                        Answer = reader.IsDBNull(reader.GetOrdinal("Answer"))
+                                    ? null
+                                    : reader.GetString(reader.GetOrdinal("Answer"))
+                    };
+
+                    answers.Add(answer);
+                }
+
+                return answers;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error occurred while fetching User Exit Interview answers.", ex);
+            }
+        }
+
     }
 }

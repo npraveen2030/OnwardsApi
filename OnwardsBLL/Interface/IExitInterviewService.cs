@@ -12,5 +12,10 @@ namespace OnwardsBLL.Interface
     {
         public Task<List<ExitInterviewQuestionDto>> GetExitInterview();
         public Task InsertExitInterview(List<AdminExitInterviewModel> Questions);
+
+        public Task InsertOrUpdateUserExitInterviewAsync(List<UserExitInterviewModel> model);
+
+        public Task DeleteUserExitInterviewAsync(int id, int loginId);
+        public Task<List<UserExitInterviewModel>> GetUserExitInterviewAsync(int userId);
     }
 }

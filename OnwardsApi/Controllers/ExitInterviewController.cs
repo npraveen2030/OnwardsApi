@@ -42,5 +42,34 @@ namespace OnwardsApi.Controllers
                 return StatusCode(500, new { error = ex.Message });
             }
         }
+
+        [HttpPost("insertorupdateanswers")]
+        public async Task<IActionResult> InsertOrUpdateUserExitInterview(List<UserExitInterviewModel> Answers)
+        {
+            try
+            {
+                await _exitInterviewService.InsertOrUpdateUserExitInterviewAsync(Answers);
+                return Ok(new { message = "Inserted Or Updated successfully." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
+        [HttpGet("getanswers")]
+        public async Task<IActionResult> GetUserExitInterview(int UserId)
+        {
+            try
+            {
+                var answers = await _exitInterviewService.GetUserExitInterviewAsync(UserId);
+                return Ok(answers);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
     }
 }

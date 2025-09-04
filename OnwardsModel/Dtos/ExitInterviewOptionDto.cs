@@ -10,7 +10,6 @@ namespace OnwardsModel.Dtos
 {
     public class ExitInterviewOptionDto : BaseDto
     {
-        public int Id { get; set; } 
 
         [Required]
         public int? QuestionId { get; set; }

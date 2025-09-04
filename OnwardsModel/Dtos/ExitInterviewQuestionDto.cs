@@ -10,10 +10,10 @@ namespace OnwardsModel.Dtos
 {
     public class ExitInterviewQuestionDto : BaseDto
     {
-        public int Id { get; set; }
-
+        public int ExitInterviewId { get;set;}
+ 
         [Required]
-        public int? ExitInterviewId { get; set; }
+        public string? ExitInterviewName { get; set; }
 
         [Required]
         [StringLength(500)]

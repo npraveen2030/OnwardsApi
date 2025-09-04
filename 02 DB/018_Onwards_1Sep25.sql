@@ -1,3 +1,114 @@
+
+
+
+CREATE TYPE Onwards.AnswerType AS TABLE
+(
+	UserId INT NOT NULL,
+    QuestionId INT NOT NULL,
+    OptionId INT NULL,
+    Answer NVARCHAR(500) NULL,
+    LoginId INT NOT NULL
+);
+
+
+
+ALTER TABLE Onwards.UserExitInterview
+DROP CONSTRAINT FK_EI_User
+
+ALTER TABLE Onwards.UserExitInterview
+DROP COLUMN ExitInterviewId
+
+ALTER TABLE Onwards.UserExitInterview
+ADD UserId INT NOT NULL
+
+ALTER TABLE Onwards.UserExitInterview
+ADD CONSTRAINT FK_UserExitInterview_Users
+FOREIGN KEY (UserId) REFERENCES Onwards.Users(Id);
+
+
+CREATE PROCEDURE [Onwards].[InsertOrUpdateUserExitInterview]
+	@Answers Onwards.AnswerType ReadOnly
+AS
+BEGIN
+
+	SET NOCOUNT ON;
+
+	    MERGE Onwards.UserExitInterview AS Target
+		USING @Answers AS Source
+		ON Target.UserId = Source.UserId AND Target.QuestionId = Source.QuestionId 
+
+		WHEN MATCHED THEN
+			UPDATE SET
+				Target.OptionId = Source.OptionId,
+				Target.Answer = Source.Answer,
+				Target.ModifiedDate = GETDATE(),
+				Target.ModifiedBy = Source.LoginId
+
+		WHEN NOT MATCHED THEN
+			INSERT (UserId,QuestionId, OptionId, Answer, CreatedDate, CreatedBy, IsActive)
+			VALUES (Source.UserId,Source.QuestionId, Source.OptionId, Source.Answer, GETDATE(), Source.LoginId, 1);
+
+END
+
+
+
+DROP PROCEDURE Onwards.InsertUserExitInterview
+DROP PROCEDURE Onwards.UpdateUserExitInterview
+
+CREATE PROCEDURE Onwards.GetUserExitInterview 
+	@UserId INT
+AS
+BEGIN
+
+	SET NOCOUNT ON;
+
+    SELECT [QuestionId]
+      ,[OptionId]
+      ,[Answer]
+	FROM Onwards.UserExitInterview
+	WHERE UserId = @UserId
+END
+GO
+
+
+---------------------------------------4 sep 25------------------------------------------------
+ALTER PROCEDURE [Onwards].[GetExitInterviewQuestions]
+
+AS
+BEGIN
+
+	SET NOCOUNT ON;
+
+    SELECT EIQ.Id
+	  ,EIQ.ExitInterviewId
+      ,EI.Value
+      ,EIQ.Question
+      ,EIQ.HasOptions
+	FROM Onwards.ExitInterviewQuestions AS EIQ
+	INNER JOIN Onwards.ExitInterview AS EI
+	ON EIQ.ExitInterviewId = EI.Id
+	WHERE EIQ.IsActive = 1
+	ORDER BY EIQ.ExitInterviewId
+
+END
+
+ALTER PROCEDURE [Onwards].[GetExitInterviewOptions]
+
+AS
+BEGIN
+
+	SET NOCOUNT ON;
+
+    SELECT [Id]
+      ,[QuestionId]
+      ,[Description]
+	FROM Onwards.ExitInterviewOptions
+	WHERE IsActive = 1
+
+END
+
+
+-----------------------------------------------------------------------------------------------------------
 CREATE TYPE [Onwards].[ExitInterviewOptionsType] AS TABLE(
 	[LoginId] [int] NOT NULL,
 	[Id] [int] NULL,
