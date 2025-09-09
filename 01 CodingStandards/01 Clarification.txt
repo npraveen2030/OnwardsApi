@@ -1,6 +1,8 @@
 
 
+
 --------------------------------------Clarification--------------------------------
+* 08Sep2025 : We can have multiple uploads but PDF format and file size should not be greater than 30MB
 * 22Aug2025 : All the Upload will take only 1 PDF file , no other format are allowed and file size should not be greater than 30MB
 
 * 21Aug25: In the Calender, if Holiday/WeekOff comes in same day then show weekOff color 
