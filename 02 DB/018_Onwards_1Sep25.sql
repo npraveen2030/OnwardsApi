@@ -1,4 +1,259 @@
+------------------------------------------12th Sep 25------------------------------------
+CREATE TABLE Onwards.CompanyDescription
+(
+	Id INT PRIMARY KEY IDENTITY(1,1),
+	Description VARCHAR(MAX),
+	CreatedDate DATETIME NULL,
+	CreatedBy INT NULL,
+	ModifiedDate DATETIME NULL,
+	ModifiedBy INT NULL,
+	IsActive INT NOT NULL DEFAULT 1
+)
 
+CREATE TABLE Onwards.JobDetails
+(
+	Id INT PRIMARY KEY IDENTITY(1,1),
+
+	ProjectId INT NOT NULL,
+	RoleId INT NOT NULL,
+	RolePurpose VARCHAR(MAX) NOT NULL,
+	LocationId INT NOT NULL,
+	SlkId INT NOT NULL,
+	SkillsId VARCHAR(500) NOT NULL,
+	Responsibilities VARCHAR(MAX) NOT NULL,
+	EducationDetails VARCHAR(500) NOT  NULL,
+	ExperienceRequired VARCHAR(250) NOT NULL,
+	DomainFunctionalSkills VARCHAR(MAX) NOT NULL,
+
+	RequesitionBy INT NOT NULL,
+	RequesitionDate DATETIME NOT NULL,
+	Status INT NOT NULL,
+
+	CreatedDate DATETIME NULL,
+	CreatedBy INT NULL,
+	ModifiedDate DATETIME NULL,
+	ModifiedBy INT NULL,
+	IsActive INT NOT NULL DEFAULT 1,
+
+	CONSTRAINT FK_JobDetails_Roles FOREIGN KEY (RoleId)
+        REFERENCES Onwards.Roles(Id),
+
+	CONSTRAINT FK_JobDetails_CompanyDescription FOREIGN KEY (SlkId)
+        REFERENCES Onwards.CompanyDescription(Id),
+)
+
+CREATE TYPE [Onwards].[ReimbursementDocumentType] AS TABLE(
+	[Id] [int] NULL,
+	[ReimbursementId] [int] NULL,
+	[FileName] [nvarchar](255) NOT NULL,
+	[FileContent] [varbinary](max) NOT NULL,
+	[UploadedAt] [datetime] NOT NULL DEFAULT (getdate()),
+	[IsActive] [bit] NOT NULL DEFAULT ((1))
+)
+GO
+
+CREATE PROCEDURE [Onwards].[GetReimbursementById]
+    @UserId     INT = NULL,
+    @StatusId   INT = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        DECLARE @UserReimbursements TABLE
+        (
+            Id INT NOT NULL,
+            ClaimCode NVARCHAR(255) NOT NULL,
+            UserId INT NOT NULL,
+            Amount DECIMAL(10,2) NOT NULL,
+            Purpose NVARCHAR(255) NOT NULL,
+            ReimbursementDate DATE NOT NULL,
+            StatusId INT NULL,
+            Action NVARCHAR(255) NOT NULL,
+            CreatedDate DATETIME NULL,
+            CreatedBy INT NULL,
+            ModifiedDate DATETIME NULL,
+            ModifiedBy INT NULL,
+            IsActive BIT NOT NULL
+        );
+
+        INSERT INTO @UserReimbursements
+        SELECT *
+        FROM Onwards.Reimbursement
+        WHERE UserId = @UserId AND StatusId = @StatusId;
+
+        SELECT *
+        FROM @UserReimbursements
+        ORDER BY CreatedDate DESC;
+
+        SELECT rd.*
+        FROM Onwards.ReimbursementDocuments AS rd
+        INNER JOIN @UserReimbursements AS ur
+            ON rd.ReimbursementId = ur.Id;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        IF XACT_STATE() <> 0
+            ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END
+GO
+
+
+CREATE PROCEDURE [Onwards].[InsertOrUpdateReimbursement]
+	@Id                  INT   = NULL,
+    @LoginId             INT,
+    @ClaimCode           NVARCHAR(255),
+    @UserId              INT,
+    @Amount              DECIMAL(10, 2),
+    @Purpose             NVARCHAR(255),
+    @ReimbursementDate   DATE,
+    @StatusId            INT,
+    @Action              NVARCHAR(255),
+    @Documents           Onwards.ReimbursementDocumentType READONLY
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    DECLARE @ReimbursementId INT;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+		IF (@Id IS NULL)
+		BEGIN 
+			INSERT INTO Onwards.Reimbursement 
+				(ClaimCode, UserId, Amount, Purpose, ReimbursementDate, StatusId, Action, CreatedDate, CreatedBy)
+			VALUES 
+				(@ClaimCode, @UserId, @Amount, @Purpose, @ReimbursementDate, @StatusId, @Action, GETDATE(), @LoginId);
+
+			SET @ReimbursementId = SCOPE_IDENTITY();
+
+			IF EXISTS (SELECT 1 FROM @Documents)
+			BEGIN
+				INSERT INTO Onwards.ReimbursementDocuments 
+					(ReimbursementId, FileName, FileContent, UploadedAt, CreatedDate, CreatedBy, IsActive)
+				SELECT 
+					@ReimbursementId, FileName, FileContent, UploadedAt, GETDATE(), @LoginId, IsActive
+				FROM @Documents;
+			END
+		END
+		ELSE 
+		BEGIN
+			UPDATE Onwards.Reimbursement
+				SET 
+					ClaimCode = @ClaimCode,
+					UserId = @UserId,
+					Amount =@Amount,
+					Purpose = @Purpose,
+					ReimbursementDate = @ReimbursementDate,
+					StatusId = @StatusId,
+					Action = @Action,
+					ModifiedDate = GETDATE(),
+					ModifiedBy = @LoginId
+				WHERE Id = @Id
+
+			MERGE Onwards.ReimbursementDocuments AS Target
+			USING @Documents AS Source
+			ON Target.Id = Source.Id
+			WHEN MATCHED AND Source.IsActive = 0 THEN
+				DELETE 
+			WHEN NOT MATCHED BY TARGET THEN
+				INSERT (ReimbursementId, FileName, FileContent, UploadedAt, IsActive)
+				VALUES (Source.ReimbursementId, Source.FileName, Source.FileContent, Source.UploadedAt, Source.IsActive);
+
+		END
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        IF XACT_STATE() <> 0
+            ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END
+
+------------------------------------------11th Sep 25------------------------------------
+CREATE TYPE [Onwards].[IntList] AS TABLE(
+	[Id] [int] NOT NULL
+)
+GO
+
+
+CREATE PROCEDURE [Onwards].[GetReimbursementById]
+    @UserId              INT = NULL,
+    @StatusId            INT = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+			;WITH UserReimbursements AS (
+				SELECT Id, UserId, Amount, StatusId, CreatedDate -- select only required columns
+				FROM Onwards.Reimbursement
+				WHERE UserId = @UserId AND StatusId = @StatusId
+			)
+			SELECT *
+			FROM UserReimbursements
+			ORDER BY CreatedDate DESC;
+
+			SELECT rd.Id,rd.ReimbursementId,rd.FileName,rd.FileContent
+			FROM Onwards.ReimbursementDocuments AS rd
+			INNER JOIN UserReimbursements AS ur
+				ON rd.ReimbursementId = ur.Id;
+
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        IF XACT_STATE() <> 0
+            ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+
+
+----------------------------------------------10th SEP 25----------------------------------------------
+  ALTER TABLE [Onwards].[ReimbursementDocuments]
+  DROP COLUMN FileType,FileSizeKB
+
+    CREATE TABLE  Onwards.ReimbursementStatus(
+  Id INT PRIMARY KEY,
+  Status VARCHAR(100) NOT NULL,
+  CreatedDate DATETIME NULL,
+  CreatedBy INT NULL,
+  ModifiedDate DATETIME NULL,
+  ModifiedBy INT NULL,
+  IsActive BIT NOT NULL DEFAULT 1
+  )
+
+    INSERT INTO Onwards.ReimbursementStatus (Id , Status)
+  VALUES 
+  (1,'Draft'),
+  (2,'Pending'),
+  (3,'Send Back'),
+  (4,'Approved'),
+  (5,'Completed');
+
+   UPDATE Onwards.Reimbursement
+SET StatusId = 1;
+
+  ALTER TABLE Onwards.Reimbursement
+  ADD CONSTRAINT FK_StatusId
+  FOREIGN KEY (StatusId) 
+  REFERENCES Onwards.ReimbursementStatus(Id);
+
+-------------------------------------------8th Sep 25 ---------------------------------------
 
 
 CREATE TYPE Onwards.AnswerType AS TABLE

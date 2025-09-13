@@ -1,29 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace OnwardsModel.Dtos
 {
     public class ReimbursementDto : BaseDto
     {
-        public int? Id { get; set; }
-
-        public string? ClaimCode { get; set; } 
-
-        public decimal? Amount { get; set; }
-
-        public string? Purpose { get; set; }
-
-        public DateTime? ReimbursementDate { get; set; }
-
+        public string ClaimCode { get; set; } = string.Empty;
+        public decimal Amount { get; set; }
+        public string Purpose { get; set; } = string.Empty;
+        public DateTime ReimbursementDate { get; set; }
         public int? StatusId { get; set; }
+        public string Action { get; set; } = string.Empty;
+        public DateTime? CreatedDate { get; set; }
+        public int? CreatedBy { get; set; }
+        public DateTime? ModifiedDate { get; set; }
+        public int? ModifiedBy { get; set; }
+        public List<ReimbursementDocumentDto> Documents { get; set; } = new List<ReimbursementDocumentDto>();
+    }
 
-        public string? Action { get; set; }
-
-        public int Skip { get; set; }
-
-        public int Take { get; set; }
+    public class ReimbursementDocumentDto
+    {
+        public int Id { get; set; }
+        public int ReimbursementId { get; set; }
+        public string FileName { get; set; } = string.Empty;
+        public byte[] FileContent { get; set; } = Array.Empty<byte>();
+        public DateTime UploadedAt { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public int? CreatedBy { get; set; }
+        public DateTime? ModifiedDate { get; set; }
+        public int? ModifiedBy { get; set; }
+        public bool IsActive { get; set; }
     }
 }
+
+
+

@@ -10,12 +10,9 @@ namespace OnwardsDAL.Interface
 {
     public interface IReimbursementRepository
     {
-        Task InsertReimbursementAsync(ReimbursementModel model);
+        public Task InsertOrUpdateReimbursementAsync(ReimbursementModel model);
 
-        Task<(List<ReimbursementModel> reimbursements, List<ReimbursementDocumentModel> documents)>
-            GetReimbursementsAsync(ReimbursementFilterModel filter);
-
-        Task UpdateReimbursementAsync(ReimbursementModel model);
+        public Task<List<ReimbursementDto>> GetReimbursementsByIdAsync(int UserId, int StatusId);
 
         Task DeleteReimbursementAsync(int id, int loginId);
     }

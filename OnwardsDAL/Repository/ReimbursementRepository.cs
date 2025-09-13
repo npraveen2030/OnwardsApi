@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using OnwardsDAL.Interface;
 using OnwardsModel.Dtos;
 using OnwardsModel.Model;
@@ -25,61 +26,66 @@ namespace OnwardsDAL.Repository
         {
             return new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
         }
+        private async Task<byte[]> ConvertToByteArrayAsync(IFormFile file)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                await file.CopyToAsync(memoryStream);
+                return memoryStream.ToArray();
+            }
+        }
 
-        private DataTable CreateDocumentsTable(List<ReimbursementDocumentModel> documents)
+        private async Task<DataTable> CreateDocumentsTable(List<ReimbursementDocumentModel> documents)
         {
             var table = new DataTable();
 
-            // Define the schema to match Onwards.ReimbursementDocumentType
             table.Columns.Add("Id", typeof(int));
             table.Columns.Add("ReimbursementId", typeof(int));
             table.Columns.Add("FileName", typeof(string));
-            table.Columns.Add("FileType", typeof(string));
-            table.Columns.Add("FileSizeKB", typeof(int));
             table.Columns.Add("FileContent", typeof(byte[]));
             table.Columns.Add("UploadedAt", typeof(DateTime));
             table.Columns.Add("IsActive", typeof(bool));
 
-            // Fill the table with values from the list
             foreach (var doc in documents)
             {
-                table.Rows.Add(
-                    doc.Id == 0 ? (object)DBNull.Value : doc.Id,
-                    doc.ReimbursementId == 0 ? (object)DBNull.Value : doc.ReimbursementId,
-                    doc.FileName,
-                    doc.FileType,
-                    doc.FileSizeKB,
-                    doc.FileContent ?? Array.Empty<byte>(),
-                    doc.UploadedAt,
-                    doc.IsActive
-                );
+                if (doc.FileContent != null)
+                {
+                    table.Rows.Add(
+                        doc.Id == null ? (object)DBNull.Value : doc.Id,
+                        doc.ReimbursementId == null ? (object)DBNull.Value : doc.ReimbursementId,
+                        doc.FileName ?? (object)DBNull.Value,
+                        await ConvertToByteArrayAsync(doc.FileContent),
+                        DBNull.Value,
+                        true
+                    );
+                }
             }
 
             return table;
         }
 
-        public async Task InsertReimbursementAsync(ReimbursementModel model)
+        public async Task InsertOrUpdateReimbursementAsync(ReimbursementModel model)
         {
             await using var conn = GetConnection();
             await conn.OpenAsync();
 
-            using var cmd = new SqlCommand("Onwards.InsertReimbursement", conn)
+            await using var cmd = new SqlCommand("Onwards.InsertOrUpdateReimbursement", conn)
             {
                 CommandType = CommandType.StoredProcedure
             };
 
+            // Core parameters
+            cmd.Parameters.AddWithValue("@Id", model.Id == null ? (object)DBNull.Value : model.Id);
             cmd.Parameters.AddWithValue("@LoginId", model.LoginId);
-            cmd.Parameters.AddWithValue("@ClaimCode", model.ClaimCode);
+            cmd.Parameters.AddWithValue("@ClaimCode", model.ClaimCode ?? string.Empty);
             cmd.Parameters.AddWithValue("@UserId", model.UserId);
             cmd.Parameters.AddWithValue("@Amount", model.Amount);
-            cmd.Parameters.AddWithValue("@Purpose", model.Purpose);
+            cmd.Parameters.AddWithValue("@Purpose", model.Purpose ?? string.Empty);
             cmd.Parameters.AddWithValue("@ReimbursementDate", model.ReimbursementDate);
-            cmd.Parameters.AddWithValue("@StatusId", model.StatusId);
-            cmd.Parameters.AddWithValue("@Action", model.Action);
+            cmd.Parameters.AddWithValue("@StatusId", model.StatusId ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@Action", model.Action ?? string.Empty);
 
-            var table = model.Documents != null && model.Documents.Any()
-                            ? CreateDocumentsTable(model.Documents)
-                            : CreateDocumentsTable(new List<ReimbursementDocumentModel>()); // Empty table
+            var table = await CreateDocumentsTable(model.Documents);
 
             var tvp = new SqlParameter("@Documents", SqlDbType.Structured)
             {
@@ -91,70 +97,107 @@ namespace OnwardsDAL.Repository
             await cmd.ExecuteNonQueryAsync();
         }
 
-        public async Task<(List<ReimbursementModel> reimbursements, List<ReimbursementDocumentModel> documents)>
-            GetReimbursementsAsync(ReimbursementFilterModel filter)
+
+        public async Task<List<ReimbursementDto>> GetReimbursementsByIdAsync(int UserId , int StatusId)
         {
-            await using var conn = GetConnection();
-            await conn.OpenAsync();
-
-            using var cmd = new SqlCommand("Onwards.GetReimbursement", conn)
+            try
             {
-                CommandType = CommandType.StoredProcedure
-            };
+                await using var conn = GetConnection();
+                await conn.OpenAsync();
 
-            cmd.Parameters.AddWithValue("@ClaimCode", (object?)filter.ClaimCode ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@UserId", (object?)filter.UserId ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@Amount", (object?)filter.Amount ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@Purpose", (object?)filter.Purpose ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@ReimbursementDate", (object?)filter.ReimbursementDate ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@StatusId", (object?)filter.StatusId ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@Action", (object?)filter.Action ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@Skip", filter.Skip);
-            cmd.Parameters.AddWithValue("@Take", filter.Take);
-
-            var reimbursements = new List<ReimbursementModel>();
-            var documents = new List<ReimbursementDocumentModel>();
-
-            await using var reader = await cmd.ExecuteReaderAsync();
-
-            // First result set - reimbursements
-            while (await reader.ReadAsync())
-            {
-                reimbursements.Add(new ReimbursementModel
+                using var cmd = new SqlCommand("Onwards.GetReimbursementById", conn)
                 {
-                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                    ClaimCode = reader.GetString(reader.GetOrdinal("ClaimCode")),
-                    UserId = reader.GetInt32(reader.GetOrdinal("UserId")),
-                    Amount = reader.GetDecimal(reader.GetOrdinal("Amount")),
-                    Purpose = reader.GetString(reader.GetOrdinal("Purpose")),
-                    ReimbursementDate = reader.GetDateTime(reader.GetOrdinal("ReimbursementDate")),
-                    StatusId = reader.GetInt32(reader.GetOrdinal("StatusId")),
-                    Action = reader.GetString(reader.GetOrdinal("Action"))
-                    // Add other properties as needed
-                });
-            }
+                    CommandType = CommandType.StoredProcedure
+                };
 
-            // Second result set - documents
-            if (await reader.NextResultAsync())
-            {
+                // Parameters for filtering
+                cmd.Parameters.AddWithValue("@UserId", UserId);
+                cmd.Parameters.AddWithValue("@StatusId", StatusId);
+
+                var reimbursements = new List<ReimbursementDto>();
+
+                var reimbursementMap = new Dictionary<int, ReimbursementDto>();
+
+                await using var reader = await cmd.ExecuteReaderAsync();
+
+                // ---------- First Result Set: Reimbursements ----------
                 while (await reader.ReadAsync())
                 {
-                    documents.Add(new ReimbursementDocumentModel
+                    var reimbursement = new ReimbursementDto
                     {
                         Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                        ReimbursementId = reader.GetInt32(reader.GetOrdinal("ReimbursementId")),
-                        FileName = reader.GetString(reader.GetOrdinal("FileName")),
-                        FileType = reader.GetString(reader.GetOrdinal("FileType")),
-                        FileSizeKB = reader.GetInt32(reader.GetOrdinal("FileSizeKB")),
-                        FileContent = (byte[])reader["FileContent"],
-                        UploadedAt = reader.GetDateTime(reader.GetOrdinal("UploadedAt"))
-                        // Add other properties as needed
-                    });
-                }
-            }
+                        ClaimCode = reader.GetString(reader.GetOrdinal("ClaimCode")),
+                        UserId = reader.GetInt32(reader.GetOrdinal("UserId")),
+                        Amount = reader.GetDecimal(reader.GetOrdinal("Amount")),
+                        Purpose = reader.GetString(reader.GetOrdinal("Purpose")),
+                        ReimbursementDate = reader.GetDateTime(reader.GetOrdinal("ReimbursementDate")),
+                        StatusId = reader.IsDBNull(reader.GetOrdinal("StatusId"))
+                                   ? (int?)null
+                                   : reader.GetInt32(reader.GetOrdinal("StatusId")),
+                        Action = reader.GetString(reader.GetOrdinal("Action")),
+                        CreatedDate = reader.IsDBNull(reader.GetOrdinal("CreatedDate"))
+                                      ? (DateTime?)null
+                                      : reader.GetDateTime(reader.GetOrdinal("CreatedDate")),
+                        CreatedBy = reader.IsDBNull(reader.GetOrdinal("CreatedBy"))
+                                    ? (int?)null
+                                    : reader.GetInt32(reader.GetOrdinal("CreatedBy")),
+                        ModifiedDate = reader.IsDBNull(reader.GetOrdinal("ModifiedDate"))
+                                       ? (DateTime?)null
+                                       : reader.GetDateTime(reader.GetOrdinal("ModifiedDate")),
+                        ModifiedBy = reader.IsDBNull(reader.GetOrdinal("ModifiedBy"))
+                                     ? (int?)null
+                                     : reader.GetInt32(reader.GetOrdinal("ModifiedBy")),
+                        IsActive = reader.GetBoolean(reader.GetOrdinal("IsActive")),
+                        Documents = new List<ReimbursementDocumentDto>() 
+                    };
 
-            return (reimbursements, documents);
+                    reimbursements.Add(reimbursement);
+                    reimbursementMap[reimbursement.Id] = reimbursement;
+                }
+
+                // ---------- Second Result Set: Documents ----------
+                if (await reader.NextResultAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        var document = new ReimbursementDocumentDto
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            ReimbursementId = reader.GetInt32(reader.GetOrdinal("ReimbursementId")),
+                            FileName = reader.GetString(reader.GetOrdinal("FileName")),
+                            FileContent = (byte[])reader["FileContent"],
+                            UploadedAt = reader.GetDateTime(reader.GetOrdinal("UploadedAt")),
+                            CreatedDate = reader.IsDBNull(reader.GetOrdinal("CreatedDate"))
+                                          ? (DateTime?)null
+                                          : reader.GetDateTime(reader.GetOrdinal("CreatedDate")),
+                            CreatedBy = reader.IsDBNull(reader.GetOrdinal("CreatedBy"))
+                                        ? (int?)null
+                                        : reader.GetInt32(reader.GetOrdinal("CreatedBy")),
+                            ModifiedDate = reader.IsDBNull(reader.GetOrdinal("ModifiedDate"))
+                                           ? (DateTime?)null
+                                           : reader.GetDateTime(reader.GetOrdinal("ModifiedDate")),
+                            ModifiedBy = reader.IsDBNull(reader.GetOrdinal("ModifiedBy"))
+                                         ? (int?)null
+                                         : reader.GetInt32(reader.GetOrdinal("ModifiedBy")),
+                            IsActive = reader.GetBoolean(reader.GetOrdinal("IsActive"))
+                        };
+
+                        // Attach document to the correct reimbursement
+                        if (reimbursementMap.TryGetValue(document.ReimbursementId, out var parentReimbursement))
+                        {
+                            parentReimbursement.Documents.Add(document);
+                        }
+                    }
+                }
+
+                return reimbursements;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Error validating login: {ex.Message}", ex);
+            }
         }
+
 
         public async Task UpdateReimbursementAsync(ReimbursementModel model)
         {

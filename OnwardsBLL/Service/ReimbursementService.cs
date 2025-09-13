@@ -14,19 +14,14 @@ namespace OnwardsBLL.Service
             _repository = repository;
         }
 
-        public async Task AddAsync(ReimbursementModel model)
+        public async Task InsertOrUpdateReimbursementAsync(ReimbursementModel model)
         {
-            await _repository.InsertReimbursementAsync(model);
+            await _repository.InsertOrUpdateReimbursementAsync(model);
         }
 
-        public async Task<(List<ReimbursementModel>, List<ReimbursementDocumentModel>)> GetAsync(ReimbursementFilterModel filter)
+        public async Task<List<ReimbursementDto>> GetReimbursementsByIdAsync(int UserId, int StatusId)
         {
-            return await _repository.GetReimbursementsAsync(filter);
-        }
-
-        public async Task UpdateAsync(ReimbursementModel model)
-        {
-            await _repository.UpdateReimbursementAsync(model);
+            return await _repository.GetReimbursementsByIdAsync(UserId, StatusId);
         }
 
         public async Task DeleteAsync(int id, int loginId)

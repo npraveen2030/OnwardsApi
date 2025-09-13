@@ -10,9 +10,8 @@ namespace OnwardsBLL.Interface
 {
     public interface IReimbursementService
     {
-        Task AddAsync(ReimbursementModel model);
-        Task<(List<ReimbursementModel>, List<ReimbursementDocumentModel>)> GetAsync(ReimbursementFilterModel filter);
-        Task UpdateAsync(ReimbursementModel model);
+        public Task InsertOrUpdateReimbursementAsync(ReimbursementModel model);
+        public Task<List<ReimbursementDto>> GetReimbursementsByIdAsync(int UserId, int StatusId);
         Task DeleteAsync(int id, int loginId);
     }
 }

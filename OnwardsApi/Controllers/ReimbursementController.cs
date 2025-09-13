@@ -16,26 +16,26 @@ namespace OnwardsApi.Controllers
             _service = service;
         }
 
-        [HttpPost("add")]
+        [HttpPost("insertorupdate")]
         public async Task<IActionResult> Add([FromBody] ReimbursementModel model)
         {
-            await _service.AddAsync(model);
-            return Ok("Reimbursement inserted successfully.");
+            await _service.InsertOrUpdateReimbursementAsync(model);
+            return Ok("Reimbursement inserted Or Updated successfully.");
         }
 
-        [HttpPost("get")]
-        public async Task<IActionResult> Get([FromBody] ReimbursementFilterModel filter)
+        [HttpGet("get")]
+        public async Task<IActionResult> Get(int UserId , int StatusId)
         {
-            var result = await _service.GetAsync(filter);
-            return Ok(new { reimbursements = result.Item1, documents = result.Item2 });
+            var result = await _service.GetReimbursementsByIdAsync(UserId, StatusId);
+            return Ok(result);
         }
 
-        [HttpPut("update")]
-        public async Task<IActionResult> Update([FromBody] ReimbursementModel model)
-        {
-            await _service.UpdateAsync(model);
-            return Ok("Reimbursement updated successfully.");
-        }
+        //[HttpPut("update")]
+        //public async Task<IActionResult> Update([FromBody] ReimbursementModel model)
+        //{
+        //    await _service.UpdateAsync(model);
+        //    return Ok("Reimbursement updated successfully.");
+        //}
 
         [HttpDelete("delete/{id}/{loginId}")]
         public async Task<IActionResult> Delete(int id, int loginId)
