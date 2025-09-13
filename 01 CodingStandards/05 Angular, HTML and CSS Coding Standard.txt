@@ -1,10 +1,14 @@
 ========================= Angular ============================================
 
 * Creating a component
-	 ng g c my-approval  (Correct)
-	 ng g c myapproval   (wrong)
+	 ng g c my-approval     (Correct)
+	 ng g c myapproval      (wrong)
 	 ng g c exit-interview  (Correct)
 	 ng g c exitinterview   (wrong)
+
+	 ng g c savedjob        (wrong)
+	 ng g c saved-job       (Correct)
+
 
 * When clicking on button...Change the button text from 'Save' to 'Saving...' and make disable for 2 seconds
 * When clicking on button...Change the button text from 'Updating' to 'Updating...' and make disable for 2 seconds
@@ -13,6 +17,8 @@
 background-color: #f4f4f4;
 padding:0.5rem; or 0.65rem;
 
+bg-light  for light gray
+bg-white  for white
 
 =========================== HTML ===============================================================
 
