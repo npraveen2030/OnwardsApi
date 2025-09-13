@@ -69,6 +69,9 @@ namespace OnwardsApi
             services.AddScoped<IReimbursementRepository, ReimbursementRepository>();
             services.AddScoped<IReimbursementService, ReimbursementService>();
 
+            services.AddScoped<IJobPostRepository, JobPostRepository>();
+            services.AddScoped<IJobPostService, JobPostService>();
+
             return services;
         }
     }

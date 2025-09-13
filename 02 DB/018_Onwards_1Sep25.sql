@@ -1,3 +1,77 @@
+CREATE TABLE Onwards.Skills 
+(
+	Id INT PRIMARY KEY IDENTITY(1,1),
+	SkillName VARCHAR(500) NOT  NULL,
+	CreatedDate DATETIME NULL,
+	CreatedBy INT NULL,
+	ModifiedDate DATETIME NULL,
+	ModifiedBy INT NULL,
+	IsActive INT NOT NULL DEFAULT 1
+
+)
+
+INSERT INTO Onwards.Skills (SkillName, CreatedDate, CreatedBy, ModifiedDate, ModifiedBy, IsActive)
+VALUES 
+('Java', GETDATE(), 1, NULL, NULL, 1),
+('C#', GETDATE(), 1, NULL, NULL, 1),
+('Python', GETDATE(), 1, NULL, NULL, 1),
+('JavaScript', GETDATE(), 1, NULL, NULL, 1),
+('TypeScript', GETDATE(), 1, NULL, NULL, 1),
+('HTML', GETDATE(), 1, NULL, NULL, 1),
+('CSS', GETDATE(), 1, NULL, NULL, 1),
+('Angular', GETDATE(), 1, NULL, NULL, 1),
+('React', GETDATE(), 1, NULL, NULL, 1),
+('Node.js', GETDATE(), 1, NULL, NULL, 1),
+('Express.js', GETDATE(), 1, NULL, NULL, 1),
+('ASP.NET Core', GETDATE(), 1, NULL, NULL, 1),
+('Blazor', GETDATE(), 1, NULL, NULL, 1),
+('SQL', GETDATE(), 1, NULL, NULL, 1),
+('MySQL', GETDATE(), 1, NULL, NULL, 1),
+('PostgreSQL', GETDATE(), 1, NULL, NULL, 1),
+('MongoDB', GETDATE(), 1, NULL, NULL, 1),
+('Oracle Database', GETDATE(), 1, NULL, NULL, 1),
+('Git', GETDATE(), 1, NULL, NULL, 1),
+('GitHub', GETDATE(), 1, NULL, NULL, 1),
+('Docker', GETDATE(), 1, NULL, NULL, 1),
+('Kubernetes', GETDATE(), 1, NULL, NULL, 1),
+('AWS', GETDATE(), 1, NULL, NULL, 1),
+('Azure', GETDATE(), 1, NULL, NULL, 1),
+('Google Cloud Platform', GETDATE(), 1, NULL, NULL, 1),
+('Jenkins', GETDATE(), 1, NULL, NULL, 1),
+('CI/CD', GETDATE(), 1, NULL, NULL, 1),
+('Linux', GETDATE(), 1, NULL, NULL, 1),
+('Agile Methodology', GETDATE(), 1, NULL, NULL, 1),
+('Scrum', GETDATE(), 1, NULL, NULL, 1),
+('REST API Development', GETDATE(), 1, NULL, NULL, 1),
+('GraphQL', GETDATE(), 1, NULL, NULL, 1),
+('Spring Boot', GETDATE(), 1, NULL, NULL, 1),
+('Hibernate', GETDATE(), 1, NULL, NULL, 1),
+('Microservices', GETDATE(), 1, NULL, NULL, 1);
+
+CREATE PROCEDURE [Onwards].[GetSkills]
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+			SELECT Id , SkillName 
+			FROM Onwards.Skills
+			WHERE IsActive = 1
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        IF XACT_STATE() <> 0
+            ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END
+GO
+
 ------------------------------------------12th Sep 25------------------------------------
 CREATE TABLE Onwards.CompanyDescription
 (
@@ -9,6 +83,7 @@ CREATE TABLE Onwards.CompanyDescription
 	ModifiedBy INT NULL,
 	IsActive INT NOT NULL DEFAULT 1
 )
+
 
 CREATE TABLE Onwards.JobDetails
 (
