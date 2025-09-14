@@ -1,3 +1,354 @@
+
+------------------------14Sep2025 12PM ----------------------------- --------------location -------------------
+
+CREATE TABLE Onwards.Locations (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Name NVARCHAR(100) NOT NULL,
+    CreatedDate DATETIME NOT NULL DEFAULT GETDATE(),
+    CreatedBy INT NOT NULL,
+    ModifiedDate DATETIME NULL,
+    ModifiedBy INT NULL,
+    IsActive BIT NOT NULL DEFAULT 
+);
+INSERT INTO Onwards.Locations (Name, CreatedBy, ModifiedDate, ModifiedBy, IsActive)
+VALUES 
+('New York', 1, NULL, NULL, 1),
+('London', 1, NULL, NULL, 1),
+('Tokyo', 1, NULL, NULL, 1);
+
+
+CREATE PROCEDURE Onwards.InsertLocation
+    @Name NVARCHAR(100),
+    @CreatedBy INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO Onwards.Locations (Name, CreatedDate, CreatedBy, IsActive)
+    VALUES (@Name, GETDATE(), @CreatedBy, 1);
+END
+
+
+CREATE PROCEDURE Onwards.UpdateLocation
+    @Id INT,
+    @Name NVARCHAR(100),
+    @ModifiedBy INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Onwards.Locations
+    SET Name = @Name,
+        ModifiedDate = GETDATE(),
+        ModifiedBy = @ModifiedBy
+    WHERE Id = @Id AND IsActive = 1;
+END
+
+
+CREATE PROCEDURE Onwards.DeleteLocation
+    @Id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Onwards.Locations
+    SET IsActive = 0
+    WHERE Id = @Id;
+END
+
+
+CREATE PROCEDURE Onwards.GetAllLocations
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT Id, Name, CreatedDate, CreatedBy, ModifiedDate, ModifiedBy, IsActive
+    FROM Onwards.Locations
+    WHERE IsActive = 1
+    ORDER BY Name;
+END
+
+
+CREATE PROCEDURE Onwards.GetLocationById
+    @Id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT Id, Name, CreatedDate, CreatedBy, ModifiedDate, ModifiedBy, IsActive
+    FROM Onwards.Locations
+    WHERE Id = @Id AND IsActive = 1;
+END
+
+
+CREATE TABLE Onwards.Language (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Name NVARCHAR(100) NOT NULL,
+    CreatedDate DATETIME NOT NULL DEFAULT GETDATE(),
+    CreatedBy INT NOT NULL,
+    ModifiedDate DATETIME NULL,
+    ModifiedBy INT NULL,
+    IsActive BIT NOT NULL DEFAULT 1
+);
+
+
+INSERT INTO Onwards.Language (Name, CreatedBy, ModifiedDate, ModifiedBy, IsActive)
+VALUES 
+('English', 1, NULL, NULL, 1),
+('Hindi', 1, NULL, NULL, 1),
+('Spanish', 1, NULL, NULL, 1);
+
+
+CREATE PROCEDURE Onwards.InsertLanguage
+    @Name NVARCHAR(100),
+    @CreatedBy INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO Onwards.Language (Name, CreatedDate, CreatedBy, IsActive)
+    VALUES (@Name, GETDATE(), @CreatedBy, 1);
+END
+
+CREATE PROCEDURE Onwards.UpdateLanguage
+    @Id INT,
+    @Name NVARCHAR(100),
+    @ModifiedBy INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Onwards.Language
+    SET Name = @Name,
+        ModifiedDate = GETDATE(),
+        ModifiedBy = @ModifiedBy
+    WHERE Id = @Id AND IsActive = 1;
+END
+
+CREATE PROCEDURE Onwards.DeleteLanguage
+    @Id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Onwards.Language
+    SET IsActive = 0
+    WHERE Id = @Id;
+END
+
+CREATE PROCEDURE Onwards.GetAllLanguages
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT Id, Name, CreatedDate, CreatedBy, ModifiedDate, ModifiedBy, IsActive
+    FROM Onwards.Language
+    WHERE IsActive = 1
+    ORDER BY Name;
+END
+
+
+CREATE PROCEDURE Onwards.GetLanguageById
+    @Id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT Id, Name, CreatedDate, CreatedBy, ModifiedDate, ModifiedBy, IsActive
+    FROM Onwards.Language
+    WHERE Id = @Id AND IsActive = 1;
+END
+
+INSERT INTO Onwards.CompanyDescription (Description, CreatedDate, CreatedBy, ModifiedDate, ModifiedBy, IsActive)
+VALUES 
+('SLK', GETDATE(), 1, NULL, NULL, 1),
+('HTS', GETDATE(), 1, NULL, NULL, 1);
+
+
+--SELECT * FROM Onwards.JobDetails 
+ 
+DECLARE @i INT = 1;
+
+WHILE @i <= 299
+BEGIN
+    INSERT INTO Onwards.JobDetails (
+        ProjectId, RoleId, RolePurpose, LocationId, SlkId, SkillsId, Responsibilities, EducationDetails,
+        ExperienceRequired, DomainFunctionalSkills, RequesitionBy, RequesitionDate, Status, CreatedDate, CreatedBy
+    )
+    VALUES (
+        1 , 1, 'Role Purpose ' + CAST(@i AS VARCHAR),
+        1 , 1, 'Skills1,Skills2',
+        'Responsibilities text ' + CAST(@i AS VARCHAR), 'Bachelor Degree',
+        '3-5 Years', 'Functional Skills text ' + CAST(@i AS VARCHAR),
+        1, GETDATE(), 1, GETDATE(), 1
+    );
+
+    SET @i = @i + 1;
+END
+
+
+CREATE PROCEDURE Onwards.InsertJobDetails
+    @ProjectId INT,
+    @RoleId INT,
+    @RolePurpose VARCHAR(MAX),
+    @LocationId INT,
+    @SlkId INT,
+    @SkillsId VARCHAR(500),
+    @Responsibilities VARCHAR(MAX),
+    @EducationDetails VARCHAR(500),
+    @ExperienceRequired VARCHAR(250),
+    @DomainFunctionalSkills VARCHAR(MAX),
+    @RequesitionBy INT,
+    @RequesitionDate DATETIME,
+    @Status INT,
+    @CreatedBy INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO Onwards.JobDetails (
+        ProjectId, RoleId, RolePurpose, LocationId, SlkId, SkillsId,
+        Responsibilities, EducationDetails, ExperienceRequired, DomainFunctionalSkills,
+        RequesitionBy, RequesitionDate, Status, CreatedDate, CreatedBy, IsActive
+    )
+    VALUES (
+        @ProjectId, @RoleId, @RolePurpose, @LocationId, @SlkId, @SkillsId,
+        @Responsibilities, @EducationDetails, @ExperienceRequired, @DomainFunctionalSkills,
+        @RequesitionBy, @RequesitionDate, @Status, GETDATE(), @CreatedBy, 1
+    );
+END
+
+
+CREATE PROCEDURE Onwards.UpdateJobDetails
+    @Id INT,
+    @ProjectId INT,
+    @RoleId INT,
+    @RolePurpose VARCHAR(MAX),
+    @LocationId INT,
+    @SlkId INT,
+    @SkillsId VARCHAR(500),
+    @Responsibilities VARCHAR(MAX),
+    @EducationDetails VARCHAR(500),
+    @ExperienceRequired VARCHAR(250),
+    @DomainFunctionalSkills VARCHAR(MAX),
+    @RequesitionBy INT,
+    @RequesitionDate DATETIME,
+    @Status INT,
+    @ModifiedBy INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Onwards.JobDetails
+    SET
+        ProjectId = @ProjectId,
+        RoleId = @RoleId,
+        RolePurpose = @RolePurpose,
+        LocationId = @LocationId,
+        SlkId = @SlkId,
+        SkillsId = @SkillsId,
+        Responsibilities = @Responsibilities,
+        EducationDetails = @EducationDetails,
+        ExperienceRequired = @ExperienceRequired,
+        DomainFunctionalSkills = @DomainFunctionalSkills,
+        RequesitionBy = @RequesitionBy,
+        RequesitionDate = @RequesitionDate,
+        Status = @Status,
+        ModifiedDate = GETDATE(),
+        ModifiedBy = @ModifiedBy
+    WHERE Id = @Id AND IsActive = 1;
+END
+
+
+CREATE PROCEDURE Onwards.DeleteJobDetails
+    @Id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Onwards.JobDetails
+    SET IsActive = 0
+    WHERE Id = @Id;
+END
+
+
+CREATE PROCEDURE Onwards.GetAllJobDetails
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT * FROM Onwards.JobDetails
+    WHERE IsActive = 1
+    ORDER BY CreatedDate DESC;
+END
+
+
+CREATE PROCEDURE Onwards.GetJobDetailsById
+    @Id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT * FROM Onwards.JobDetails
+    WHERE Id = @Id AND IsActive = 1;
+END
+
+
+CREATE PROCEDURE Onwards.SearchJobDetails
+    @SearchString VARCHAR(MAX)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT * FROM Onwards.JobDetails
+    WHERE (RolePurpose LIKE '%' + @SearchString + '%' OR DomainFunctionalSkills LIKE '%' + @SearchString + '%')
+    AND IsActive = 1
+    ORDER BY CreatedDate DESC;
+END
+
+------------------------14Sep2025 -----------------------------
+
+CREATE TABLE Onwards.Language (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Name NVARCHAR(100) NOT NULL,
+    CreatedDate DATETIME NOT NULL DEFAULT GETDATE(),
+    CreatedBy INT NOT NULL,
+    ModifiedDate DATETIME NULL,
+    ModifiedBy INT NULL,
+    IsActive BIT NOT NULL DEFAULT 1
+);
+
+
+INSERT INTO Onwards.Language (Name, CreatedBy, ModifiedDate, ModifiedBy, IsActive)
+VALUES 
+('English', 1, NULL, NULL, 1),
+('Hindi', 1, NULL, NULL, 1),
+('Spanish', 1, NULL, NULL, 1);
+
+
+CREATE PROCEDURE Onwards.GetLanguage
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT Id, Name IsActive
+    FROM Onwards.Language
+    WHERE IsActive = 1;
+END
+
+
+CREATE PROCEDURE Onwards.GetLanguageById
+    @Id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT Id, Name IsActive
+    FROM Onwards.Language
+    WHERE Id = @Id AND IsActive = 1;
+END
+
+
 ------------------------13Sep2025 -----------------------------
 
 CREATE TABLE Onwards.Skills 
