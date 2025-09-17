@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using OnwardsBLL.Interface;
 using OnwardsDAL.Interface;
@@ -19,34 +16,34 @@ namespace OnwardsBLL.Service
             _repository = repository;
         }
 
-        public void Insert(JobDetailModel model)
+        public async Task InsertAsync(JobDetailModel model)
         {
-            _repository.Insert(model);
+            await _repository.InsertAsync(model);
         }
 
-        public void Update(JobDetailModel model)
+        public async Task UpdateAsync(JobDetailModel model)
         {
-            _repository.Update(model);
+            await _repository.UpdateAsync(model);
         }
 
-        public void Delete(int id)
+        public async Task DeleteAsync(int id)
         {
-            _repository.Delete(id);
+            await _repository.DeleteAsync(id);
         }
 
-        public JobDetailDto GetById(int id)
+        public async Task<JobDetailDto> GetByIdAsync(int id)
         {
-            return _repository.GetById(id);
+            return await _repository.GetByIdAsync(id);
         }
 
-        public List<JobDetailDto> GetAll()
+        public async Task<List<JobDetailDto>> GetAllAsync()
         {
-            return _repository.GetAll();
+            return await _repository.GetAllAsync();
         }
 
-        public List<JobDetailDto> Search(string searchString)
+        public async Task<List<JobDetailDto>> SearchAsync(string searchString)
         {
-            return _repository.Search(searchString);
+            return await _repository.SearchAsync(searchString);
         }
     }
 }

@@ -1,5 +1,217 @@
 
-------------------------14Sep2025 12PM ----------------------------- --------------location -------------------
+------------------------14Sep2025 12PM ----------------------------- 
+DROP TABLE Onwards.JobDetails
+CREATE TABLE Onwards.JobDetails
+(
+	Id INT PRIMARY KEY IDENTITY(1,1),
+
+	ProjectId INT NOT NULL,
+	RoleId INT NOT NULL,
+	RolePurpose VARCHAR(MAX) NOT NULL,
+	LocationId INT NOT NULL,
+	CompanyId INT NOT NULL,
+	Skills VARCHAR(500) NOT NULL,
+	Responsibilities VARCHAR(MAX) NOT NULL,
+	EducationDetails VARCHAR(500) NOT  NULL,
+	ExperienceRequired VARCHAR(250) NOT NULL,
+	DomainFunctionalSkills VARCHAR(MAX) NOT NULL,
+
+	RequesitionBy INT NOT NULL,
+	RequesitionDate DATETIME NOT NULL,
+
+	CreatedDate DATETIME NULL,
+	CreatedBy INT NULL,
+	ModifiedDate DATETIME NULL,
+	ModifiedBy INT NULL,
+	IsActive INT NOT NULL DEFAULT 1,
+
+	CONSTRAINT FK_JobDetails_Roles FOREIGN KEY (RoleId)
+        REFERENCES Onwards.Roles(Id),
+
+	CONSTRAINT FK_JobDetails_CompanyDescription FOREIGN KEY (CompanyId)
+        REFERENCES Onwards.CompanyDescription(Id),
+)
+
+ALTER PROCEDURE Onwards.InsertJobDetails
+    @ProjectId INT,
+    @RoleId INT,
+    @RolePurpose VARCHAR(MAX),
+    @LocationId INT,
+    @CompanyId INT,
+    @Skills VARCHAR(500),
+    @Responsibilities VARCHAR(MAX),
+    @EducationDetails VARCHAR(500),
+    @ExperienceRequired VARCHAR(250),
+    @DomainFunctionalSkills VARCHAR(MAX),
+    @RequesitionBy INT,
+    @RequesitionDate DATETIME,
+    @CreatedBy INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO Onwards.JobDetails (
+        ProjectId, RoleId, RolePurpose, LocationId, CompanyId, Skills,
+        Responsibilities, EducationDetails, ExperienceRequired, DomainFunctionalSkills,
+        RequesitionBy, RequesitionDate, CreatedDate, CreatedBy, IsActive
+    )
+    VALUES (
+        @ProjectId, @RoleId, @RolePurpose, @LocationId, @CompanyId, @Skills,
+        @Responsibilities, @EducationDetails, @ExperienceRequired, @DomainFunctionalSkills,
+        @RequesitionBy, @RequesitionDate, GETDATE(), @CreatedBy, 1
+    );
+END
+
+
+ALTER PROCEDURE Onwards.UpdateJobDetails
+    @Id INT,
+    @ProjectId INT,
+    @RoleId INT,
+    @RolePurpose VARCHAR(MAX),
+    @LocationId INT,
+    @CompanyId INT,
+    @Skills VARCHAR(500),
+    @Responsibilities VARCHAR(MAX),
+    @EducationDetails VARCHAR(500),
+    @ExperienceRequired VARCHAR(250),
+    @DomainFunctionalSkills VARCHAR(MAX),
+    @RequesitionBy INT,
+    @RequesitionDate DATETIME,
+    @ModifiedBy INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Onwards.JobDetails
+    SET
+        ProjectId = @ProjectId,
+        RoleId = @RoleId,
+        RolePurpose = @RolePurpose,
+        LocationId = @LocationId,
+        CompanyId = @CompanyId,
+        Skills = @Skills,
+        Responsibilities = @Responsibilities,
+        EducationDetails = @EducationDetails,
+        ExperienceRequired = @ExperienceRequired,
+        DomainFunctionalSkills = @DomainFunctionalSkills,
+        RequesitionBy = @RequesitionBy,
+        RequesitionDate = @RequesitionDate,
+        ModifiedDate = GETDATE(),
+        ModifiedBy = @ModifiedBy
+    WHERE Id = @Id AND IsActive = 1;
+END
+
+
+ALTER PROCEDURE Onwards.DeleteJobDetails
+    @Id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Onwards.JobDetails
+    SET IsActive = 0
+    WHERE Id = @Id;
+END
+
+
+ALTER PROCEDURE Onwards.GetAllJobDetails
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT * FROM Onwards.JobDetails
+    WHERE IsActive = 1
+    ORDER BY CreatedDate DESC;
+END
+
+
+ALTER PROCEDURE Onwards.GetJobDetailsById
+    @Id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT * FROM Onwards.JobDetails
+    WHERE Id = @Id AND IsActive = 1;
+END
+
+
+ALTER PROCEDURE Onwards.SearchJobDetails
+    @SearchString VARCHAR(MAX)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT * FROM Onwards.JobDetails
+    WHERE (RolePurpose LIKE '%' + @SearchString + '%' OR DomainFunctionalSkills LIKE '%' + @SearchString + '%')
+    AND IsActive = 1
+    ORDER BY CreatedDate DESC;
+END
+
+
+CREATE TABLE Onwards.Projects(
+	Id INT IDENTITY(1,1) PRIMARY KEY,
+	ProjectName VARCHAR(200) NOT NULL,
+	CreatedDate DATETIME NOT NULL DEFAULT GETDATE(),
+    CreatedBy INT NOT NULL,
+    ModifiedDate DATETIME NULL,
+    ModifiedBy INT NULL,
+    IsActive BIT NOT NULL DEFAULT 1
+)
+
+INSERT INTO Onwards.Projects (ProjectName, CreatedBy)
+VALUES
+('NextGen Banking Portal', 1),
+('Cloud Infrastructure Automation', 1),
+('AI-Based Chatbot', 1),
+('Cybersecurity Threat Analyzer', 1),
+('E-Commerce Platform Upgrade', 1),
+('Healthcare Management System', 1),
+('Blockchain Payment Gateway', 1),
+('DevOps Pipeline Optimization', 1),
+('HR Recruitment Portal', 1),
+('Customer Data Analytics Dashboard', 1),
+('Mobile Banking App', 1),
+('Inventory Management System', 1),
+('Cloud Cost Optimization Tool', 1),
+('IoT Device Management Platform', 1),
+('Digital Wallet Integration', 1),
+('Fraud Detection System', 1),
+('Employee Onboarding Portal', 1),
+('Learning Management System (LMS)', 1),
+('Project Collaboration Tool', 1),
+('Travel Booking Platform', 1),
+('Online Exam Proctoring System', 1),
+('Document Management Portal', 1),
+('Social Media Analytics Tool', 1),
+('API Gateway Management System', 1),
+('Healthcare Telemedicine App', 1),
+('AI Recommendation Engine', 1),
+('E-Learning Mobile App', 1),
+('Bug Tracking System', 1),
+('Video Conferencing Tool', 1),
+('Digital Marketing Dashboard', 1);
+
+CREATE PROCEDURE Onwards.GetAllRoles
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+	SELECT Id, RoleName
+	FROM Onwards.Roles
+	WHERE IsActive = 1
+END
+
+CREATE PROCEDURE Onwards.GetAllProjects
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+	SELECT Id, ProjectName
+	FROM Onwards.Projects
+	WHERE IsActive = 1
+END
+---------------------------------------------------------------------------------------------------
 
 CREATE TABLE Onwards.Locations (
     Id INT IDENTITY(1,1) PRIMARY KEY,
@@ -8,7 +220,7 @@ CREATE TABLE Onwards.Locations (
     CreatedBy INT NOT NULL,
     ModifiedDate DATETIME NULL,
     ModifiedBy INT NULL,
-    IsActive BIT NOT NULL DEFAULT 
+    IsActive BIT NOT NULL DEFAULT 1
 );
 INSERT INTO Onwards.Locations (Name, CreatedBy, ModifiedDate, ModifiedBy, IsActive)
 VALUES 
@@ -437,7 +649,7 @@ CREATE TABLE Onwards.CompanyDescription
 	IsActive INT NOT NULL DEFAULT 1
 )
 
-
+DROP TABLE Onwards.JobDetails
 CREATE TABLE Onwards.JobDetails
 (
 	Id INT PRIMARY KEY IDENTITY(1,1),
@@ -446,7 +658,7 @@ CREATE TABLE Onwards.JobDetails
 	RoleId INT NOT NULL,
 	RolePurpose VARCHAR(MAX) NOT NULL,
 	LocationId INT NOT NULL,
-	SlkId INT NOT NULL,
+	CompanyId INT NOT NULL,
 	SkillsId VARCHAR(500) NOT NULL,
 	Responsibilities VARCHAR(MAX) NOT NULL,
 	EducationDetails VARCHAR(500) NOT  NULL,
@@ -466,7 +678,7 @@ CREATE TABLE Onwards.JobDetails
 	CONSTRAINT FK_JobDetails_Roles FOREIGN KEY (RoleId)
         REFERENCES Onwards.Roles(Id),
 
-	CONSTRAINT FK_JobDetails_CompanyDescription FOREIGN KEY (SlkId)
+	CONSTRAINT FK_JobDetails_CompanyDescription FOREIGN KEY (CompanyId)
         REFERENCES Onwards.CompanyDescription(Id),
 )
 

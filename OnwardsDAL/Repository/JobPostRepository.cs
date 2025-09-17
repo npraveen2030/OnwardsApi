@@ -47,5 +47,95 @@ namespace OnwardsDAL.Repository
                 throw new Exception("Error while Getting Skills.", ex);
             }
         }
+
+        public async Task<List<RolesDto>> GetRolesAsync()
+        {
+            try
+            {
+                var list = new List<RolesDto>();
+                await using var conn = GetConnection();
+                await conn.OpenAsync();
+
+                await using var cmd = new SqlCommand("Onwards.GetAllRoles", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    list.Add(new RolesDto
+                    {
+                        Id = Convert.ToInt32(reader["Id"]),
+                        RoleName = reader["RoleName"].ToString() ?? ""
+                    });
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while Getting Roles.", ex);
+            }
+        }
+
+        public async Task<List<ProjectsDto>> GetProjectsAsync()
+        {
+            try
+            {
+                var list = new List<ProjectsDto>();
+                await using var conn = GetConnection();
+                await conn.OpenAsync();
+
+                await using var cmd = new SqlCommand("Onwards.GetAllProjects", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    list.Add(new ProjectsDto
+                    {
+                        Id = Convert.ToInt32(reader["Id"]),
+                        ProjectName = reader["ProjectName"].ToString() ?? ""
+                    });
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while Getting Projects.", ex);
+            }
+        }
+
+        public async Task<List<UserDto>> GetUsersAsync()
+        {
+            try
+            {
+                var list = new List<UserDto>();
+                await using var conn = GetConnection();
+                await conn.OpenAsync();
+
+                await using var cmd = new SqlCommand("Onwards.GetAllUsers", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    list.Add(new UserDto
+                    {
+                        Id = Convert.ToInt32(reader["Id"]),
+                        UserName = reader["UserName"].ToString() ?? ""
+                    });
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while Getting Users.", ex);
+            }
+        }
     }
 }

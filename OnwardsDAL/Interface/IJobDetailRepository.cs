@@ -10,11 +10,11 @@ namespace OnwardsDAL.Interface
 {
     public interface IJobDetailRepository
     {
-        void Insert(JobDetailModel jobDetailsModel);
-        void Update(JobDetailModel jobDetailsModel);
-        void Delete(int id);
-        JobDetailDto GetById(int id);
-        List<JobDetailDto> GetAll();
-        List<JobDetailDto> Search(string searchString);
+        Task InsertAsync(JobDetailModel jobDetailsModel);
+        Task UpdateAsync(JobDetailModel jobDetailsModel);
+        Task DeleteAsync(int id);
+        Task<JobDetailDto> GetByIdAsync(int id);
+        Task<List<JobDetailDto>> GetAllAsync();
+        Task<List<JobDetailDto>> SearchAsync(string searchString);
     }
 }

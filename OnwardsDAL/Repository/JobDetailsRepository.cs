@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using OnwardsDAL.Interface;
@@ -21,7 +19,8 @@ namespace OnwardsDAL.Repository
             _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
-        public void Insert(JobDetailModel model)
+        // ------------------- INSERT -------------------
+        public async Task InsertAsync(JobDetailModel model)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand cmd = new SqlCommand("Onwards.InsertJobDetails", conn))
@@ -31,50 +30,50 @@ namespace OnwardsDAL.Repository
                 cmd.Parameters.AddWithValue("@RoleId", model.RoleId);
                 cmd.Parameters.AddWithValue("@RolePurpose", model.RolePurpose);
                 cmd.Parameters.AddWithValue("@LocationId", model.LocationId);
-                cmd.Parameters.AddWithValue("@SlkId", model.SlkId);
-                cmd.Parameters.AddWithValue("@SkillsId", model.SkillsId);
+                cmd.Parameters.AddWithValue("@CompanyId", model.CompanyId);
+                cmd.Parameters.AddWithValue("@Skills", model.Skills);
                 cmd.Parameters.AddWithValue("@Responsibilities", model.Responsibilities);
                 cmd.Parameters.AddWithValue("@EducationDetails", model.EducationDetails);
                 cmd.Parameters.AddWithValue("@ExperienceRequired", model.ExperienceRequired);
                 cmd.Parameters.AddWithValue("@DomainFunctionalSkills", model.DomainFunctionalSkills);
                 cmd.Parameters.AddWithValue("@RequesitionBy", model.RequesitionBy);
                 cmd.Parameters.AddWithValue("@RequesitionDate", model.RequesitionDate);
-                cmd.Parameters.AddWithValue("@Status", model.Status);
-                cmd.Parameters.AddWithValue("@CreatedBy", model.CreatedBy);
+                cmd.Parameters.AddWithValue("@CreatedBy", model.LoginId);
 
-                conn.Open();
-                cmd.ExecuteNonQuery();
+                await conn.OpenAsync();
+                await cmd.ExecuteNonQueryAsync();
             }
         }
 
-        public void Update(JobDetailModel model)
+        // ------------------- UPDATE -------------------
+        public async Task UpdateAsync(JobDetailModel model)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand cmd = new SqlCommand("Onwards.UpdateJobDetails", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@Id", model.ProjectId);  // Assuming ProjectId is key? (should use proper Id)
+                cmd.Parameters.AddWithValue("@Id", model.Id);  // Make sure to pass actual JobDetail Id
                 cmd.Parameters.AddWithValue("@ProjectId", model.ProjectId);
                 cmd.Parameters.AddWithValue("@RoleId", model.RoleId);
                 cmd.Parameters.AddWithValue("@RolePurpose", model.RolePurpose);
                 cmd.Parameters.AddWithValue("@LocationId", model.LocationId);
-                cmd.Parameters.AddWithValue("@SlkId", model.SlkId);
-                cmd.Parameters.AddWithValue("@SkillsId", model.SkillsId);
+                cmd.Parameters.AddWithValue("@CompanyId", model.CompanyId);
+                cmd.Parameters.AddWithValue("@Skills", model.Skills);
                 cmd.Parameters.AddWithValue("@Responsibilities", model.Responsibilities);
                 cmd.Parameters.AddWithValue("@EducationDetails", model.EducationDetails);
                 cmd.Parameters.AddWithValue("@ExperienceRequired", model.ExperienceRequired);
                 cmd.Parameters.AddWithValue("@DomainFunctionalSkills", model.DomainFunctionalSkills);
                 cmd.Parameters.AddWithValue("@RequesitionBy", model.RequesitionBy);
                 cmd.Parameters.AddWithValue("@RequesitionDate", model.RequesitionDate);
-                cmd.Parameters.AddWithValue("@Status", model.Status);
                 cmd.Parameters.AddWithValue("@ModifiedBy", model.CreatedBy);
 
-                conn.Open();
-                cmd.ExecuteNonQuery();
+                await conn.OpenAsync();
+                await cmd.ExecuteNonQueryAsync();
             }
         }
 
-        public void Delete(int id)
+        // ------------------- DELETE -------------------
+        public async Task DeleteAsync(int id)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand cmd = new SqlCommand("Onwards.DeleteJobDetails", conn))
@@ -82,12 +81,13 @@ namespace OnwardsDAL.Repository
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Id", id);
 
-                conn.Open();
-                cmd.ExecuteNonQuery();
+                await conn.OpenAsync();
+                await cmd.ExecuteNonQueryAsync();
             }
         }
 
-        public JobDetailDto GetById(int id)
+        // ------------------- GET BY ID -------------------
+        public async Task<JobDetailDto> GetByIdAsync(int id)
         {
             JobDetailDto dto = null;
 
@@ -97,20 +97,21 @@ namespace OnwardsDAL.Repository
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Id", id);
 
-                conn.Open();
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                await conn.OpenAsync();
+
+                using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
                 {
-                    if (reader.Read())
+                    if (await reader.ReadAsync())
                     {
                         dto = new JobDetailDto
                         {
-                            Id = (int)reader["Id"],
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
                             RolePurpose = reader["RolePurpose"].ToString(),
-                            SkillsId = reader["SkillsId"].ToString(),
+                            Skills = reader["Skills"].ToString(),
                             EducationDetails = reader["EducationDetails"].ToString(),
                             ExperienceRequired = reader["ExperienceRequired"].ToString(),
                             DomainFunctionalSkills = reader["DomainFunctionalSkills"].ToString(),
-                            CreatedDate = (DateTime)reader["CreatedDate"]
+                            CreatedDate = reader.GetDateTime(reader.GetOrdinal("CreatedDate"))
                         };
                     }
                 }
@@ -119,7 +120,8 @@ namespace OnwardsDAL.Repository
             return dto;
         }
 
-        public List<JobDetailDto> GetAll()
+        // ------------------- GET ALL -------------------
+        public async Task<List<JobDetailDto>> GetAllAsync()
         {
             var list = new List<JobDetailDto>();
 
@@ -128,20 +130,21 @@ namespace OnwardsDAL.Repository
             {
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                conn.Open();
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                await conn.OpenAsync();
+
+                using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
                 {
-                    while (reader.Read())
+                    while (await reader.ReadAsync())
                     {
                         list.Add(new JobDetailDto
                         {
-                            Id = (int)reader["Id"],
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
                             RolePurpose = reader["RolePurpose"].ToString(),
-                            SkillsId = reader["SkillsId"].ToString(),
+                            Skills = reader["Skills"].ToString(),
                             EducationDetails = reader["EducationDetails"].ToString(),
                             ExperienceRequired = reader["ExperienceRequired"].ToString(),
                             DomainFunctionalSkills = reader["DomainFunctionalSkills"].ToString(),
-                            CreatedDate = (DateTime)reader["CreatedDate"]
+                            CreatedDate = reader.GetDateTime(reader.GetOrdinal("CreatedDate"))
                         });
                     }
                 }
@@ -150,7 +153,8 @@ namespace OnwardsDAL.Repository
             return list;
         }
 
-        public List<JobDetailDto> Search(string searchString)
+        // ------------------- SEARCH -------------------
+        public async Task<List<JobDetailDto>> SearchAsync(string searchString)
         {
             var list = new List<JobDetailDto>();
 
@@ -160,20 +164,21 @@ namespace OnwardsDAL.Repository
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@SearchString", searchString);
 
-                conn.Open();
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                await conn.OpenAsync();
+
+                using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
                 {
-                    while (reader.Read())
+                    while (await reader.ReadAsync())
                     {
                         list.Add(new JobDetailDto
                         {
-                            Id = (int)reader["Id"],
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
                             RolePurpose = reader["RolePurpose"].ToString(),
-                            SkillsId = reader["SkillsId"].ToString(),
+                            Skills = reader["Skills"].ToString(),
                             EducationDetails = reader["EducationDetails"].ToString(),
                             ExperienceRequired = reader["ExperienceRequired"].ToString(),
                             DomainFunctionalSkills = reader["DomainFunctionalSkills"].ToString(),
-                            CreatedDate = (DateTime)reader["CreatedDate"]
+                            CreatedDate = reader.GetDateTime(reader.GetOrdinal("CreatedDate"))
                         });
                     }
                 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace OnwardsModel.Dtos
 {
-    public class UserDto
+    public class ProjectsDto
     {
         public int Id { get; set; }
-
-        public string UserName { get; set; } = string.Empty;
+        public string ProjectName { get; set; } = string.Empty;
     }
 }

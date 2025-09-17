@@ -10,11 +10,11 @@ namespace OnwardsBLL.Interface
 {
     public interface IJobDetailService
     {
-        void Insert(JobDetailModel jobDetailModel);
-        void Update(JobDetailModel jobDetailModel);
-        void Delete(int id);
-        JobDetailDto GetById(int id);
-        List<JobDetailDto> GetAll();
-        List<JobDetailDto> Search(string searchString);
+        Task InsertAsync(JobDetailModel model);
+        Task UpdateAsync(JobDetailModel model);
+        Task DeleteAsync(int id);
+        Task<JobDetailDto> GetByIdAsync(int id);
+        Task<List<JobDetailDto>> GetAllAsync();
+        Task<List<JobDetailDto>> SearchAsync(string searchString);
     }
 }

@@ -13,8 +13,8 @@ namespace OnwardsModel.Dtos
         public int RoleId { get; set; }
         public string RolePurpose { get; set; }
         public int LocationId { get; set; }
-        public int SlkId { get; set; }
-        public string SkillsId { get; set; }
+        public int CompanyId { get; set; }
+        public string Skills { get; set; }
         public string Responsibilities { get; set; }
         public string EducationDetails { get; set; }
         public string ExperienceRequired { get; set; }

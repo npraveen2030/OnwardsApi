@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OnwardsBLL.Interface;
 using OnwardsModel.Model;
+using System.Threading.Tasks;
 
 namespace OnwardsApi.Controllers
 {
@@ -16,47 +16,63 @@ namespace OnwardsApi.Controllers
             _jobDetailsService = jobDetailsService;
         }
 
+        // POST: api/JobDetails
         [HttpPost]
-        public IActionResult Insert([FromBody] JobDetailModel model)
+        public async Task<IActionResult> Insert([FromBody] JobDetailModel model)
         {
-            _jobDetailsService.Insert(model);
-            return Ok();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            await _jobDetailsService.InsertAsync(model);
+            return Ok(new { message = "Job detail inserted successfully." });
         }
 
+        // PUT: api/JobDetails
         [HttpPut]
-        public IActionResult Update([FromBody] JobDetailModel model)
+        public async Task<IActionResult> Update([FromBody] JobDetailModel model)
         {
-            _jobDetailsService.Update(model);
-            return Ok();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            await _jobDetailsService.UpdateAsync(model);
+            return Ok(new { message = "Job detail updated successfully." });
         }
 
+        // DELETE: api/JobDetails/{id}
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _jobDetailsService.Delete(id);
-            return Ok();
+            await _jobDetailsService.DeleteAsync(id);
+            return Ok(new { message = "Job detail deleted successfully." });
         }
 
+        // GET: api/JobDetails/{id}
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var result = _jobDetailsService.GetById(id);
+            var result = await _jobDetailsService.GetByIdAsync(id);
             if (result == null)
-                return NotFound();
+                return NotFound(new { message = $"Job detail with Id {id} not found." });
+
             return Ok(result);
         }
 
+        // GET: api/JobDetails
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var result = _jobDetailsService.GetAll();
+            var result = await _jobDetailsService.GetAllAsync();
             return Ok(result);
         }
 
+        // GET: api/JobDetails/search?query=value
         [HttpGet("search")]
-        public IActionResult Search([FromQuery] string query)
+        public async Task<IActionResult> Search([FromQuery] string query)
         {
-            var result = _jobDetailsService.Search(query);
+            if (string.IsNullOrWhiteSpace(query))
+                return BadRequest(new { message = "Search query cannot be empty." });
+
+            var result = await _jobDetailsService.SearchAsync(query);
             return Ok(result);
         }
     }

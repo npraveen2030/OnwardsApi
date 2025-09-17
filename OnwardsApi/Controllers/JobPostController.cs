@@ -20,5 +20,26 @@ namespace OnwardsApi.Controllers
             var result = await _service.GetSkillsAsync();
             return Ok(result);
         }
+
+        [HttpGet("getroles")]
+        public async Task<IActionResult> GetRoles()
+        {
+            var result = await _service.GetRolesAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("getprojects")]
+        public async Task<IActionResult> GetProjects()
+        {
+            var result = await _service.GetProjectsAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("getusers")]
+        public async Task<IActionResult> GetUsers()
+        {
+            var result = await _service.GetUsersAsync();
+            return Ok(result);
+        }
     }
 }
