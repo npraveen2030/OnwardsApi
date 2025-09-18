@@ -14,5 +14,7 @@ namespace OnwardsDAL.Interface
         public Task<List<ProjectsDto>> GetProjectsAsync();
 
         public Task<List<UserDto>> GetUsersAsync();
+
+        public Task<List<CompanyDto>> GetCompaniesAsync();
     }
 }

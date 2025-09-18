@@ -127,7 +127,7 @@ namespace OnwardsDAL.Repository
                     list.Add(new UserDto
                     {
                         Id = Convert.ToInt32(reader["Id"]),
-                        UserName = reader["UserName"].ToString() ?? ""
+                        UserName = reader["FullName"].ToString() ?? ""
                     });
                 }
                 return list;
@@ -135,6 +135,36 @@ namespace OnwardsDAL.Repository
             catch (Exception ex)
             {
                 throw new Exception("Error while Getting Users.", ex);
+            }
+        }
+
+        public async Task<List<CompanyDto>> GetCompaniesAsync()
+        {
+            try
+            {
+                var list = new List<CompanyDto>();
+                await using var conn = GetConnection();
+                await conn.OpenAsync();
+
+                await using var cmd = new SqlCommand("Onwards.GetAllCompanies", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    list.Add(new CompanyDto
+                    {
+                        Id = Convert.ToInt32(reader["Id"]),
+                        CompanyName = reader["CompanyName"].ToString() ?? ""
+                    });
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while Getting CompanyName.", ex);
             }
         }
     }

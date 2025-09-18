@@ -19,6 +19,7 @@ namespace OnwardsBLL.Service
         public async Task InsertAsync(JobDetailModel model)
         {
             await _repository.InsertAsync(model);
+            await _repository.AddNewSkills(model.NonDbSkills);
         }
 
         public async Task UpdateAsync(JobDetailModel model)
@@ -36,9 +37,9 @@ namespace OnwardsBLL.Service
             return await _repository.GetByIdAsync(id);
         }
 
-        public async Task<List<JobDetailDto>> GetAllAsync()
+        public async Task<List<AllJobdetailsDto>> GetAllAsync(int? userId)
         {
-            return await _repository.GetAllAsync();
+            return await _repository.GetAllAsync(userId);
         }
 
         public async Task<List<JobDetailDto>> SearchAsync(string searchString)

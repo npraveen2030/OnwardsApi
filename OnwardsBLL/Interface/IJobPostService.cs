@@ -12,7 +12,7 @@ namespace OnwardsBLL.Interface
         public Task<List<SkillsDto>> GetSkillsAsync();
         public Task<List<RolesDto>> GetRolesAsync();
         public Task<List<ProjectsDto>> GetProjectsAsync();
-
         public Task<List<UserDto>> GetUsersAsync();
+        public Task<List<CompanyDto>> GetCompaniesAsync();
     }
 }

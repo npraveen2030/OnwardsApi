@@ -17,7 +17,7 @@ namespace OnwardsApi.Controllers
         }
 
         // POST: api/JobDetails
-        [HttpPost]
+        [HttpPost("insert")]
         public async Task<IActionResult> Insert([FromBody] JobDetailModel model)
         {
             if (!ModelState.IsValid)
@@ -58,10 +58,10 @@ namespace OnwardsApi.Controllers
         }
 
         // GET: api/JobDetails
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
+        [HttpGet("getall")]
+        public async Task<IActionResult> GetAll([FromQuery] int? userId)
         {
-            var result = await _jobDetailsService.GetAllAsync();
+            var result = await _jobDetailsService.GetAllAsync(userId);
             return Ok(result);
         }
 

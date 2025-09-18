@@ -1,3 +1,191 @@
+ALTER TABLE Onwards.JobDetails
+DROP CONSTRAINT DF__JobDetail__IsAct__1837881B;
+
+ALTER TABLE Onwards.JobDetails
+DROP COLUMN IsActive
+GO
+
+ALTER TABLE Onwards.JobDetails
+ADD IsActive BIT NOT NULL DEFAULT 1
+GO
+
+CREATE TYPE Onwards.NewSkillList AS TABLE 
+(
+	SkillName VARCHAR(250) NOT NULL
+)
+
+
+CREATE PROCEDURE Onwards.InsertNewSkills
+	@Skills Onwards.NewSkillList Readonly
+AS
+BEGIN 
+	SET NOCOUNT ON;
+
+	INSERT INTO Onwards.Skills (SkillName)
+	SELECT * FROM @Skills
+
+END
+
+DELETE FROM Onwards.CompanyDescription;
+
+ALTER TABLE Onwards.CompanyDescription
+ADD CompanyName VARCHAR(300) NOT NULL
+
+INSERT INTO [Projects].[Onwards].[CompanyDescription]
+(
+    [CompanyName],
+    [Description],
+    [CreatedDate],
+    [CreatedBy],
+    [ModifiedDate],
+    [ModifiedBy],
+    [IsActive]
+)
+VALUES
+-- Company 1
+('TechSolutions Pvt. Ltd.', 
+ 'A leading software development company specializing in cloud-based enterprise solutions and mobile app development.', 
+ GETDATE(), 1, NULL, NULL, 1),
+
+-- Company 2
+('InnoSoft Technologies', 
+ 'Innovative IT services company focused on artificial intelligence, data analytics, and machine learning solutions.', 
+ GETDATE(), 1, NULL, NULL, 1),
+
+-- Company 3
+('CyberNet Systems', 
+ 'Provides secure network infrastructure and cybersecurity solutions for enterprises worldwide.', 
+ GETDATE(), 1, NULL, NULL, 1),
+
+-- Company 4
+('PixelSoft IT Services', 
+ 'Specializes in web development, UI/UX design, and digital transformation consulting.', 
+ GETDATE(), 1, NULL, NULL, 1),
+
+-- Company 5
+('CloudWorks Global', 
+ 'Cloud migration, DevOps, and SaaS product development experts with a global client base.', 
+ GETDATE(), 1, NULL, NULL, 1),
+
+-- Company 6
+('DataMind Analytics', 
+ 'A data-driven company delivering advanced analytics, business intelligence, and data engineering solutions.', 
+ GETDATE(), 1, NULL, NULL, 1),
+
+-- Company 7
+('NextGen Software Solutions', 
+ 'Offers custom software development services for fintech, healthcare, and e-commerce sectors.', 
+ GETDATE(), 1, NULL, NULL, 1),
+
+-- Company 8
+('Quantum IT Labs', 
+ 'Focused on research and development in blockchain, quantum computing, and advanced algorithms.', 
+ GETDATE(), 1, NULL, NULL, 1),
+
+-- Company 9
+('BlueWave Technologies', 
+ 'Provides IT consulting, cloud infrastructure, and enterprise software integration.', 
+ GETDATE(), 1, NULL, NULL, 1),
+
+-- Company 10
+('CodeCraft Innovations', 
+ 'Agile software development firm specializing in scalable backend systems and microservices architecture.', 
+ GETDATE(), 1, NULL, NULL, 1);
+
+
+ CREATE PROCEDURE Onwards.GetAllCompanies
+AS
+BEGIN 
+	SET NOCOUNT ON;
+
+	SELECT Id , CompanyName 
+	FROM Onwards.CompanyDescription
+	WHERE IsActive = 1
+
+END
+
+
+ALTER PROCEDURE [Onwards].[GetAllJobDetails]
+	@UserId INT NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+	IF (@UserId IS NULL)
+	BEGIN
+		SELECT Jd.Id ,Jd.RequesitionBy , R.RoleName , L.Name , Jd.CreatedDate 
+		FROM Onwards.JobDetails AS Jd
+		INNER JOIN Onwards.Roles AS R
+		ON Jd.RoleId = R.Id
+		INNER JOIN Onwards.Locations AS L
+		ON Jd.LocationId = L.Id
+		WHERE Jd.IsActive = 1 
+		ORDER BY Jd.CreatedDate DESC
+	END
+	ELSE
+	BEGIN
+		SELECT Jd.Id ,Jd.RequesitionBy, R.RoleName , L.Name , Jd.CreatedDate 
+		FROM Onwards.JobDetails AS Jd
+		INNER JOIN Onwards.Roles AS R
+		ON Jd.RoleId = R.Id
+		INNER JOIN Onwards.Locations AS L
+		ON Jd.LocationId = L.Id
+		WHERE Jd.IsActive = 1 AND Jd.CreatedBy = @UserId
+		ORDER BY Jd.CreatedDate DESC
+	END
+END
+
+
+ALTER PROCEDURE [Onwards].[GetJobDetailsById]
+    @Id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT  J.ProjectId,
+			P.ProjectName,
+			J.RoleId,
+			R.RoleName,
+			J.RolePurpose,
+			J.LocationId,
+			L.Name,
+			J.CompanyId,
+			C.Description,
+			J.Skills,
+			J.Responsibilities,
+			J.EducationDetails,
+			J.ExperienceRequired,
+			J.DomainFunctionalSkills,
+			J.RequesitionBy,
+			U.FullName,
+			J.RequesitionDate,
+			J.CreatedBy,
+			J.CreatedDate,
+			J.ModifiedBy,
+			J.ModifiedDate,
+			J.IsActive
+	FROM Onwards.JobDetails AS J
+	INNER JOIN Onwards.Projects AS P ON J.ProjectId = P.Id
+	INNER JOIN Onwards.Roles AS R ON J.RoleId = R.Id
+	INNER JOIN Onwards.Locations AS L ON J.LocationId = L.Id
+	INNER JOIN Onwards.CompanyDescription AS C ON J.CompanyId = C.Id
+	INNER JOIN Onwards.Users AS U ON J.RequesitionBy = U.Id
+    WHERE J.Id = @Id AND J.IsActive = 1;
+END
+
+---------------------------------------18 Sep 2025 -------------------------------------------
+
+CREATE PROCEDURE Onwards.GetAllUsers
+AS
+BEGIN 
+	SET NOCOUNT ON;
+
+	SELECT Id , FullName 
+	FROM Onwards.Users
+	WHERE IsActive = 1
+
+END
+
 
 ------------------------14Sep2025 12PM ----------------------------- 
 DROP TABLE Onwards.JobDetails

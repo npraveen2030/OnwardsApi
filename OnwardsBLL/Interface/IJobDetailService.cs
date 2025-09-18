@@ -14,7 +14,7 @@ namespace OnwardsBLL.Interface
         Task UpdateAsync(JobDetailModel model);
         Task DeleteAsync(int id);
         Task<JobDetailDto> GetByIdAsync(int id);
-        Task<List<JobDetailDto>> GetAllAsync();
+        Task<List<AllJobdetailsDto>> GetAllAsync(int? userId);
         Task<List<JobDetailDto>> SearchAsync(string searchString);
     }
 }

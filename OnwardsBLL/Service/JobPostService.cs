@@ -37,5 +37,10 @@ namespace OnwardsBLL.Service
         {
             return await _repository.GetUsersAsync();
         }
+
+        public async Task<List<CompanyDto>> GetCompaniesAsync()
+        {
+            return await _repository.GetCompaniesAsync();
+        }
     }
 }

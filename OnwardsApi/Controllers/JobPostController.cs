@@ -41,5 +41,12 @@ namespace OnwardsApi.Controllers
             var result = await _service.GetUsersAsync();
             return Ok(result);
         }
+
+        [HttpGet("getcompanies")]
+        public async Task<IActionResult> GetCompanies()
+        {
+            var result = await _service.GetCompaniesAsync();
+            return Ok(result);
+        }
     }
 }
