@@ -8,7 +8,7 @@ namespace OnwardsModel.Model
 {
     public class JobDetailModel 
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public int? UserId { get; set; }
 
         public int LoginId { get; set; }

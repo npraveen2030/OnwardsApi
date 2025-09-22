@@ -1,3 +1,399 @@
+--------------------------------22 Aug 25--------------------------------------------------
+CREATE TABLE Onwards.SavedSearch
+(
+	Id INT PRIMARY KEY IDENTITY(1,1),
+	UserId INT NOT NULL,
+	SearchName VARCHAR(100) NOT NULL,
+	Search VARCHAR(MAX) NOT NULL,
+	CreatedDate DATETIME NULL,
+	CreatedBy INT NULL,
+	ModifiedDate DATETIME NULL,
+	ModifiedBy INT NULL,
+	IsActive BIT NOT NULL DEFAULT 1,
+)
+
+CREATE PROCEDURE Onwards.InsertOrUpdateSavedSearch
+	@Id INT NULL = NULL,
+	@UserId INT ,
+	@SearchName VARCHAR(100),
+	@Search VARCHAR(MAX),
+	@LoginId INT,
+	@IsUnique BIT OUTPUT
+AS 
+BEGIN
+	SET NOCOUNT ON;
+
+	IF EXISTS(SELECT 1 FROM Onwards.SavedSearch WHERE SearchName = @SearchName AND UserId = @UserId)
+	BEGIN
+		SET @IsUnique = 0
+	END
+	ELSE
+	BEGIN
+		SET @IsUnique = 1
+
+		IF (@Id IS NULL)
+		BEGIN
+			INSERT INTO Onwards.SavedSearch (UserId,SearchName,Search,CreatedDate,CreatedBy)
+			VALUES (@UserId,@SearchName,@Search,GETDATE(),@LoginId)
+		END
+		ELSE
+		BEGIN
+			UPDATE Onwards.SavedSearch
+			SET 
+				SearchName = @SearchName,
+				ModifiedBy = @LoginId,
+				ModifiedDate = GETDATE()
+			WHERE Id = @Id
+		END
+	END
+END
+
+CREATE PROCEDURE Onwards.GetAllSavedSearch
+	@UserId INT
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	SELECT Id,SearchName,Search
+	FROM Onwards.SavedSearch
+	WHERE IsActive = 1 AND UserId = @UserId
+END
+
+CREATE PROCEDURE Onwards.DeleteSavedSearch
+	@Id INT 
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	DELETE Onwards.SavedSearch
+	WHERE Id = @Id
+END
+--------------------------------21 Aug 25--------------------------------------------------
+
+CREATE TABLE Onwards.JobStatus
+(
+	Id INT PRIMARY KEY,
+	Status VARCHAR(100) NOT NULL,
+	CreatedDate DATETIME NULL,
+	CreatedBy INT NULL,
+	ModifiedDate DATETIME NULL,
+	ModifiedBy INT NULL,
+	IsActive BIT NOT NULL DEFAULT 1,
+)
+
+INSERT INTO Onwards.JobStatus (Id,Status)
+VALUES
+	(1,'Pending'),
+	(2,'Approved'),
+	(3,'Withdraw'),
+	(4,'Deleted');
+
+
+CREATE TABLE Onwards.JobApplications
+(
+	Id INT PRIMARY KEY IDENTITY(1,1),
+	UserId INT NOT NULL,
+	JobId INT NOT NULL,
+	StatusId INT NOT NULL,
+	CreatedDate DATETIME NULL,
+	CreatedBy INT NULL,
+	ModifiedDate DATETIME NULL,
+	ModifiedBy INT NULL,
+	IsActive BIT NOT NULL DEFAULT 1,
+
+	CONSTRAINT FK_JobApplications_Users FOREIGN KEY (UserId) REFERENCES Onwards.Users(Id),
+	CONSTRAINT FK_JobApplications_JobDetails FOREIGN KEY (JobId) REFERENCES Onwards.JobDetails(Id),
+	CONSTRAINT FK_JobApplications_JobStatus FOREIGN KEY (StatusId) REFERENCES Onwards.JobStatus(Id),
+)
+
+CREATE PROCEDURE Onwards.InsertOrUpdateJobApplications
+	@Id INT NULL = NULL,
+	@UserId INT,
+	@JobId INT,
+	@LoginId INT,
+	@StatusId INT,
+	@Inserted BIT OUTPUT
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	IF (@ID IS NULL)
+	BEGIN
+		IF EXISTS(SELECT 1 FROM Onwards.JobApplications WHERE UserId = @UserId AND JobId = @JobId)
+		BEGIN
+			SET @Inserted = 0
+		END
+		ELSE
+		BEGIN
+			INSERT INTO Onwards.JobApplications (UserId,JobId,StatusId,CreatedBy,CreatedDate)
+			VALUES (@UserId,@JobId,@StatusId,@LoginId,GETDATE())
+
+			SET @Inserted = 1
+		END
+	END
+	ELSE
+	BEGIN
+		UPDATE Onwards.JobApplications
+		SET 
+			UserId = @UserId,
+			JobId = @JobId,
+			StatusId = @StatusId,
+			ModifiedBy = @LoginId,
+			ModifiedDate = GETDATE()
+		WHERE Id = @Id
+
+		SET @Inserted = 1
+	END
+END
+
+CREATE PROCEDURE Onwards.GetJobApplications
+	@UserId INT
+AS
+BEGIN
+	SET NOCOUNT ON;
+	DECLARE @jobApplications AS TABLE
+	(
+		Id INT NOT NULL,
+		JobId INT NOT NULL,
+		StatusId INT NOT NULL,
+		Status VARCHAR(100) NOT NULL,
+		CreatedDate DATETIME NOT NULL
+	)
+
+	INSERT INTO @jobApplications (Id,JobId,StatusId,Status,CreatedDate)
+	SELECT Ja.Id,Ja.JobId,Ja.StatusId,Js.Status,Ja.CreatedDate
+	FROM Onwards.JobApplications AS Ja
+	INNER JOIN Onwards.JobStatus AS Js ON Ja.StatusId = Js.Id
+	WHERE UserId = @UserId AND Ja.IsActive = 1
+
+	SELECT Jd.Id AS JobId , R.RoleName AS RoleName , L.Name AS LocationName , 
+		   Ja.Id AS Id , Ja.CreatedDate AS CreatedDate , Ja.StatusId AS StatusId ,
+		   Ja.Status AS Status
+	FROM Onwards.JobDetails AS Jd
+	INNER JOIN @jobApplications AS Ja ON Jd.Id = Ja.JobId
+	INNER JOIN Onwards.Roles AS R ON Jd.RoleId = R.Id
+	INNER JOIN Onwards.Locations AS L ON Jd.LocationId = L.Id
+	WHERE Jd.IsActive = 1 
+	ORDER BY Ja.CreatedDate DESC
+	
+END
+
+CREATE PROCEDURE Onwards.DeleteJobApplications
+	@Id INT,
+	@LoginId INT
+AS
+BEGIN
+	SET NOCOUNT ON;
+	UPDATE JobApplications
+	SET 
+		StatusId = 3, --Withdraw
+		ModifiedBy = @LoginId,
+		ModifiedDate = GETDATE()
+	WHERE Id = @Id
+END
+
+
+ALTER PROCEDURE [Onwards].[DeleteJobDetails]
+    @Id INT,
+	@LoginId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Onwards.JobDetails
+    SET
+		IsActive = 0,
+		ModifiedBy = @LoginId,
+		ModifiedDate = GETDATE()
+    WHERE Id = @Id;
+
+	DELETE Onwards.SavedJobs
+	WHERE JobId = @Id
+
+	UPDATE JobApplications
+	SET 
+		StatusId = 4, --Deleted
+		ModifiedBy = @LoginId,
+		ModifiedDate = GETDATE()
+	WHERE Id = @Id
+END
+
+
+ALTER PROCEDURE [Onwards].[SearchJobDetails]
+    @KeyWord VARCHAR(MAX) = NULL,
+    @ReqId INT = NULL,
+    @LocationIds Onwards.IntList READONLY
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @KeyWordTable TABLE
+    (
+        Id INT NOT NULL,
+        RoleName NVARCHAR(50) NOT NULL,
+        LocationId INT NOT NULL,
+        LocationName NVARCHAR(100) NOT NULL,
+        CreatedDate DATETIME NULL
+    );
+
+	DECLARE @ReqIdTable TABLE
+    (
+        Id INT NOT NULL,
+        RoleName NVARCHAR(50) NOT NULL,
+        LocationId INT NOT NULL,
+        LocationName NVARCHAR(100) NOT NULL,
+        CreatedDate DATETIME NULL
+    );
+
+    INSERT INTO @KeyWordTable (Id, RoleName, LocationId, LocationName, CreatedDate)
+    SELECT 
+        Jd.Id,
+        R.RoleName,
+        Jd.LocationId,
+        L.Name,
+        Jd.CreatedDate
+    FROM Onwards.JobDetails AS Jd
+    INNER JOIN Onwards.Roles AS R ON Jd.RoleId = R.Id
+    INNER JOIN Onwards.Locations AS L ON Jd.LocationId = L.Id
+    INNER JOIN Onwards.Users AS U ON Jd.RequesitionBy = U.Id
+    INNER JOIN Onwards.Projects AS P ON Jd.ProjectId = P.Id
+    INNER JOIN Onwards.CompanyDescription AS C ON Jd.CompanyId = C.Id
+    WHERE 
+    (
+        (@KeyWord IS NULL OR R.RoleName LIKE '%' + @KeyWord + '%')
+     OR (@KeyWord IS NULL OR Jd.Skills LIKE '%' + @KeyWord + '%')
+     OR (@KeyWord IS NULL OR Jd.DomainFunctionalSkills LIKE '%' + @KeyWord + '%')
+     OR (@KeyWord IS NULL OR Jd.RolePurpose LIKE '%' + @KeyWord + '%')
+     OR (@KeyWord IS NULL OR Jd.Responsibilities LIKE '%' + @KeyWord + '%')
+     OR (@KeyWord IS NULL OR Jd.EducationDetails LIKE '%' + @KeyWord + '%')
+     OR (@KeyWord IS NULL OR Jd.ExperienceRequired LIKE '%' + @KeyWord + '%')
+     OR (@KeyWord IS NULL OR U.FullName LIKE '%' + @KeyWord + '%')
+     OR (@KeyWord IS NULL OR P.ProjectName LIKE '%' + @KeyWord + '%')
+     OR (@KeyWord IS NULL OR C.CompanyName LIKE '%' + @KeyWord + '%')
+    )
+    AND Jd.IsActive = 1
+
+	INSERT INTO @ReqIdTable (Id, RoleName, LocationId, LocationName, CreatedDate)
+    SELECT 
+        Jd.Id,
+        R.RoleName,
+        Jd.LocationId,
+        L.Name,
+        Jd.CreatedDate
+    FROM Onwards.JobDetails AS Jd
+    INNER JOIN Onwards.Roles AS R ON Jd.RoleId = R.Id
+    INNER JOIN Onwards.Locations AS L ON Jd.LocationId = L.Id
+    INNER JOIN Onwards.Users AS U ON Jd.RequesitionBy = U.Id
+    INNER JOIN Onwards.Projects AS P ON Jd.ProjectId = P.Id
+    INNER JOIN Onwards.CompanyDescription AS C ON Jd.CompanyId = C.Id
+    WHERE 
+     (@ReqId IS NULL OR CAST(Jd.Id AS VARCHAR(20)) LIKE '%' + CAST(@ReqId AS VARCHAR(20)) + '%')
+
+    AND Jd.IsActive = 1
+    
+
+    -- Filter by LocationIds only if provided
+    IF EXISTS (SELECT 1 FROM @LocationIds)
+    BEGIN
+        SELECT Ft.Id, Ft.RoleName, Ft.LocationName, Ft.CreatedDate
+        FROM (SELECT * FROM @KeyWordTable INTERSECT SELECT * FROM @ReqIdTable) AS Ft
+        INNER JOIN @LocationIds AS L ON Ft.LocationId = L.Id
+		ORDER BY Ft.CreatedDate DESC;
+    END
+    ELSE
+    BEGIN
+        SELECT Ft.Id, Ft.RoleName, Ft.LocationName, Ft.CreatedDate
+        FROM (SELECT * FROM @KeyWordTable INTERSECT SELECT * FROM @ReqIdTable)AS Ft
+		ORDER BY Ft.CreatedDate DESC;
+    END
+END;
+
+
+ALTER PROCEDURE [Onwards].[InsertSavedJob]
+	@UserId INT,
+	@JobId INT,
+	@LoginId INT,
+	@Inserted BIT OUTPUT
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	IF EXISTS(SELECT 1 FROM Onwards.SavedJobs WHERE UserId = @UserId AND JobId = @JobId)
+	BEGIN
+		SET @Inserted = 0
+	END
+	ELSE
+	BEGIN
+		INSERT INTO Onwards.SavedJobs (UserId,JobId,CreatedBy,CreatedDate)
+		VALUES (@UserId,@JobId,@LoginId,GETDATE())
+
+		SET @Inserted = 1
+	END
+END
+
+--------------------------------20 sep 25 --------------------------------
+CREATE TABLE Onwards.SavedJobs
+(
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    UserId INT NOT NULL,
+    JobId INT NOT NULL,
+	CreatedDate DATETIME NULL,
+	CreatedBy INT NULL,
+	ModifiedDate DATETIME NULL,
+	ModifiedBy INT NULL,
+	IsActive BIT NOT NULL DEFAULT 1,
+
+    CONSTRAINT FK_SavedJobs_Users FOREIGN KEY (UserId) REFERENCES Onwards.Users(Id),
+    CONSTRAINT FK_SavedJobs_Jobs FOREIGN KEY (JobId) REFERENCES Onwards.JobDetails(Id)
+);
+
+CREATE PROCEDURE Onwards.InsertSavedJob
+	@UserId INT,
+	@JobId INT,
+	@LoginId INT
+AS
+BEGIN
+	SET NOCOUNT ON;
+	INSERT INTO Onwards.SavedJobs (UserId,JobId,CreatedBy,CreatedDate)
+	VALUES (@UserId,@JobId,@LoginId,GETDATE())
+END
+
+CREATE PROCEDURE Onwards.GetSavedJob
+	@UserId INT
+AS
+BEGIN
+	SET NOCOUNT ON;
+	DECLARE @Ids AS TABLE
+	(
+		Id INT NOT NULL,
+		JobId INT NOT NULL
+	)
+
+	INSERT INTO @Ids (Id,JobId)
+	SELECT Id,JobId 
+	FROM Onwards.SavedJobs
+	WHERE UserId = @UserId
+
+	SELECT Jd.Id AS JobId , R.RoleName AS RoleName , L.Name AS LocationName , Id.Id AS Id
+	FROM Onwards.JobDetails AS Jd
+	INNER JOIN @Ids AS Id ON Jd.Id = Id.JobId
+	INNER JOIN Onwards.Roles AS R ON Jd.RoleId = R.Id
+	INNER JOIN Onwards.Locations AS L ON Jd.LocationId = L.Id
+	
+END
+
+CREATE PROCEDURE Onwards.DeleteSavedJobs
+	@Id INT
+AS
+BEGIN
+	SET NOCOUNT ON;
+	DELETE Onwards.SavedJobs
+	WHERE Id = @Id
+END
+
+
+
+------------------------------------------- 19 Sep 25 -----------------------------------
 ALTER TABLE Onwards.JobDetails
 DROP CONSTRAINT DF__JobDetail__IsAct__1837881B;
 
@@ -113,7 +509,7 @@ BEGIN
 
 	IF (@UserId IS NULL)
 	BEGIN
-		SELECT Jd.Id ,Jd.RequesitionBy , R.RoleName , L.Name , Jd.CreatedDate 
+		SELECT Jd.Id  , R.RoleName , L.Name , Jd.CreatedDate 
 		FROM Onwards.JobDetails AS Jd
 		INNER JOIN Onwards.Roles AS R
 		ON Jd.RoleId = R.Id
@@ -124,7 +520,7 @@ BEGIN
 	END
 	ELSE
 	BEGIN
-		SELECT Jd.Id ,Jd.RequesitionBy, R.RoleName , L.Name , Jd.CreatedDate 
+		SELECT Jd.Id , R.RoleName , L.Name , Jd.CreatedDate 
 		FROM Onwards.JobDetails AS Jd
 		INNER JOIN Onwards.Roles AS R
 		ON Jd.RoleId = R.Id
@@ -142,7 +538,8 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    SELECT  J.ProjectId,
+    SELECT  J.Id,
+			J.ProjectId,
 			P.ProjectName,
 			J.RoleId,
 			R.RoleName,

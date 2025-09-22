@@ -78,6 +78,15 @@ namespace OnwardsApi
             services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddScoped<ILocationService, LocationService>();
 
+            services.AddScoped<ISavedJobRepository, SavedJobRepository>();
+            services.AddScoped<ISavedJobService, SavedJobService>();
+
+            services.AddScoped<IJobApplicationRepository, JobApplicationRepository>();
+            services.AddScoped<IJobApplicationService, JobApplicationService>();
+
+            services.AddScoped<ISavedSearchRepository, SavedSearchRepository>();
+            services.AddScoped<ISavedSearchService, SavedSearchService>();
+
             return services;
         }
     }

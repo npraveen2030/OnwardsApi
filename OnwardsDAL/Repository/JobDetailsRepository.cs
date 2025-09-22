@@ -141,13 +141,14 @@ namespace OnwardsDAL.Repository
 
 
         // ------------------- DELETE -------------------
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id,int loginid)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand cmd = new SqlCommand("Onwards.DeleteJobDetails", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Id", id);
+                cmd.Parameters.AddWithValue("@LoginId", loginid);
 
                 await conn.OpenAsync();
                 await cmd.ExecuteNonQueryAsync();
@@ -176,7 +177,7 @@ namespace OnwardsDAL.Repository
                             dto = new JobDetailDto
                             {
                                 // Job Info
-                                Id = id,
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
                                 RolePurpose = reader["RolePurpose"].ToString() ?? "",
                                 Skills = reader["Skills"].ToString() ?? "",
                                 Responsibilities = reader["Responsibilities"].ToString() ?? "",
@@ -242,7 +243,6 @@ namespace OnwardsDAL.Repository
                         list.Add(new AllJobdetailsDto
                         {
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                            RequesitionId = reader.GetInt32(reader.GetOrdinal("RequesitionBy")),
                             RoleName = reader["RoleName"].ToString() ?? "",
                             LocationName = reader["Name"].ToString() ?? "",
                             CreatedDate = reader.GetDateTime(reader.GetOrdinal("CreatedDate"))
@@ -255,37 +255,65 @@ namespace OnwardsDAL.Repository
         }
 
         // ------------------- SEARCH -------------------
-        public async Task<List<JobDetailDto>> SearchAsync(string searchString)
+        public async Task<List<AllJobdetailsDto>> SearchAsync(string? keyword, int? reqId, List<int> locationIds)
         {
-            var list = new List<JobDetailDto>();
+            var list = new List<AllJobdetailsDto>();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
-            using (SqlCommand cmd = new SqlCommand("Onwards.SearchJobDetails", conn))
+            try
             {
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@SearchString", searchString);
-
-                await conn.OpenAsync();
-
-                using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                using (SqlConnection conn = new SqlConnection(_connectionString))
+                using (SqlCommand cmd = new SqlCommand("Onwards.SearchJobDetails", conn))
                 {
-                    while (await reader.ReadAsync())
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    // @KeyWord parameter
+                    cmd.Parameters.AddWithValue("@KeyWord", string.IsNullOrEmpty(keyword) ? (object)DBNull.Value : keyword);
+
+                    // @ReqId parameter
+                    cmd.Parameters.AddWithValue("@ReqId", reqId.HasValue ? (object)reqId.Value : DBNull.Value);
+
+                    // @LocationIds parameter (TVP)
+                    var tvp = new DataTable();
+                    tvp.Columns.Add("Id", typeof(int));
+
+                    if (locationIds != null && locationIds.Count > 0)
                     {
-                        list.Add(new JobDetailDto
+                        foreach (var id in locationIds)
                         {
-                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                            RolePurpose = reader["RolePurpose"].ToString(),
-                            Skills = reader["Skills"].ToString(),
-                            EducationDetails = reader["EducationDetails"].ToString(),
-                            ExperienceRequired = reader["ExperienceRequired"].ToString(),
-                            DomainFunctionalSkills = reader["DomainFunctionalSkills"].ToString(),
-                            CreatedDate = reader.GetDateTime(reader.GetOrdinal("CreatedDate"))
-                        });
+                            tvp.Rows.Add(id);
+                        }
+                    }
+
+                    var tvpParam = cmd.Parameters.AddWithValue("@LocationIds", tvp);
+                    tvpParam.SqlDbType = SqlDbType.Structured;
+                    tvpParam.TypeName = "Onwards.IntList";
+
+                    // Open connection
+                    await conn.OpenAsync();
+
+                    // Execute reader
+                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            list.Add(new AllJobdetailsDto
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                RoleName = reader["RoleName"].ToString() ?? "",
+                                LocationName = reader["LocationName"].ToString() ?? "",
+                                CreatedDate = reader.GetDateTime(reader.GetOrdinal("CreatedDate"))
+                            });
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An unexpected error occurred while searching for job details.", ex);
             }
 
             return list;
         }
+
     }
 }

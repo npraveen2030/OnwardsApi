@@ -2,6 +2,16 @@
 
 
 --------------------------------------Clarification--------------------------------
+* 21Sep25 : Email (SMTP ) service 
+* 21Sep25 : Once you click apply or saved button  then disable the respective button
+* 21Sep25 : JobStatus 
+			Pending
+			Approved 
+			Withdraw --- Its was cancalled by user, when previous it was applyed 
+			Deleted  --- Job post was deleted 
+	Note: Deleted Job will not be displayed in any tabs
+
+* 21Sep25 : Once Job is deleted then delete from saved jobs 
 * 08Sep2025 : We can have multiple uploads but PDF format and file size should not be greater than 30MB
 * 22Aug2025 : All the Upload will take only 1 PDF file , no other format are allowed and file size should not be greater than 30MB
 

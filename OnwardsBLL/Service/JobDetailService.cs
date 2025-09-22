@@ -27,9 +27,9 @@ namespace OnwardsBLL.Service
             await _repository.UpdateAsync(model);
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id,int loginid)
         {
-            await _repository.DeleteAsync(id);
+            await _repository.DeleteAsync(id,loginid);
         }
 
         public async Task<JobDetailDto> GetByIdAsync(int id)
@@ -42,9 +42,9 @@ namespace OnwardsBLL.Service
             return await _repository.GetAllAsync(userId);
         }
 
-        public async Task<List<JobDetailDto>> SearchAsync(string searchString)
+        public async Task<List<AllJobdetailsDto>> SearchAsync(string? keyword, int? reqId, List<int> locationIds)
         {
-            return await _repository.SearchAsync(searchString);
+            return await _repository.SearchAsync(keyword, reqId, locationIds);
         }
     }
 }

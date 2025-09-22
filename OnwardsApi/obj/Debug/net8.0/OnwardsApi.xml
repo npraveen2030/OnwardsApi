@@ -18,6 +18,37 @@
             <param name="request">LoginRequest containing EmployeeCode and Password</param>
             <returns>200 OK or 401 Unauthorized</returns>
         </member>
+        <member name="M:OnwardsApi.Controllers.JobApplicationController.InsertOrUpdateJobApplication(OnwardsModel.Model.JobApplicationModel)">
+            <summary>
+            Insert or update a job application.
+            </summary>
+        </member>
+        <member name="M:OnwardsApi.Controllers.JobApplicationController.GetJobApplications(System.Int32)">
+            <summary>
+            Get all job applications for a specific user.
+            </summary>
+        </member>
+        <member name="M:OnwardsApi.Controllers.JobApplicationController.DeleteJobApplication(System.Int32,System.Int32)">
+            <summary>
+            Delete (withdraw) a job application by Id.
+            </summary>
+        </member>
+        <member name="M:OnwardsApi.Controllers.SavedSearchController.InsertOrUpdateSavedSearch(OnwardsModel.Model.SavedSearchModel)">
+            <summary>
+            Insert or update a saved search.
+            Returns true if the search name is unique.
+            </summary>
+        </member>
+        <member name="M:OnwardsApi.Controllers.SavedSearchController.GetAllSavedSearch(System.Int32)">
+            <summary>
+            Get all active saved searches.
+            </summary>
+        </member>
+        <member name="M:OnwardsApi.Controllers.SavedSearchController.DeleteSavedSearch(System.Int32)">
+            <summary>
+            Delete a saved search by Id.
+            </summary>
+        </member>
         <member name="M:OnwardsApi.Controllers.TrainingController.GetByLocation(System.Int32)">
             <summary>
             Get all training records for a specific location.

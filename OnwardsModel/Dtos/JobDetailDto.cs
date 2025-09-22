@@ -38,7 +38,6 @@ namespace OnwardsModel.Dtos
     public class AllJobdetailsDto
     {
         public int Id { get; set; }
-        public int RequesitionId { get;set; }
         public string RoleName { get; set; } = "";
         public string LocationName { get; set; } = "";
         public DateTime CreatedDate { get; set; }
