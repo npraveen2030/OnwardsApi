@@ -57,6 +57,7 @@ BEGIN
 	SELECT Id,SearchName,Search
 	FROM Onwards.SavedSearch
 	WHERE IsActive = 1 AND UserId = @UserId
+	ORDER BY CreatedDate DESC
 END
 
 CREATE PROCEDURE Onwards.DeleteSavedSearch
