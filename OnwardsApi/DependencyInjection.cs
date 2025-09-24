@@ -87,6 +87,8 @@ namespace OnwardsApi
             services.AddScoped<ISavedSearchRepository, SavedSearchRepository>();
             services.AddScoped<ISavedSearchService, SavedSearchService>();
 
+            services.AddScoped<IEmailService, EmailService>();
+
             return services;
         }
     }
