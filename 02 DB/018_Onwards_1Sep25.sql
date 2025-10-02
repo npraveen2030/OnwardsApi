@@ -1,3 +1,240 @@
+ALTER TABLE Onwards.Projects
+ADD
+	StartDate DATETIME DEFAULT GETDATE(),
+	EndDate DATETIME DEFAULT GETDATE()
+
+CREATE TABLE UserProjectAssociation
+(
+	Id INT PRIMARY KEY IDENTITY(1,1),
+	UserId INT NOT NULL,
+	ProjectId INT NOT NULL,
+	AssociationDate DATETIME NULL,
+	DissociationDate DATETIME NULL,
+	CreatedDate DATETIME NULL,
+	CreatedBy INT NULL,
+	ModifiedDate DATETIME NULL,
+	ModifiedBy INT NULL,
+	IsActive BIT NOT NULL DEFAULT 1,
+
+	CONSTRAINT FK_UserProjectAssociation_Users FOREIGN KEY (UserId) REFERENCES Onwards.Users(Id),
+	CONSTRAINT FK_UserProjectAssociation_Projects FOREIGN KEY (ProjectId) REFERENCES Onwards.Projects(Id),
+)
+
+CREATE PROCEDURE Onwards.InsertOrUpdateProjects
+	@Id INT = NULL,
+	@LoginId INT,
+    @ProjectName VARCHAR(200),
+    @StartDate DATETIME,
+    @EndDate DATETIME
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	IF (@Id IS NULL)
+	BEGIN
+		INSERT INTO Onwards.Projects (ProjectName,StartDate,EndDate,CreatedDate,CreatedBy)
+		VALUES (@ProjectName,@StartDate,@EndDate,GETDATE(),@LoginId)
+	END
+	ELSE 
+	BEGIN
+		UPDATE Onwards.Projects
+		SET 
+			ProjectName = @ProjectName,
+			StartDate = @StartDate,
+			EndDate = @EndDate,
+			ModifiedBy = @LoginId,
+			ModifiedDate = GETDATE()
+		WHERE Id = @Id
+	END
+END
+
+CREATE PROCEDURE Onwards.GetProjects
+	@Id INT 
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	SELECT Id,ProjectName,StartDate,EndDate
+	FROM Onwards.Projects
+	WHERE Id = @Id AND IsActive = 1
+END
+
+CREATE PROCEDURE Onwards.DeleteProjects
+	@Id INT 
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	UPDATE Onwards.Projects
+	SET 
+		IsActive = 0
+	WHERE Id = @Id
+END
+
+CREATE PROCEDURE Onwards.InsertUserProjectAssociation
+	@LoginId INT ,
+	@UserId INT ,
+	@ProjectId INT ,
+	@AssociationDate DATETIME ,
+	@DissociationDate DATETIME 
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	INSERT INTO Onwards.UserProjectAssociation (UserId,ProjectId,AssociationDate,DissociationDate,CreatedBy,CreatedDate)
+	VALUES (@UserId,@ProjectId,@AssociationDate,@DissociationDate,@LoginId,GETDATE())
+
+END
+
+CREATE PROCEDURE Onwards.GetUserProjectAssociation
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	SELECT Id,UserId,ProjectId,AssociationDate,DissociationDate
+	FROM Onwards.UserProjectAssociation
+	WHERE IsActive = 1
+END
+
+CREATE PROCEDURE Onwards.DeleteUserProjectAssociation
+	@Id INT 
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	UPDATE Onwards.UserProjectAssociation
+	SET 
+		IsActive = 0
+	WHERE Id = @Id
+END
+
+
+
+--------------------------------29 Aug 25--------------------------------------------------
+CREATE TABLE Onwards.ReferralTracking
+(
+	Id INT PRIMARY KEY IDENTITY(1,1),
+	JobId INT NOT NULL,
+	FirstName VARCHAR(50) NOT NULL,
+	LastName VARCHAR(50) NOT NULL,
+	Email VARCHAR(50) NOT NULL,
+	Phone VARCHAR(50) NULL,
+	LocationId INT NOT NULL,
+	FileName NVARCHAR(255) NOT NULL,
+    FileType NVARCHAR(100) NOT NULL,
+    FileData VARBINARY(MAX) NOT NULL,
+	StatusId INT NOT NULL,
+	CreatedDate DATETIME NULL,
+	CreatedBy INT NULL,
+	ModifiedDate DATETIME NULL,
+	ModifiedBy INT NULL,
+	IsActive BIT NOT NULL DEFAULT 1,
+
+	CONSTRAINT FK_ReferralTracking_JobDetails FOREIGN KEY (JobId) REFERENCES Onwards.JobDetails(Id),
+	CONSTRAINT FK_ReferralTracking_JobStatus FOREIGN KEY (StatusId) REFERENCES Onwards.JobStatus(Id),
+	CONSTRAINT FK_ReferralTracking_Locations FOREIGN KEY (LocationId) REFERENCES Onwards.Locations(Id)
+)
+
+
+CREATE PROCEDURE Onwards.GetReferralTracking
+	@CreatedBy INT
+AS
+BEGIN
+
+	SET NOCOUNT ON;
+
+	SELECT RT.Id,RT.JobId,RT.FirstName,RT.LastName,RT.Email,RT.Phone,L.Name AS LocationName, Js.Status , RT.FileName
+	FROM Onwards.ReferralTracking AS RT
+	INNER JOIN Onwards.Locations AS L ON RT.LocationId = L.Id
+	INNER JOIN Onwards.JobStatus AS Js ON RT.StatusId = Js.Id
+	WHERE RT.CreatedBy = @CreatedBy AND RT.IsActive = 1
+	ORDER BY RT.CreatedDate DESC
+
+END
+
+CREATE PROCEDURE Onwards.GetReferralTrackingDocument
+	@Id INT
+AS
+BEGIN
+
+	SET NOCOUNT ON;
+
+	SELECT FileName,FileType,FileData
+	FROM Onwards.ReferralTracking
+	WHERE Id = @Id
+
+END
+
+CREATE PROCEDURE Onwards.InsertReferralTracking
+    @JobId INT,
+    @LoginId INT,
+    @FirstName VARCHAR(50),
+    @LastName VARCHAR(50),
+    @Email VARCHAR(50),
+    @Phone VARCHAR(50) = NULL,
+    @LocationId INT,
+    @FileName NVARCHAR(255),
+    @FileType NVARCHAR(100),
+    @FileData VARBINARY(MAX),
+    @StatusId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+            INSERT INTO Onwards.ReferralTracking
+            (
+                JobId,
+                FirstName,
+                LastName,
+                Email,
+                Phone,
+                LocationId,
+                FileName,
+                FileType,
+                FileData,
+                StatusId,
+                CreatedBy,
+                CreatedDate
+            )
+            OUTPUT INSERTED.Id
+            VALUES
+            (
+                @JobId,
+                @FirstName,
+                @LastName,
+                @Email,
+                @Phone,
+                @LocationId,
+                @FileName,
+                @FileType,
+                @FileData,
+                @StatusId,
+                @LoginId,
+                GETDATE()
+            );
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW; 
+    END CATCH
+END
+
+
+CREATE PROCEDURE Onwards.DeleteReferralTracking
+	@Id INT 
+AS
+BEGIN
+	SET NOCOUNT ON;
+	UPDATE Onwards.ReferralTracking
+	SET IsActive = 0
+	WHERE Id = @Id
+END
+
 --------------------------------22 Aug 25--------------------------------------------------
 CREATE TABLE Onwards.SavedSearch
 (

@@ -89,6 +89,9 @@ namespace OnwardsApi
 
             services.AddScoped<IEmailService, EmailService>();
 
+            services.AddScoped<IReferralTrackingRepository, ReferralTrackingRepository>();
+            services.AddScoped<IReferralTrackingService, ReferralTrackingService>();
+
             return services;
         }
     }

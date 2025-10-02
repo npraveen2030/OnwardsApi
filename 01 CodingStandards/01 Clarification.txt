@@ -1,7 +1,12 @@
 
+1 Emp - n project
+1 Program Manager(PL)  - n Project
+1 Project - 1 PL
+
 
 
 --------------------------------------Clarification--------------------------------
+* 29Sep25 : file size : 1MB
 * 21Sep25 : Email (SMTP ) service 
 * 21Sep25 : Once you click apply or saved button  then disable the respective button
 * 21Sep25 : JobStatus 
