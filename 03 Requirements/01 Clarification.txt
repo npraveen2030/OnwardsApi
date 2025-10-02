@@ -6,6 +6,38 @@
 
 
 --------------------------------------Clarification--------------------------------
+
+User Project Association:
+--------------------------------------------------------------
+* 02Oct2025 : 
+	* For a project there is one Project Lead (Project Manager) and One Program Manager
+	* For the same project we can have same project lead and program manager, 
+		But user cannot be Program Manager and Others (Developer)
+		But user cannot be Project Manager and Others (Developer) 
+	* Project Lead can associated with multiple projects
+	* Program Manager can assoicated with Multiple projects
+	* For a project we can have only one Program Manager and One Project Lead 
+	* For a project we have have mulitple Developers
+	* For a project we have have mulitple Testers
+	* For a project we have have mulitple leads(Team lead)
+
+* 02Oct2025 :
+* 02Oct2025 :
+* 02Oct2025 :
+
+
+Project Association
+-------------------------------
+* 02Oct2025 : Add AssociatedDate, DisAssociatedDate in Project table
+* 02Oct2025 :
+* 02Oct2025 :
+* 02Oct2025 :
+* 02Oct2025 :
+
+
+
+
+
 * 29Sep25 : file size : 1MB
 * 21Sep25 : Email (SMTP ) service 
 * 21Sep25 : Once you click apply or saved button  then disable the respective button
