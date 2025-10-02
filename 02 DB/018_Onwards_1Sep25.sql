@@ -3,11 +3,12 @@ ADD
 	StartDate DATETIME DEFAULT GETDATE(),
 	EndDate DATETIME DEFAULT GETDATE()
 
-CREATE TABLE UserProjectAssociation
+CREATE TABLE Onwards.UserProjectRoleAssociation
 (
 	Id INT PRIMARY KEY IDENTITY(1,1),
 	UserId INT NOT NULL,
 	ProjectId INT NOT NULL,
+	RoleId INT NOT NULL,
 	AssociationDate DATETIME NULL,
 	DissociationDate DATETIME NULL,
 	CreatedDate DATETIME NULL,
@@ -18,6 +19,7 @@ CREATE TABLE UserProjectAssociation
 
 	CONSTRAINT FK_UserProjectAssociation_Users FOREIGN KEY (UserId) REFERENCES Onwards.Users(Id),
 	CONSTRAINT FK_UserProjectAssociation_Projects FOREIGN KEY (ProjectId) REFERENCES Onwards.Projects(Id),
+	CONSTRAINT FK_UserProjectAssociation_Roles FOREIGN KEY (RoleId) REFERENCES Onwards.Roles(Id),
 )
 
 CREATE PROCEDURE Onwards.InsertOrUpdateProjects
@@ -49,14 +51,13 @@ BEGIN
 END
 
 CREATE PROCEDURE Onwards.GetProjects
-	@Id INT 
 AS
 BEGIN
 	SET NOCOUNT ON;
 
 	SELECT Id,ProjectName,StartDate,EndDate
 	FROM Onwards.Projects
-	WHERE Id = @Id AND IsActive = 1
+	WHERE IsActive = 1
 END
 
 CREATE PROCEDURE Onwards.DeleteProjects
@@ -71,42 +72,44 @@ BEGIN
 	WHERE Id = @Id
 END
 
-CREATE PROCEDURE Onwards.InsertUserProjectAssociation
+CREATE PROCEDURE Onwards.InsertUserProjectRoleAssociation
 	@LoginId INT ,
 	@UserId INT ,
 	@ProjectId INT ,
+	@RoleId INT ,
 	@AssociationDate DATETIME ,
 	@DissociationDate DATETIME 
 AS
 BEGIN
 	SET NOCOUNT ON;
 
-	INSERT INTO Onwards.UserProjectAssociation (UserId,ProjectId,AssociationDate,DissociationDate,CreatedBy,CreatedDate)
-	VALUES (@UserId,@ProjectId,@AssociationDate,@DissociationDate,@LoginId,GETDATE())
+	INSERT INTO Onwards.UserProjectRoleAssociation (UserId,ProjectId,RoleId,AssociationDate,DissociationDate,CreatedBy,CreatedDate)
+	VALUES (@UserId,@ProjectId,@RoleId,@AssociationDate,@DissociationDate,@LoginId,GETDATE())
 
 END
 
-CREATE PROCEDURE Onwards.GetUserProjectAssociation
-AS
-BEGIN
-	SET NOCOUNT ON;
+--CREATE PROCEDURE Onwards.GetUserProjectAssociation
+--AS
+--BEGIN
+--	SET NOCOUNT ON;
 
-	SELECT Id,UserId,ProjectId,AssociationDate,DissociationDate
-	FROM Onwards.UserProjectAssociation
-	WHERE IsActive = 1
-END
+--	SELECT Id,UserId,ProjectId,AssociationDate,DissociationDate
+--	FROM Onwards.UserProjectAssociation
+--	WHERE IsActive = 1
+--END
 
-CREATE PROCEDURE Onwards.DeleteUserProjectAssociation
-	@Id INT 
-AS
-BEGIN
-	SET NOCOUNT ON;
+--CREATE PROCEDURE Onwards.DeleteUserProjectAssociation
+--	@Id INT 
+--AS
+--BEGIN
+--	SET NOCOUNT ON;
 
-	UPDATE Onwards.UserProjectAssociation
-	SET 
-		IsActive = 0
-	WHERE Id = @Id
-END
+--	UPDATE Onwards.UserProjectAssociation
+--	SET 
+--		IsActive = 0
+--	WHERE Id = @Id
+--END
+
 
 
 
