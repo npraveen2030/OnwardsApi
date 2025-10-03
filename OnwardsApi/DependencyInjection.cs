@@ -92,6 +92,9 @@ namespace OnwardsApi
             services.AddScoped<IReferralTrackingRepository, ReferralTrackingRepository>();
             services.AddScoped<IReferralTrackingService, ReferralTrackingService>();
 
+            services.AddScoped<IUserProjectRoleAssociationRepository, UserProjectRoleAssociationRepository>();
+            services.AddScoped<IUserProjectRoleAssociationService, UserProjectRoleAssociationService>();
+
             return services;
         }
     }

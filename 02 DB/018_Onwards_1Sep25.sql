@@ -3,14 +3,15 @@ ADD
 	StartDate DATETIME DEFAULT GETDATE(),
 	EndDate DATETIME DEFAULT GETDATE()
 
+
 CREATE TABLE Onwards.UserProjectRoleAssociation
 (
 	Id INT PRIMARY KEY IDENTITY(1,1),
 	UserId INT NOT NULL,
 	ProjectId INT NOT NULL,
 	RoleId INT NOT NULL,
-	AssociationDate DATETIME NULL,
-	DissociationDate DATETIME NULL,
+	AssociationStartDate DATETIME NULL,
+	AssociationEndDate DATETIME NULL,
 	CreatedDate DATETIME NULL,
 	CreatedBy INT NULL,
 	ModifiedDate DATETIME NULL,
@@ -61,54 +62,165 @@ BEGIN
 END
 
 CREATE PROCEDURE Onwards.DeleteProjects
-	@Id INT 
+	@Id INT ,
+	@LoginId INT
 AS
 BEGIN
 	SET NOCOUNT ON;
 
 	UPDATE Onwards.Projects
 	SET 
-		IsActive = 0
+		IsActive = 0,
+		ModifiedBy = @LoginId,
+		ModifiedDate = GETDATE()
 	WHERE Id = @Id
 END
 
 CREATE PROCEDURE Onwards.InsertUserProjectRoleAssociation
-	@LoginId INT ,
-	@UserId INT ,
-	@ProjectId INT ,
-	@RoleId INT ,
-	@AssociationDate DATETIME ,
-	@DissociationDate DATETIME 
+    @LoginId INT ,
+    @UserId INT ,
+    @ProjectId INT ,
+    @RoleId INT ,
+    @AssociationStartDate DATETIME ,
+    @AssociationEndDate DATETIME
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @ProjectAssociations AS TABLE
+    (
+        Id INT,
+        UserId INT,
+        ProjectId INT,
+        RoleId INT
+    );
+
+    INSERT INTO @ProjectAssociations (Id, UserId, ProjectId, RoleId)
+    SELECT Id, UserId, ProjectId, RoleId 
+    FROM Onwards.UserProjectRoleAssociation
+    WHERE ProjectId = @ProjectId AND IsActive = 1;
+
+    -- Association Already Exists
+    IF EXISTS
+    (
+        SELECT 1 FROM @ProjectAssociations
+        WHERE UserId = @UserId AND ProjectId = @ProjectId AND RoleId = @RoleId
+    )
+    BEGIN
+        RAISERROR('This user is already associated with the selected role in this project.', 16, 1);
+        RETURN;
+    END
+    ELSE
+    BEGIN
+        IF EXISTS
+        (
+            SELECT 1 FROM @ProjectAssociations
+            WHERE ProjectId = @ProjectId AND UserId = @UserId
+        )
+        BEGIN        
+            -- 4 --> Project Manager(PL) , 5 --> Program Manager
+            IF (@RoleId IN (4,5))
+            BEGIN
+                IF EXISTS
+                (
+                    SELECT RoleId FROM @ProjectAssociations
+                    WHERE ProjectId = @ProjectId AND UserId = @UserId AND RoleId IN (4,5)
+                )
+                BEGIN
+                    -- Only one User For this Role
+                    IF EXISTS
+                    (
+                        SELECT 1 FROM @ProjectAssociations
+                        WHERE ProjectId = @ProjectId AND RoleId = @RoleId
+                    )
+                    BEGIN
+                        RAISERROR('A user has already been assigned this managerial role for the project. Only one user is allowed for this role.', 16, 1);
+                        RETURN;
+                    END
+                    ELSE
+                    BEGIN
+                        INSERT INTO Onwards.UserProjectRoleAssociation
+                            (UserId, ProjectId, RoleId, AssociationStartDate, AssociationEndDate, CreatedBy, CreatedDate)
+                        VALUES
+                            (@UserId, @ProjectId, @RoleId, @AssociationStartDate, @AssociationEndDate, @LoginId, GETDATE());
+                    END
+                END
+                ELSE
+                BEGIN
+                    -- You are in developer like position so cannot apply for this role
+                    RAISERROR('Users already assigned to a non-nanagerial role cannot be reassigned to managerial roles within the same project.', 16, 1);
+                    RETURN;
+                END
+            END
+            ELSE 
+            BEGIN
+                -- You are already in this project as developer like role
+                RAISERROR('This user is already assigned a non-nanagerial role in this project. Duplicate associations are not permitted.', 16, 1);
+                RETURN;
+            END
+        END
+        ELSE
+        BEGIN
+            IF (@RoleId IN (4,5))
+            BEGIN
+                IF EXISTS
+                (
+                    SELECT 1 FROM @ProjectAssociations
+                    WHERE ProjectId = @ProjectId AND RoleId = @RoleId
+                )
+                BEGIN
+                    -- Only one User For this Role
+                    RAISERROR('A user has already been assigned this managerial role for the project. Only one user is allowed for this role.', 16, 1);
+                    RETURN;
+                END
+                ELSE
+                BEGIN
+                    INSERT INTO Onwards.UserProjectRoleAssociation
+                        (UserId, ProjectId, RoleId, AssociationStartDate, AssociationEndDate, CreatedBy, CreatedDate)
+                    VALUES
+                        (@UserId, @ProjectId, @RoleId, @AssociationStartDate, @AssociationEndDate, @LoginId, GETDATE());
+                END
+            END
+            ELSE
+            BEGIN
+                INSERT INTO Onwards.UserProjectRoleAssociation
+                    (UserId, ProjectId, RoleId, AssociationStartDate, AssociationEndDate, CreatedBy, CreatedDate)
+                VALUES
+                    (@UserId, @ProjectId, @RoleId, @AssociationStartDate, @AssociationEndDate, @LoginId, GETDATE());
+            END
+        END
+    END
+END
+
+
+CREATE PROCEDURE Onwards.GetUserProjectRoleAssociation
+	@ProjectId INT
 AS
 BEGIN
 	SET NOCOUNT ON;
 
-	INSERT INTO Onwards.UserProjectRoleAssociation (UserId,ProjectId,RoleId,AssociationDate,DissociationDate,CreatedBy,CreatedDate)
-	VALUES (@UserId,@ProjectId,@RoleId,@AssociationDate,@DissociationDate,@LoginId,GETDATE())
-
+	SELECT A.Id,A.UserId,U.FullName,A.ProjectId,A.RoleId,A.AssociationStartDate
+	FROM Onwards.UserProjectRoleAssociation AS A
+	INNER JOIN Onwards.Users AS U ON A.UserId = U.Id
+	WHERE A.IsActive = 1 AND A.ProjectId = @ProjectId
 END
 
---CREATE PROCEDURE Onwards.GetUserProjectAssociation
---AS
---BEGIN
---	SET NOCOUNT ON;
 
---	SELECT Id,UserId,ProjectId,AssociationDate,DissociationDate
---	FROM Onwards.UserProjectAssociation
---	WHERE IsActive = 1
---END
+CREATE PROCEDURE Onwards.DeleteUserProjectRoleAssociation
+	@Id INT,
+	@LoginId INT
+AS
+BEGIN
+	SET NOCOUNT ON;
 
---CREATE PROCEDURE Onwards.DeleteUserProjectAssociation
---	@Id INT 
---AS
---BEGIN
---	SET NOCOUNT ON;
-
---	UPDATE Onwards.UserProjectAssociation
---	SET 
---		IsActive = 0
---	WHERE Id = @Id
---END
+	UPDATE Onwards.UserProjectRoleAssociation
+	SET 
+		IsActive = 0,
+		AssociationEndDate = GETDATE(),
+		ModifiedBy = @LoginId,
+		ModifiedDate = GETDATE()
+	WHERE Id = @Id
+END
 
 
 

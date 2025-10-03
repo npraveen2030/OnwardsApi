@@ -77,6 +77,21 @@
             <param name="id">Training ID.</param>
             <returns>Status message.</returns>
         </member>
+        <member name="M:OnwardsApi.Controllers.UserProjectRoleAssociationController.Insert(OnwardsModel.Model.UserProjectRoleAssociationModel)">
+            <summary>
+            Insert a new User-Project-Role association
+            </summary>
+        </member>
+        <member name="M:OnwardsApi.Controllers.UserProjectRoleAssociationController.Get(System.Int32)">
+            <summary>
+            Get all associations for a given project
+            </summary>
+        </member>
+        <member name="M:OnwardsApi.Controllers.UserProjectRoleAssociationController.Delete(System.Int32,System.Int32)">
+            <summary>
+            Delete (soft delete) an association
+            </summary>
+        </member>
         <member name="M:OnwardsApi.Controllers.UserShiftDetailsController.InsertOrUpdate(System.Int32)">
             <summary>
             Inserts or updates a user's shift log. Returns LogId.
