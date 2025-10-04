@@ -95,6 +95,9 @@ namespace OnwardsApi
             services.AddScoped<IUserProjectRoleAssociationRepository, UserProjectRoleAssociationRepository>();
             services.AddScoped<IUserProjectRoleAssociationService, UserProjectRoleAssociationService>();
 
+            services.AddScoped<IProjectManagementRepository, ProjectManagementRepository>();
+            services.AddScoped<IProjectManagementService, ProjectManagementService>();
+
             return services;
         }
     }

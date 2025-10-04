@@ -33,6 +33,21 @@
             Delete (withdraw) a job application by Id.
             </summary>
         </member>
+        <member name="M:OnwardsApi.Controllers.ProjectManagementController.InsertOrUpdate(OnwardsModel.Model.ProjectManagementModel)">
+            <summary>
+            Insert or Update a Project
+            </summary>
+        </member>
+        <member name="M:OnwardsApi.Controllers.ProjectManagementController.Get">
+            <summary>
+            Get all active projects
+            </summary>
+        </member>
+        <member name="M:OnwardsApi.Controllers.ProjectManagementController.Delete(System.Int32,System.Int32)">
+            <summary>
+            Delete (soft delete) a project
+            </summary>
+        </member>
         <member name="M:OnwardsApi.Controllers.SavedSearchController.InsertOrUpdateSavedSearch(OnwardsModel.Model.SavedSearchModel)">
             <summary>
             Insert or update a saved search.

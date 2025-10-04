@@ -59,6 +59,7 @@ BEGIN
 	SELECT Id,ProjectName,StartDate,EndDate
 	FROM Onwards.Projects
 	WHERE IsActive = 1
+	ORDER BY CreatedDate DESC
 END
 
 CREATE PROCEDURE Onwards.DeleteProjects
@@ -100,7 +101,6 @@ BEGIN
     FROM Onwards.UserProjectRoleAssociation
     WHERE ProjectId = @ProjectId AND IsActive = 1;
 
-    -- Association Already Exists
     IF EXISTS
     (
         SELECT 1 FROM @ProjectAssociations
@@ -127,7 +127,6 @@ BEGIN
                     WHERE ProjectId = @ProjectId AND UserId = @UserId AND RoleId IN (4,5)
                 )
                 BEGIN
-                    -- Only one User For this Role
                     IF EXISTS
                     (
                         SELECT 1 FROM @ProjectAssociations
@@ -147,15 +146,15 @@ BEGIN
                 END
                 ELSE
                 BEGIN
-                    -- You are in developer like position so cannot apply for this role
-                    RAISERROR('Users already assigned to a non-nanagerial role cannot be reassigned to managerial roles within the same project.', 16, 1);
+ 
+                    RAISERROR('Users already assigned to a non-managerial role cannot be reassigned to managerial roles within the same project.', 16, 1);
                     RETURN;
                 END
             END
             ELSE 
             BEGIN
-                -- You are already in this project as developer like role
-                RAISERROR('This user is already assigned a non-nanagerial role in this project. Duplicate associations are not permitted.', 16, 1);
+                RAISERROR('This user is already assigned a role in this project. Same User for different non-managerial roles or 
+				a manager applying for non-managerial role are not permitted.', 16, 1);
                 RETURN;
             END
         END
@@ -169,7 +168,6 @@ BEGIN
                     WHERE ProjectId = @ProjectId AND RoleId = @RoleId
                 )
                 BEGIN
-                    -- Only one User For this Role
                     RAISERROR('A user has already been assigned this managerial role for the project. Only one user is allowed for this role.', 16, 1);
                     RETURN;
                 END
@@ -203,6 +201,7 @@ BEGIN
 	FROM Onwards.UserProjectRoleAssociation AS A
 	INNER JOIN Onwards.Users AS U ON A.UserId = U.Id
 	WHERE A.IsActive = 1 AND A.ProjectId = @ProjectId
+	ORDER BY A.CreatedDate DESC
 END
 
 
