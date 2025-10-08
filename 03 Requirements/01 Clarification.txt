@@ -4,7 +4,12 @@
 
 --------------------------------------Clarification--------------------------------
 
-Time Sheer Management:
+* 08Oct2025 : Service 10 : Create a new service when will approve the leave every day automatically 
+* 08Oct2025 : Service 11 : Create a new service which will run on 1stJan, 
+				- Override Paternity Leave : 5 days, Merternity Leave : 60 Days, Baverment leave : 5 Days
+				- Take 6 casual leave and add in current year as Earned leaves ( If exists ) 
+
+Time Sheet Management:
 --------------------------------------------------------------
 * 04Oct2025 :  
 
@@ -38,6 +43,17 @@ Project Management
 * 02Oct2025 :
 
 
+Leave Management System 
+-------------------------------
+* 08Oct2025 : 1 Earned leave and 1 Sick leave will be added every month on 1st 
+* 08Oct2025 : if the User logined before 15th then 1 EL and 1 SL else more than 15th then 0.5 EL and SL
+* 08Oct2025 : Leaves will be calculated for the year, but not finacial year
+* 08Oct2025 : Once leave applyed , next day it will be Autoapproved 
+		Service 10 : 
+* 08Oct2025 : Paternity Leave : 5 days, Merternity Leavve : 60 Days, Baverment leave : 5 Days
+		Service 11: 
+* 08Oct2025 : 
+* 08Oct2025 : 
 
 
 
