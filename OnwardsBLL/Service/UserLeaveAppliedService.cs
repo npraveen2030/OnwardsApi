@@ -31,7 +31,7 @@ namespace OnwardsBLL.Service
 
         public async Task InsertOrUpdateUserLeaveAppliedAsync(UserLeaveAppliedModel leave)
         {
-            await _repo.InsertOrUpdateUserLeaveAppliedAsync(leave);
+            await _repo.InsertUserLeaveAppliedAsync(leave);
         }
     }
 }

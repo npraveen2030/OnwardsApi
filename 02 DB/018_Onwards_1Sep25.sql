@@ -1,3 +1,450 @@
+----------------------------------------08Oct25--------------------------------------------------
+ALTER TABLE Onwards.UserShiftLog
+ADD IsPresent BIT NOT NULL DEFAULT 1
+
+CREATE PROCEDURE Onwards.AbsentCheck 
+	@LoginId INT
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	DECLARE @Yesterday DATE =  DATEADD(DAY,-1,CAST(GETDATE() AS DATE))
+
+	MERGE Onwards.UserShiftLog AS T
+	USING Onwards.Users AS S
+	ON T.UserId = S.Id AND T.Date = @Yesterday AND S.IsActive = 1 AND T.IsActive = 1
+
+	WHEN NOT MATCHED BY TARGET THEN
+		INSERT (UserId, ShiftId, LoginTime,Date,IsPresent,CreatedBy,CreatedDate)
+		VALUES (S.Id, 1, '00:00:00.0000000',@Yesterday,0,@LoginId,GETDATE());
+END
+
+ALTER PROCEDURE [Onwards].[InsertLeavesAdded]
+	@UserId INT,
+	@LeaveTypeId INT,
+	@NoOfLeaves DECIMAL(9,2),
+	@LoginId INT
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SET XACT_ABORT ON;
+
+	BEGIN TRY
+	BEGIN TRANSACTION;
+
+		DECLARE @Today DATETIME = GETDATE();
+		DECLARE @LeaveValues AS TABLE 
+		(
+			LeaveTypeId INT NOT NULL,
+			NoOfLeaves INT NOT NULL
+		)
+
+		INSERT INTO @LeaveValues
+		(LeaveTypeId,NoOfLeaves)
+		VALUES
+		(1,1),
+		(2,1),
+		(3,1)
+
+
+		INSERT INTO Onwards.LeavesAdded (UserId,LeaveTypeId,NoOfLeaves,CreatedDate,CreatedBy)
+		SELECT U.Id 
+		FROM Onwards.Users AS U
+		CROSS JOIN 
+
+		--INSERT INTO Onwards.LeavesAdded (UserId,LeaveTypeId,NoOfLeaves,CreatedDate,CreatedBy)
+		--VALUES (@UserId,@LeaveTypeId,@NoOfLeaves,GETDATE(),@LoginId)
+
+		UPDATE Onwards.LeaveBalances
+		SET RemainingDays = RemainingDays + @NoOfLeaves
+		WHERE (UserId = @UserId) AND (LeaveTypeId = @LeaveTypeId)
+
+	COMMIT TRANSACTION;
+	END TRY
+	BEGIN CATCH
+        IF XACT_STATE() <> 0
+            ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END
+
+----------------------------------------07Oct25--------------------------------------------------
+ALTER TABLE Onwards.LeaveBalances
+DROP COLUMN RemainingDays
+
+ALTER TABLE Onwards.LeaveBalances
+ADD RemainingDays DECIMAL(9, 2) NOT NULL DEFAULT 0
+
+
+
+ALTER TABLE Onwards.LeavesAdded
+DROP COLUMN NoOfLeaves
+
+ALTER TABLE Onwards.LeavesAdded
+ADD NoOfLeaves DECIMAL(9, 2) NOT NULL DEFAULT 0
+
+ALTER PROCEDURE [Onwards].[InsertLeavesAdded]
+	@UserId INT,
+	@LeaveTypeId INT,
+	@NoOfLeaves DECIMAL(9,2),
+	@LoginId INT
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SET XACT_ABORT ON;
+
+	BEGIN TRY
+	BEGIN TRANSACTION;
+
+		INSERT INTO Onwards.LeavesAdded (UserId,LeaveTypeId,NoOfLeaves,CreatedDate,CreatedBy)
+		VALUES (@UserId,@LeaveTypeId,@NoOfLeaves,GETDATE(),@LoginId)
+
+		UPDATE Onwards.LeaveBalances
+		SET RemainingDays = RemainingDays + @NoOfLeaves
+		WHERE (UserId = @UserId) AND (LeaveTypeId = @LeaveTypeId)
+
+	COMMIT TRANSACTION;
+	END TRY
+	BEGIN CATCH
+        IF XACT_STATE() <> 0
+            ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END
+
+DROP PROCEDURE Onwards.InsertOrUpdateUserLeaveApplied
+
+CREATE PROCEDURE [Onwards].[InsertUserLeaveApplied]
+	@LoginId INT,
+	@UserId INT,
+	@LeaveTypeId INT,
+	@Year INT= NULL,
+	@PhoneNo NVARCHAR(20) = NULL,
+	@StartDate DATETIME,
+	@EndDate DATETIME,
+	@NoOfDays DECIMAL(9,2) = NULL,
+	@LocationId INT = NULL,
+	@Reason VARCHAR(300)= NULL,
+	@NotifiedUserId INT,
+	@FileName NVARCHAR(255) = NULL,
+	@Data VARBINARY(MAX) = NULL,
+	@LeaveStatusId INT
+	
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SET XACT_ABORT ON;
+
+	BEGIN TRY
+	BEGIN TRANSACTION;
+
+		-- Wihin 30 days from today
+		IF (CAST(@StartDate AS DATE) < DATEADD(DAY, -30, CAST(GETDATE() AS DATE)))
+		BEGIN 
+			RAISERROR('Only 30 days Prior to Today can be applied', 16, 1);
+			RETURN;
+		END
+
+
+		-- NO Previous Dates Clash
+		DECLARE @StartAndEndDates AS TABLE
+		(
+			StartDate DATETIME,
+			EndDate DATETIME
+		)
+
+		INSERT INTO @StartAndEndDates (StartDate,EndDate)
+		SELECT StartDate , EndDate
+		FROM Onwards.UserLeaveApplied
+		-- 1 --> Requested , 2 --> Approved
+		WHERE UserId = @UserId AND LeaveStatusId IN (1,2)
+
+		IF EXISTS(SELECT 1 FROM @StartAndEndDates
+		WHERE (StartDate BETWEEN @StartDate AND @EndDate) OR (EndDate BETWEEN @StartDate AND @EndDate))
+		BEGIN 
+			RAISERROR('Dates Clash with Previous Leave Request', 16, 1);
+			RETURN;
+		END
+
+		-- Total Working Days 
+		DECLARE @WorkingDays INT;
+		;WITH DateSeries AS
+		(
+			SELECT @StartDate AS TheDate
+			UNION ALL
+			SELECT DATEADD(DAY, 1, TheDate)
+			FROM DateSeries
+			WHERE TheDate < @EndDate
+		)
+		SELECT 
+			@WorkingDays = COUNT(*)
+		FROM DateSeries d
+		WHERE 
+			-- Exclude weekends
+			DATENAME(WEEKDAY, d.TheDate) NOT IN ('Saturday', 'Sunday')
+			-- Exclude holidays
+			AND NOT EXISTS (
+				SELECT 1 
+				FROM Onwards.HolidayList h
+				WHERE h.LocationId = @LocationId 
+				  AND h.HolidayDate = d.TheDate
+			)
+		OPTION (MAXRECURSION 0);
+
+		-- NO Remaining days
+		IF EXISTS(SELECT 1
+		FROM Onwards.LeaveBalances
+		WHERE UserId = @UserId AND LeaveTypeId = @LeaveTypeId AND RemainingDays < @WorkingDays AND IsActive = 1)
+		BEGIN
+			RAISERROR('Insuffecient Leaves', 16, 1);
+			RETURN;
+		END
+		
+
+		Insert Onwards.UserLeaveApplied ([UserId]
+				  ,[LeaveTypeId]
+				  ,[Year]
+				  ,[NoOfDays]
+				  ,[StartDate]
+				  ,[EndDate]
+				  ,[Reason]
+				  ,[FileName]
+				  ,[Data]
+				  ,[LeaveStatusId]
+				  ,[CreatedDate]
+				  ,[CreatedBy]
+				  ,[ModefiedDate]
+				  ,[ModifiedBy]
+				  ,[IsActive]
+				  ,[NotifiedUserId])
+		VALUES
+				(@UserId,
+				@LeaveTypeId,
+				@Year,
+				@WorkingDays,
+				@StartDate,
+				@EndDate,
+				@Reason,
+				@FileName,
+				@Data,
+				@LeaveStatusId,
+				GETDATE(),
+				@LoginId,
+				NULL,
+				NULL,
+				1,
+				@NotifiedUserId);
+
+		UPDATE Onwards.LeaveBalances
+		SET RemainingDays = RemainingDays - @WorkingDays
+		WHERE UserId = @UserId AND LeaveTypeId = @LeaveTypeId
+
+	COMMIT TRANSACTION;
+	END TRY
+	BEGIN CATCH
+        IF XACT_STATE() <> 0
+            ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END
+
+
+CREATE PROCEDURE [Onwards].[UpdateUserLeaveApplied]
+	@Id INT,
+	@LoginId INT,
+	@UserId INT,
+	@LeaveTypeId INT,
+	@LeaveStatusId INT,
+	@Action NVARCHAR(300) = NULL,
+	@NoOfDays DECIMAL(9,2) = NULL	
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SET XACT_ABORT ON;
+
+	BEGIN TRY
+	BEGIN TRANSACTION;
+
+		UPDATE Onwards.UserLeaveApplied
+		SET ModifiedBy = @LoginId,ModefiedDate = GETDATE(),LeaveStatusId = @LeaveStatusId, Action = @Action
+		WHERE Id = @Id
+		-- 3: Rejected , 4: Cancelled
+		IF (@LeaveStatusId IN (3,4))
+		BEGIN
+			UPDATE Onwards.LeaveBalances
+			SET RemainingDays = RemainingDays + @NoOfDays
+			WHERE UserId = @UserId AND LeaveTypeId = @LeaveTypeId
+		END
+
+	COMMIT TRANSACTION;
+	END TRY
+	BEGIN CATCH
+        IF XACT_STATE() <> 0
+            ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END
+
+
+ALTER PROCEDURE [Onwards].[GetLeaveTypes] 
+	
+AS
+BEGIN
+
+	SET NOCOUNT ON;
+
+    SELECT LT.Id
+          ,LT.LeaveTypeName
+          ,LB.RemainingDays
+	FROM Onwards.LeaveTypes AS LT
+	INNER JOIN Onwards.LeaveBalances AS LB ON LB.LeaveTypeId = LT.Id
+	WHERE LT.IsActive = 1
+END
+
+CREATE TABLE Onwards.CalenderStatus
+(
+	Id INT PRIMARY KEY,
+	Status VARCHAR(30) NOT NULL,
+	CreatedDate DATETIME NULL,
+	CreatedBy INT NULL,
+	ModifiedDate DATETIME NULL,
+	ModifiedBy INT NULL,
+	IsActive BIT NOT NULL DEFAULT 1,
+)
+
+INSERT INTO Onwards.CalenderStatus 
+(
+	Id,
+	Status,
+	CreatedDate,
+	CreatedBy
+)
+VALUES
+('1','Present',GETDATE(),1),
+('2','Absent',GETDATE(),1),
+('3','Leave',GETDATE(),1),
+('4','Week off',GETDATE(),1),
+('5','Holiday',GETDATE(),1),
+('6','Multiple Events',GETDATE(),1)
+
+
+CREATE PROCEDURE Onwards.GetCalendarEvents
+	@UserId INT,
+	@Month INT,
+	@Year INT
+AS 
+BEGIN
+
+	SET NOCOUNT ON;
+	SET XACT_ABORT ON;
+
+	BEGIN TRY
+	BEGIN TRANSACTION;
+
+		DECLARE @StartDate DATE = DATEFROMPARTS(@Year, @Month, 1);
+		DECLARE @EndDate   DATE = EOMONTH(@StartDate);
+
+		DECLARE @LeaveDates AS TABLE
+		(
+			StartDate DATE,
+			EndDate DATE
+		)
+
+		DECLARE @CalenderDates AS TABLE 
+		(
+			Date DATE NOT NULL,
+			StatusId INT NULL
+		)
+
+		DECLARE @DateItr DATE;
+
+		INSERT INTO @LeaveDates (StartDate,EndDate)
+		SELECT CAST(StartDate AS DATE) , CAST(EndDate AS DATE)
+		FROM Onwards.UserLeaveApplied
+		WHERE
+		(UserId = @UserId) AND 
+		--  2 --> Approved
+		(LeaveStatusId = 2) AND
+		((CAST(StartDate AS DATE) BETWEEN @StartDate AND @EndDate) OR (CAST(EndDate AS DATE) BETWEEN @StartDate AND @EndDate))
+
+	
+		SET @DateItr = @StartDate
+
+		WHILE (@DateItr <= @EndDate)
+		BEGIN
+			-- Week off Check
+			IF (DATENAME(WEEKDAY, @DateItr) IN ('Saturday', 'Sunday'))
+			BEGIN
+				INSERT INTO @CalenderDates (Date, StatusId)
+				-- 4 --> Week off
+				VALUES (@DateItr, 4); 
+
+				SET @DateItr = DATEADD(DAY, 1, @DateItr);
+				CONTINUE;
+			END
+
+			-- Holiday Check
+			IF EXISTS( SELECT 1 FROM Onwards.HolidayList WHERE HolidayDate = @DateItr)
+			BEGIN
+				INSERT INTO @CalenderDates (Date, StatusId)
+				-- 5 --> Holiday
+				VALUES (@DateItr, 5); 
+
+				SET @DateItr = DATEADD(DAY, 1, @DateItr);
+				CONTINUE;
+			END
+
+			-- Leave Check
+			IF EXISTS( SELECT 1 FROM @LeaveDates WHERE @DateItr BETWEEN StartDate AND EndDate)
+			BEGIN
+				INSERT INTO @CalenderDates (Date, StatusId)
+				-- 3 --> Leave
+				VALUES (@DateItr, 3); 
+
+				SET @DateItr = DATEADD(DAY, 1, @DateItr);
+				CONTINUE;
+			END
+
+			-- Present Check
+			IF EXISTS( SELECT 1 FROM Onwards.UserShiftLog WHERE UserId = @UserId AND Date = @DateItr AND IsPresent = 1 )
+			BEGIN
+				INSERT INTO @CalenderDates (Date, StatusId)
+				-- 1 --> Present
+				VALUES (@DateItr, 1); 
+
+				SET @DateItr = DATEADD(DAY, 1, @DateItr);
+				CONTINUE;
+			END
+
+			-- Absent Check
+			IF EXISTS( SELECT 1 FROM Onwards.UserShiftLog WHERE UserId = @UserId AND Date = @DateItr AND IsPresent = 0 )
+			BEGIN
+				INSERT INTO @CalenderDates (Date, StatusId)
+				-- 2 --> Absent
+				VALUES (@DateItr, 2); 
+
+				SET @DateItr = DATEADD(DAY, 1, @DateItr);
+				CONTINUE;
+			END
+	
+		END
+
+		SELECT * FROM @CalenderDates
+	COMMIT TRANSACTION;
+	END TRY
+	BEGIN CATCH
+        IF XACT_STATE() <> 0
+            ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END
+
+----------------------------------------03Oct25--------------------------------------------------
 ALTER TABLE Onwards.Projects
 ADD
 	StartDate DATETIME DEFAULT GETDATE(),

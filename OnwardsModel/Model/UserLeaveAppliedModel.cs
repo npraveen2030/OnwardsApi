@@ -22,8 +22,6 @@ namespace OnwardsModel.Model
 
         public string? Action { get; set; }
 
-        public string? FileName { get; set; }
-
         public IFormFile? Data { get; set; }
 
         public int LeaveStatusId { get; set; }

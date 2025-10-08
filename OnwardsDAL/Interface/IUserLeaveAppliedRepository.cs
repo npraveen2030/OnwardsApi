@@ -12,6 +12,6 @@ namespace OnwardsDAL.Interface
     {
         public Task<List<UserLeaveAppliedDto>> GetUserLeaveAppliedAsync(int userId);
         public Task<List<LeaveTypeDto>> GetLeaveTypesAsync();
-        public Task InsertOrUpdateUserLeaveAppliedAsync(UserLeaveAppliedModel leave);
+        public Task InsertUserLeaveAppliedAsync(UserLeaveAppliedModel leave);
     }
 }

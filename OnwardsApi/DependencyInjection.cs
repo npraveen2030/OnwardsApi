@@ -98,6 +98,9 @@ namespace OnwardsApi
             services.AddScoped<IProjectManagementRepository, ProjectManagementRepository>();
             services.AddScoped<IProjectManagementService, ProjectManagementService>();
 
+            services.AddScoped<IDailyTaskRepository, DailyTaskRepository>();
+            services.AddHostedService<DailyTaskService>();
+
             return services;
         }
     }

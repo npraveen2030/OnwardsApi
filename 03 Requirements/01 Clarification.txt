@@ -1,11 +1,12 @@
 
-1 Emp - n project
-1 Program Manager(PL)  - n Project
-1 Project - 1 PL
 
 
 
 --------------------------------------Clarification--------------------------------
+
+Time Sheer Management:
+--------------------------------------------------------------
+* 04Oct2025 :  
 
 User Project Association:
 --------------------------------------------------------------
@@ -26,10 +27,12 @@ User Project Association:
 * 02Oct2025 :
 
 
-Project Association
+Project Management
 -------------------------------
+* 04Oct2025 : when the project reaches its end date send email to the admin to dissociate the project
+* 04Oct2025 : A project is only deleted if no user is associated to that project
 * 02Oct2025 : Add AssociatedDate, DisAssociatedDate in Project table
-* 02Oct2025 :
+
 * 02Oct2025 :
 * 02Oct2025 :
 * 02Oct2025 :
@@ -69,7 +72,6 @@ Project Association
   
 			 
 -------------------------------- Discussed Points------------------------
-
 * Leave Screen
 	
 	21Aug25: Ignore YEAR in the table "[Onwards].[LeaveTypes]"

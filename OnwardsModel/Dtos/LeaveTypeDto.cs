@@ -10,6 +10,6 @@ namespace OnwardsModel.Dtos
     {
         public int Id { get; set; }
         public string LeaveTypeName { get; set; } = string.Empty;
-        public int MaxDaysPerYear { get; set; }
+        public decimal RemainingDays { get; set; }
     }
 }
