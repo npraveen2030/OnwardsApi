@@ -1,5 +1,22 @@
 
-
+Missing UI Screen:
+---------------------------
+* Reports
+	AR Reports wrt Month, year, Financial Year in excel and PDF
+	Leave Report wrt Month, year, Financial Year in excel and PDF
+	
+* Approval
+	Leave Management Approval screen
+	Timesheet Approval Screen
+	Resgination Approval Screen
+	Software Approval Screen
+	
+	
+* Emailing Sending/Service
+	After applying leave
+	After approving leave
+	After resignation approval
+	
 
 
 --------------------------------------Clarification--------------------------------
@@ -16,6 +33,7 @@ Time Sheet Management:
 User Project Association:
 --------------------------------------------------------------
 * 02Oct2025 : 
+	
 	* For a project there is one Project Lead (Project Manager) and One Program Manager
 	* For the same project we can have same project lead and program manager, 
 		But user cannot be Program Manager and Others (Developer)
@@ -45,6 +63,7 @@ Project Management
 
 Leave Management System 
 -------------------------------
+* 09Oct2025 : Even if the user is present for hald day( hald day leave) then show as PRESENT
 * 08Oct2025 : 1 Earned leave and 1 Sick leave will be added every month on 1st 
 * 08Oct2025 : if the User logined before 15th then 1 EL and 1 SL else more than 15th then 0.5 EL and SL
 * 08Oct2025 : Leaves will be calculated for the year, but not finacial year
@@ -52,7 +71,6 @@ Leave Management System
 		Service 10 : 
 * 08Oct2025 : Paternity Leave : 5 days, Merternity Leavve : 60 Days, Baverment leave : 5 Days
 		Service 11: 
-* 08Oct2025 : 
 * 08Oct2025 : 
 
 
