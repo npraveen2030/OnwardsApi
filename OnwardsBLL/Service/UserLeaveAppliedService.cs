@@ -24,14 +24,24 @@ namespace OnwardsBLL.Service
             return await _repo.GetUserLeaveAppliedAsync(userId);
         }
 
-        public async Task<List<LeaveTypeDto>> GetLeaveTypesAsync()
+        public async Task<List<LeaveTypeDto>> GetLeaveTypesAsync(int userId)
         {
-            return await _repo.GetLeaveTypesAsync();
+            return await _repo.GetLeaveTypesAsync(userId);
         }
 
-        public async Task InsertOrUpdateUserLeaveAppliedAsync(UserLeaveAppliedModel leave)
+        public async Task InsertUserLeaveAppliedAsync(UserLeaveAppliedModel leave)
         {
             await _repo.InsertUserLeaveAppliedAsync(leave);
+        }
+
+        public async Task UpdateUserLeaveAppliedAsync(UserLeaveAppliedUpdateModel leave)
+        {
+            await _repo.UpdateUserLeaveAppliedAsync(leave);
+        }
+
+        public async Task<List<CalendarEventDto>> GetCalendarEventsAsync(int userId, int month, int year)
+        {
+            return await _repo.GetCalendarEventsAsync(userId,month,year);
         }
     }
 }
