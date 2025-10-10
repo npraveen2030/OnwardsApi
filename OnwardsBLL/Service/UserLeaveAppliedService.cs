@@ -43,5 +43,10 @@ namespace OnwardsBLL.Service
         {
             return await _repo.GetCalendarEventsAsync(userId,month,year);
         }
+
+        public async Task<List<LeavesAndAttendanceDto>> GetLeavesAndAttendanceAsync(int userId)
+        {
+            return await _repo.GetLeavesAndAttendanceAsync(userId);
+        }
     }
 }

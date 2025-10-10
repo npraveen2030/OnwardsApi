@@ -15,5 +15,6 @@ namespace OnwardsBLL.Interface
         public Task<List<CalendarEventDto>> GetCalendarEventsAsync(int userId, int month, int year);
         public Task InsertUserLeaveAppliedAsync(UserLeaveAppliedModel leave);
         public Task UpdateUserLeaveAppliedAsync(UserLeaveAppliedUpdateModel leave);
+        public Task<List<LeavesAndAttendanceDto>> GetLeavesAndAttendanceAsync(int userId);
     }
 }

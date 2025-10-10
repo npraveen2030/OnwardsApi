@@ -86,5 +86,19 @@ namespace OnwardsApi.Controllers
                 return Ok(new List<CalendarEventDto>());
             }
         }
+
+        [HttpGet("getleaveandattendance")]
+        public async Task<IActionResult> GetLeavesAndAttendance([FromQuery] int userId)
+        {
+            try
+            {
+                var events = await _userLeaveAppliedService.GetLeavesAndAttendanceAsync(userId);
+                return Ok(events);
+            }
+            catch (Exception ex)
+            {
+                return Ok(new List<LeavesAndAttendanceDto>());
+            }
+        }
     }
 }

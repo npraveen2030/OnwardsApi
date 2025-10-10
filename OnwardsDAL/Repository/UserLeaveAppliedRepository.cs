@@ -238,6 +238,55 @@ namespace OnwardsDAL.Repository
                 throw new Exception("Error occurred while retrieving calendar events.", ex);
             }
         }
+        public async Task<List<LeavesAndAttendanceDto>> GetLeavesAndAttendanceAsync(int userId)
+        {
+            var result = new List<LeavesAndAttendanceDto>();
+
+            try
+            {
+                await using var conn = GetConnection();
+                await conn.OpenAsync();
+
+                await using var cmd = new SqlCommand("Onwards.GetLeavesAndAttendance", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.AddWithValue("@UserId", userId);
+
+                await using var reader = await cmd.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    var record = new LeavesAndAttendanceDto
+                    {
+                        IsLeave = reader.GetBoolean(reader.GetOrdinal("IsLeave")),
+                        Id = reader.GetInt32(reader.GetOrdinal("Id")),
+
+                        // Nullable columns
+                        LeaveTypeName = reader["LeaveTypeName"] as string,
+                        Type = reader["Type"] == DBNull.Value ? null : (int?)reader.GetInt32(reader.GetOrdinal("Type")),
+
+                        StartDate = reader.GetDateTime(reader.GetOrdinal("StartDate")),
+                        EndDate = reader.GetDateTime(reader.GetOrdinal("EndDate")),
+                        Duration = reader.GetDecimal(reader.GetOrdinal("Duration")),
+                        Status = reader["Status"] as string,
+                        Reason = reader["Reason"] as string,
+                        CreatedDate = reader["CreatedDate"] == DBNull.Value
+                            ? null
+                            : (DateTime?)reader.GetDateTime(reader.GetOrdinal("CreatedDate"))
+                    };
+
+                    result.Add(record);
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error occurred while retrieving leaves and attendance data.", ex);
+            }
+        }
 
     }
 }

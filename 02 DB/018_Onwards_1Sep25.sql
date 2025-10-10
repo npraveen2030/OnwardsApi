@@ -1,4 +1,207 @@
-﻿----------------------------------------09Oct25--------------------------------------------------
+﻿----------------------------------------10Oct25--------------------------------------------------
+CREATE TABLE Onwards.AttendanceRegularizationType
+(
+	Id INT PRIMARY KEY,
+	Type VARCHAR(20) NOT NULL,
+	CreatedDate DATETIME NULL,
+	CreatedBy INT NULL,
+	ModifiedDate DATETIME NULL,
+	ModifiedBy INT NULL,
+	IsActive BIT NOT NULL DEFAULT 1,
+)
+
+INSERT INTO Onwards.AttendanceRegularizationType (Id,Type)
+VALUES
+(1,'Day'),
+(2,'Time')
+
+
+CREATE TABLE Onwards.AttendanceRegularization
+(
+	Id INT PRIMARY KEY IDENTITY(1,1),
+	UserId INT NOT NULL,
+	ManagerId INT NOT NULL,
+	TypeId INT NOT NULL,
+	StartDate DATE NOT NULL,
+	EndDate DATE NOT NULL,
+	Duration DECIMAL(9,2) NOT NULL,
+	Reason VARCHAR(250) NOT NULL,
+	Action VARCHAR(250) NULL,
+	StatusId INT NOT NULL,
+	CreatedDate DATETIME NULL,
+	CreatedBy INT NULL,
+	ModifiedDate DATETIME NULL,
+	ModifiedBy INT NULL,
+	IsActive BIT NOT NULL DEFAULT 1,
+
+	CONSTRAINT FK_AttendanceRegularization_Users FOREIGN KEY(UserId) REFERENCES Onwards.Users(Id),
+	CONSTRAINT FK_AttendanceRegularization_AttendanceRegularizationType FOREIGN KEY(TypeId) REFERENCES Onwards.AttendanceRegularizationType(Id),
+	CONSTRAINT FK_AttendanceRegularization_LeaveStatus FOREIGN KEY(StatusId) REFERENCES Onwards.LeaveStatus(Id),
+)
+
+ALTER PROCEDURE Onwards.InsertAttendanceRegularization
+	@UserId INT ,
+	@TypeId INT ,
+	@StartDate DATE ,
+	@EndDate DATE ,
+	@Duration DECIMAL(9,2),
+	@Reason VARCHAR(250),
+	@LoginId INT
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	-- 30 day check
+	IF (DATEDIFF(DAY,@StartDate,GETDATE()) > 30)
+	BEGIN
+		RAISERROR('Cant be more than 30 days from today', 16, 1);
+        RETURN;
+	END
+
+	DECLARE @ManagerId INT ;
+	SELECT @ManagerId = ReportingManagerId 
+	FROM Onwards.Users
+	WHERE Id = @UserId
+
+	INSERT INTO Onwards.AttendanceRegularization
+			(UserId ,
+			ManagerId,
+			TypeId ,
+			StartDate,
+			EndDate,
+			Duration,
+			Reason ,
+			StatusId,
+			CreatedBy,
+			CreatedDate)
+	VALUES
+			(@UserId,
+			@ManagerId,
+			@TypeId,
+			@StartDate,
+			@EndDate,
+			@Duration,
+			@Reason,
+			1, -- 1 => Pending
+			@LoginId,
+			GETDATE()) 
+END
+
+ALTER PROCEDURE Onwards.UpdateAttendanceRegularization
+	@UserId INT ,
+	@Action VARCHAR(250),
+	@StatusId INT ,
+	@LoginId INT
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	UPDATE Onwards.AttendanceRegularization
+	SET 
+		Action = @Action,
+		StatusId = @StatusId,
+		ModifiedBy = @LoginId,
+		ModifiedDate = GETDATE()
+
+END
+
+CREATE PROCEDURE Onwards.GetAttendanceRegularization
+	@UserId INT 
+AS
+BEGIN
+
+	SET NOCOUNT ON;
+
+	SELECT * FROM Onwards.AttendanceRegularization
+	WHERE UserId = @UserId
+
+END
+
+ALTER PROCEDURE [Onwards].[GetUserLeaveApplied]
+	@UserId INT
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	SELECT 
+		   u.Id,
+		   t.LeaveTypeName,
+		   u.NoOfDays,
+		   u.StartDate,
+		   u.EndDate,
+		   s.Name
+	FROM Onwards.UserLeaveApplied AS u
+	INNER JOIN Onwards.LeaveTypes AS t ON u.LeaveTypeId = t.Id
+	INNER JOIN Onwards.LeaveStatus AS s ON u.LeaveStatusId = s.Id
+	WHERE u.UserId = @UserId
+	ORDER BY u.CreatedDate DESC
+	OFFSET 0 ROWS FETCH NEXT 15 ROWS ONLY;
+     
+END
+
+
+
+ALTER PROCEDURE Onwards.GetLeavesAndAttendance
+	@UserId INT 
+AS
+BEGIN
+
+	SET NOCOUNT ON;
+
+	DECLARE @LeavesAndAttendance AS TABLE 
+	(
+		IsLeave BIT,
+		Id INT,
+		LeaveTypeName VARCHAR(50) NULL,
+		Type INT NULL,
+		StartDate DATE,
+		EndDate DATE,
+		Duration DECIMAL(9,2),
+		Status VARCHAR(50),
+		Reason VARCHAR(250),
+		CreatedDate DATETIME NULL
+	)
+
+	INSERT INTO @LeavesAndAttendance (IsLeave,Id,LeaveTypeName,StartDate,EndDate,Duration,Status,Reason,CreatedDate)
+	SELECT 1,
+		   u.Id,
+		   t.LeaveTypeName,
+		   u.StartDate,
+		   u.EndDate,
+		   u.NoOfDays,
+		   s.Name,
+		   u.Reason,
+		   u.CreatedDate
+	FROM Onwards.UserLeaveApplied AS u
+	INNER JOIN Onwards.LeaveTypes AS t ON u.LeaveTypeId = t.Id
+	INNER JOIN Onwards.LeaveStatus AS s ON u.LeaveStatusId = s.Id
+	WHERE u.UserId = @UserId
+	ORDER BY u.CreatedDate DESC
+	OFFSET 0 ROWS FETCH NEXT 15 ROWS ONLY;
+
+	INSERT INTO @LeavesAndAttendance (IsLeave,Id,Type,StartDate,EndDate,Duration,Status,Reason,CreatedDate)
+	SELECT	0,
+			A.Id ,
+			A.TypeId,
+			A.StartDate ,
+			A.EndDate ,
+			A.Duration,
+			S.Name,
+			A.Reason,
+			S.CreatedDate
+	FROM Onwards.AttendanceRegularization AS A
+	INNER JOIN Onwards.LeaveStatus AS S ON A.StatusId = S.Id
+	WHERE A.UserId = @UserId
+	ORDER BY A.CreatedDate DESC
+	OFFSET 0 ROWS FETCH NEXT 15 ROWS ONLY;
+
+	SELECT * FROM @LeavesAndAttendance
+	ORDER BY CreatedDate DESC
+END
+
+
+
+----------------------------------------09Oct25--------------------------------------------------
 USE msdb;
 GO
 
@@ -57,11 +260,67 @@ ALTER TABLE Onwards.Users
 ADD CONSTRAINT FK_Users_UserType FOREIGN KEY (UserTypeId) REFERENCES Onwards.UserType(Id)
 
 
-CREATE TABLE Onwards.AttendanceRegularization
-(
-	Id INT PRIMARY KEY IDENTITY(1,1),
+ALTER PROCEDURE [Onwards].[InsertOrUpdateUserShiftDetails]
+    @UserId INT, 
+    @ResultLogId INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
 
-)
+	DECLARE @ShiftId INT= 0, @LogId INT = 0
+
+	-- Try to get the latest assigned ShiftId for the user (if exists)
+    SELECT TOP 1 @ShiftId = ShiftId
+    FROM Onwards.UserShiftAssignment
+    WHERE UserId = @UserId
+    ORDER BY CreatedDate DESC;
+	 
+	-- If no shift found, raise an error or skip insert
+    IF (@ShiftId IS NULL OR @ShiftId = 0)
+    BEGIN
+        RAISERROR('No ShiftId found for the given UserId.', 16, 1);
+        RETURN;
+    END
+
+
+	SELECT TOP 1 @LogId= Logid from [Onwards].[UserShiftLog]
+	WHERE UserId = @UserId 
+    AND Date = CAST(GETDATE() AS DATE)
+
+    IF (@LogId = 0 OR @LogId IS NULL)
+    BEGIN
+        INSERT INTO [Onwards].[UserShiftLog]
+        (
+            UserId,
+            ShiftId,
+            LoginTime,
+            [Date]
+        )
+        VALUES
+        (
+            @UserId,
+            @ShiftId,
+            CAST(GETDATE() AS TIME),
+            GETDATE()
+        );
+
+        SET @ResultLogId = SCOPE_IDENTITY();  -- Return new LogId
+
+    END
+    ELSE
+    BEGIN
+        UPDATE [Onwards].[UserShiftLog]
+        SET
+            UserId = @UserId,
+            ShiftId = @ShiftId,  
+            LogOutTime = CAST(GETDATE() AS TIME),
+			ModifiedBy = @LogId,
+			ModifiedDate = GETDATE()
+        WHERE LogId = @LogId;
+
+        SET @ResultLogId = @LogId; -- Return updated LogId
+    END
+END
 
 ----------------------------------------08Oct25--------------------------------------------------
 ALTER TABLE Onwards.UserShiftLog
@@ -73,14 +332,34 @@ BEGIN
 	SET NOCOUNT ON;
 
 	DECLARE @Yesterday DATE =  DATEADD(DAY,-1,CAST(GETDATE() AS DATE))
+	DECLARE @UserDetails AS TABLE 
+	(
+		UserId INT,
+		ShiftId INT
+	)
 
+	-- Week off check
+	IF (DATENAME(WEEKDAY, @Yesterday) IN ('Saturday', 'Sunday'))
+	BEGIN
+		Return;
+	END
+
+	-- Active Users who does'nt have a holiday on yesterday
+	INSERT INTO @UserDetails (UserId,ShiftId)
+	SELECT U.Id,S.ShiftId
+	FROM Onwards.Users AS U
+	INNER JOIN Onwards.UserShiftAssignment AS S ON U.Id = S.UserId
+	WHERE U.IsActive = 1 AND S.IsActive = 1 AND
+	NOT EXISTS(SELECT 1 FROM Onwards.HolidayList WHERE HolidayDate = @Yesterday AND LocationId = U.LocationId)
+
+	-- Adding absent for users who have'nt logged in yesterday
 	MERGE Onwards.UserShiftLog AS T
-	USING Onwards.UsersShiftAssignment AS S
-	ON T.UserId = S.UserId AND T.Date = @Yesterday AND S.IsActive = 1 AND T.IsActive = 1
-
+	USING @UserDetails AS S
+	ON T.UserId = S.UserId AND T.Date = @Yesterday
 	WHEN NOT MATCHED BY TARGET THEN
 		INSERT (UserId, ShiftId, LoginTime,Date,IsPresent,CreatedBy,CreatedDate)
 		VALUES (S.UserId, S.ShiftId, '00:00:00.0000000',@Yesterday,0,0,GETDATE());
+
 END
 
 CREATE PROCEDURE Onwards.ApproveLeaves
@@ -103,6 +382,8 @@ BEGIN
 		SET T.LeaveStatusId = 2;
 END
 
+
+-- Monthly Service
 CREATE PROCEDURE [Onwards].[InsertLeavesAdded]
 AS
 BEGIN
@@ -433,7 +714,7 @@ VALUES
 ('6','Multiple Events',GETDATE(),1)
 
 
-CREATE PROCEDURE Onwards.GetCalendarEvents
+ALTER PROCEDURE Onwards.GetCalendarEvents
 	@UserId INT,
 	@Month INT,
 	@Year INT
@@ -448,6 +729,11 @@ BEGIN
 
 		DECLARE @StartDate DATE = DATEFROMPARTS(@Year, @Month, 1);
 		DECLARE @EndDate   DATE = EOMONTH(@StartDate);
+		DECLARE @LocationId INT;
+
+		SELECT @LocationId = LocationId 
+		FROM Onwards.Users
+		WHERE Id = @UserId
 
 		DECLARE @LeaveDates AS TABLE
 		(
@@ -492,7 +778,7 @@ BEGIN
 			END
 
 			-- Holiday Check
-			IF EXISTS( SELECT 1 FROM Onwards.HolidayList WHERE HolidayDate = @DateItr)
+			IF EXISTS( SELECT 1 FROM Onwards.HolidayList WHERE HolidayDate = @DateItr AND LocationId = @LocationId)
 			BEGIN
 				INSERT INTO @CalenderDates (Date, StatusId)
 				-- 5 --> Holiday
@@ -541,7 +827,7 @@ BEGIN
 
 		MERGE @CalenderDates AS T
 		USING Onwards.UserShiftLog AS S
-		ON S.UserId = @UserId AND T.Date = CAST(S.CreatedDate AS DATE) AND T.StatusId = 1 -- 1 => Present 
+		ON S.UserId = @UserId AND T.Date = S.Date AND T.StatusId = 1 -- 1 => Present 
 		WHEN MATCHED THEN
 			UPDATE 
 			SET 
