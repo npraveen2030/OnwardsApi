@@ -176,10 +176,12 @@ namespace OnwardsDAL.Repository
                 cmd.Parameters.AddWithValue("@Id", leave.Id);
                 cmd.Parameters.AddWithValue("@LoginId", leave.LoginId);
                 cmd.Parameters.AddWithValue("@UserId", leave.UserId);
+                cmd.Parameters.AddWithValue("@StartDate", leave.StartDate);
+                cmd.Parameters.AddWithValue("@EndDate", leave.EndDate);
                 cmd.Parameters.AddWithValue("@LeaveTypeId", leave.LeaveTypeId);
                 cmd.Parameters.AddWithValue("@LeaveStatusId", leave.LeaveStatusId);
                 cmd.Parameters.AddWithValue("@Action", (object?)leave.Action ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@NoOfDays", leave.NoOfDays);
+                cmd.Parameters.AddWithValue("@NoOfDays", (object?)leave.NoOfDays ?? DBNull.Value);
 
                 await cmd.ExecuteNonQueryAsync();
             }
@@ -264,6 +266,7 @@ namespace OnwardsDAL.Repository
                         Id = reader.GetInt32(reader.GetOrdinal("Id")),
 
                         // Nullable columns
+                        LeaveTypeId = reader["LeaveTypeId"] == DBNull.Value ? null : (int?)reader.GetInt32(reader.GetOrdinal("LeaveTypeId")),
                         LeaveTypeName = reader["LeaveTypeName"] as string,
                         Type = reader["Type"] == DBNull.Value ? null : (int?)reader.GetInt32(reader.GetOrdinal("Type")),
 

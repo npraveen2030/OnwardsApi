@@ -10,5 +10,6 @@ namespace OnwardsDAL.Interface
     public interface IAttendanceRegularizationRepository
     {
         public Task InsertAttendanceRegularizationAsync(AttendanceRegularizationModel regularization);
+        public Task UpdateAttendanceRegularizationAsync(AttendanceRegularizationUpdateModel regularization);
     }
 }

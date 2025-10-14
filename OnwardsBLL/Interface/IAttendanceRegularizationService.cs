@@ -10,5 +10,6 @@ namespace OnwardsBLL.Interface
     public interface IAttendanceRegularizationService
     {
         Task InsertAttendanceRegularizationAsync(AttendanceRegularizationModel regularization);
+        public Task UpdateAttendanceRegularizationAsync(AttendanceRegularizationUpdateModel regularization);
     }
 }

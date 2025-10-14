@@ -10,6 +10,7 @@ namespace OnwardsModel.Dtos
     {
         public bool IsLeave { get; set; }
         public int Id { get; set; }
+        public int? LeaveTypeId { get; set; }
         public string? LeaveTypeName { get; set; }   // for leave
         public int? Type { get; set; }               // for attendance regularization
         public DateTime StartDate { get; set; }

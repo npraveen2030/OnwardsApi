@@ -34,5 +34,23 @@ namespace OnwardsApi.Controllers
                 return Ok(new { success = false, message = "Error occurred while inserting attendance regularization request.", error = ex.Message });
             }
         }
+
+        [HttpPost("update")]
+        public async Task<IActionResult> UpdateAttendanceRegularization([FromBody] AttendanceRegularizationUpdateModel regularization)
+        {
+            try
+            {
+                await _attendanceRegularizationService.UpdateAttendanceRegularizationAsync(regularization);
+                return Ok(new { success = true, message = "Attendance regularization request updated successfully." });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Ok(new { success = false, message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { success = false, message = "Error occurred while updating attendance regularization request.", error = ex.Message });
+            }
+        }
     }
 }

@@ -31,6 +31,18 @@ namespace OnwardsBLL.Service
             }
         }
 
-        
+        public async Task UpdateAttendanceRegularizationAsync(AttendanceRegularizationUpdateModel regularization)
+        {
+            try
+            {
+                await _attendanceRegularizationRepository.UpdateAttendanceRegularizationAsync(regularization);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error occurred while Updating attendance regularization.", ex);
+            }
+        }
+
+
     }
 }

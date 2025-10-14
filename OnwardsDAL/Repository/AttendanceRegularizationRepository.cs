@@ -2,12 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using OnwardsDAL.Interface;
 using OnwardsModel.Model;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace OnwardsDAL.Repository
 {
@@ -53,6 +49,38 @@ namespace OnwardsDAL.Repository
             catch (Exception ex)
             {
                 throw new Exception("Error occurred while inserting attendance regularization request.", ex);
+            }
+        }
+        public async Task UpdateAttendanceRegularizationAsync(AttendanceRegularizationUpdateModel regularization)
+        {
+            try
+            {
+                await using var conn = GetConn();
+                await conn.OpenAsync();
+
+                await using var cmd = new SqlCommand("Onwards.UpdateAttendanceRegularization", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                // Parameters - must match the stored procedure exactly
+                cmd.Parameters.AddWithValue("@Id", regularization.Id);
+                cmd.Parameters.AddWithValue("@UserId", regularization.UserId);
+                cmd.Parameters.AddWithValue("@StartDate", regularization.StartDate.Date);
+                cmd.Parameters.AddWithValue("@EndDate", regularization.EndDate.Date);
+                cmd.Parameters.AddWithValue("@Action", (object?)regularization.Action ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@StatusId", regularization.StatusId);
+                cmd.Parameters.AddWithValue("@LoginId", regularization.LoginId);
+
+                await cmd.ExecuteNonQueryAsync();
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("SQL error occurred while updating attendance regularization.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error occurred while updating attendance regularization.", ex);
             }
         }
 
