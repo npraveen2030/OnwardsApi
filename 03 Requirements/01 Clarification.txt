@@ -1,9 +1,20 @@
+Need to explore
+--------------------------------------
+* 10Oct2025 :onwards.users
+		Why administratiorManagerid is required
+* 10Oct2025 :Leave Manager :
+		Ignore timebased 
+* IN Dec2025, you have applyed leaves for Jan21 to 28( 8 Days)...in Jan you have cancelled leave,
+			Should i need to add this 8 leaves ( Technically 6 are earned leaves and it can be carry forwarded. then
+			what about remaining leaves 
+
 
 Missing UI Screen:
 ---------------------------
 * Reports
 	AR Reports wrt Month, year, Financial Year in excel and PDF
 	Leave Report wrt Month, year, Financial Year in excel and PDF
+	Compare Leave, AR and Timesheet (Get only absent dates by Month, Year)
 	
 * Approval
 	Leave Management Approval screen
@@ -61,11 +72,33 @@ Project Management
 * 02Oct2025 :
 
 
+Attendance Regulation:
+-----------------------------------------
+* 14Oct2025 : 
+		If LoginIn is present and Logout is not there then its consider as leave, user has to raise request for AR 
+* 09Oct2025 : 
+* 09Oct2025 : 
+* 09Oct2025 : 
+* 09Oct2025 : 
+
+Will Consider later:
+		* 09Oct2025 : If LoginIn and logout time <= 6 hours then consider as leave
+
+
 Leave Management System 
 -------------------------------
+* 09Oct2025 : 
+* 09Oct2025 : 
+* 09Oct2025 : 
+* 09Oct2025 : 
+* 09Oct2025 : 
+* 09Oct2025 : 
+* 10Oct2025 : In the side bar, show last 15 records ( leave + AR)
+* 09Oct2025 : (Current Month-30 days) and Future Month -- Approved leaves can be cancalled 
+* 
 * 09Oct2025 : Even if the user is present for hald day( hald day leave) then show as PRESENT
 * 08Oct2025 : 1 Earned leave and 1 Sick leave will be added every month on 1st 
-* 08Oct2025 : if the User logined before 15th then 1 EL and 1 SL else more than 15th then 0.5 EL and SL
+* 08Oct2025 : if the User Joining date before 15th then 1 EL and 1 SL else more than 15th then 0.5 EL and SL
 * 08Oct2025 : Leaves will be calculated for the year, but not finacial year
 * 08Oct2025 : Once leave applyed , next day it will be Autoapproved 
 		Service 10 : 
