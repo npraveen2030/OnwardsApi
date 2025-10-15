@@ -1,5 +1,6 @@
 ﻿using OnwardsBLL.Interface;
 using OnwardsDAL.Interface;
+using OnwardsDAL.Repository;
 using OnwardsModel.Dtos;
 using OnwardsModel.Model;
 using System;
@@ -27,6 +28,11 @@ namespace OnwardsBLL.Service
         public async Task<(string FileName, byte[] Data)?> GetUserLeaveAppliedDocumentAsync(int id)
         {
             return await _repo.GetUserLeaveAppliedDocumentAsync(id);
+        }
+
+        public async Task<UserLeaveAppliedDetailsDto?> GetUserLeaveAppliedByIdAsync(int id)
+        {
+            return await _repo.GetUserLeaveAppliedByIdAsync(id);
         }
 
         public async Task<List<LeaveTypeDto>> GetLeaveTypesAsync(int userId)

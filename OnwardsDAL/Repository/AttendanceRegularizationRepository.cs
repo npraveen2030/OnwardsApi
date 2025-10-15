@@ -63,6 +63,49 @@ namespace OnwardsDAL.Repository
             }
         }
 
+        public async Task<AttendanceRegularizationDetailsDto?> GetAttendanceRegularizationByIdAsync(int id)
+        {
+            try
+            {
+                await using var conn = GetConn();
+                await conn.OpenAsync();
+
+                await using var cmd = new SqlCommand("Onwards.GetAttendanceRegularizationById", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.AddWithValue("@Id", id);
+
+                await using var reader = await cmd.ExecuteReaderAsync();
+
+                if (await reader.ReadAsync())
+                {
+                    return new AttendanceRegularizationDetailsDto
+                    {
+                        UserName = reader.GetString(reader.GetOrdinal("UserName")),
+                        ManagerName = reader.GetString(reader.GetOrdinal("ManagerName")),
+                        Type = reader.GetString(reader.GetOrdinal("Type")),
+                        StartDate = reader.GetDateTime(reader.GetOrdinal("StartDate")),
+                        EndDate = reader.GetDateTime(reader.GetOrdinal("EndDate")),
+                        Duration = reader.GetDecimal(reader.GetOrdinal("Duration")),
+                        Reason = reader.GetString(reader.GetOrdinal("Reason")),
+                        Action = reader.IsDBNull(reader.GetOrdinal("Action")) ? null : reader.GetString(reader.GetOrdinal("Action")),
+                        StatusName = reader.GetString(reader.GetOrdinal("StatusName"))
+                    };
+                }
+
+                return null;
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("SQL error occurred while fetching attendance regularization details by ID.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error occurred while fetching attendance regularization details by ID.", ex);
+            }
+        }
 
 
         public async Task InsertAttendanceRegularizationAsync(AttendanceRegularizationModel regularization)
@@ -88,9 +131,9 @@ namespace OnwardsDAL.Repository
 
                 await cmd.ExecuteNonQueryAsync();
             }
-            catch (SqlException ex) when (ex.Message.Contains("Cant be more than 30 days from today"))
+            catch (SqlException ex) when (ex.Message.Contains("Only 30 days Prior to Today can be applied"))
             {
-                throw new InvalidOperationException("You can only regularize attendance within 30 days from today.", ex);
+                throw new InvalidOperationException("You can only apply for leave within 30 days from today.", ex);
             }
             catch (Exception ex)
             {

@@ -1,5 +1,43 @@
-﻿----------------------------------------14Oct25-------------------------------------------------
+﻿----------------------------------------15Oct25-------------------------------------------------
+USE msdb;
+GO
 
+-- 1️⃣ Create the Job
+EXEC sp_add_job 
+    @job_name = N'Monthly Start-of-Month Service';
+GO
+
+-- 2️⃣ Add Job Step(s)
+EXEC sp_add_jobstep 
+    @job_name = N'Monthly Start-of-Month Service',
+    @step_name = N'Perform Start-of-Month Tasks',
+    @subsystem = N'TSQL',
+    @database_name = N'Projects',  
+    @command = N'
+		EXEC Projects.Onwards.InsertLeavesAdded;
+    ';
+GO
+
+-- 3️⃣ Define Schedule (Runs on 1st day of every month at midnight)
+EXEC sp_add_schedule 
+    @schedule_name = N'Monthly on 1st Midnight',
+    @freq_type = 16,            -- 16 = Monthly
+    @freq_interval = 1,         -- Day 1 of every month
+    @freq_recurrence_factor = 1,-- Every 1 month
+    @active_start_time = 0;     -- 00:00:00 (midnight)
+GO
+
+-- 4️⃣ Attach Schedule to Job
+EXEC sp_attach_schedule 
+    @job_name = N'Monthly Start-of-Month Service',
+    @schedule_name = N'Monthly on 1st Midnight';
+GO
+
+-- 5️⃣ Add Job to SQL Server Agent
+EXEC sp_add_jobserver 
+    @job_name = N'Monthly Start-of-Month Service';
+GO
+----------------------------------------14Oct25-------------------------------------------------
 CREATE PROCEDURE [Onwards].[GetAttendanceRegularizationById]
 	@Id INT 
 AS
@@ -7,8 +45,14 @@ BEGIN
 
 	SET NOCOUNT ON;
 
-	SELECT * FROM Onwards.AttendanceRegularization
-	WHERE Id = @Id
+	SELECT U.FullName AS UserName, Um.FullName AS ManagerName, ART.Type, AR.StartDate, AR.EndDate, AR.Duration,
+		   AR.Reason, AR.Action, LS.Name AS StatusName
+	FROM Onwards.AttendanceRegularization AS AR
+	INNER JOIN Onwards.Users AS U ON AR.UserId = U.Id
+	INNER JOIN Onwards.Users AS Um ON AR.ManagerId = Um.Id
+	INNER JOIN Onwards.AttendanceRegularizationType AS ART ON ART.Id = AR.TypeId
+	INNER JOIN Onwards.LeaveStatus AS LS ON LS.Id = AR.StatusId
+ 	WHERE AR.Id = @Id
 
 END
 
@@ -18,19 +62,14 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 
-	SELECT 
-		   u.Id,
-		   t.LeaveTypeName,
-		   u.NoOfDays,
-		   u.StartDate,
-		   u.EndDate,
-		   s.Name
-	FROM Onwards.UserLeaveApplied AS u
-	INNER JOIN Onwards.LeaveTypes AS t ON u.LeaveTypeId = t.Id
-	INNER JOIN Onwards.LeaveStatus AS s ON u.LeaveStatusId = s.Id
-	WHERE u.UserId = @UserId
-	ORDER BY u.CreatedDate DESC
-	OFFSET 0 ROWS FETCH NEXT 15 ROWS ONLY;
+	SELECT U.FullName AS UserName,Um.FullName AS ManagerName,LT.LeaveTypeName,ULA.NoOfDays,ULA.StartDate,
+		   ULA.EndDate,ULA.Reason,ULA.Action,LS.Name AS StatusName
+	FROM Onwards.UserLeaveApplied AS ULA
+	INNER JOIN Onwards.Users AS U ON ULA.UserId = U.Id
+	INNER JOIN Onwards.Users AS Um ON ULA.ManagerId = Um.Id
+	INNER JOIN Onwards.LeaveTypes AS LT ON ULA.LeaveTypeId = LT.Id
+	INNER JOIN Onwards.LeaveStatus AS LS ON ULA.LeaveStatusId = LS.Id
+	WHERE ULA.Id = @Id
      
 END
 
@@ -78,6 +117,17 @@ BEGIN
 	WHERE ULA.ManagerId = @ManagerId AND ULA.LeaveStatusId IN (1,2) -- 1=> Pending,2=> Approved
 	ORDER BY ULA.CreatedDate DESC
      
+END
+
+CREATE PROCEDURE Onwards.GetUserLeaveAppliedDocument
+	@Id INT
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	SELECT FileName,Data
+	FROM Onwards.UserLeaveApplied
+	WHERE Id = @Id
 END
 
 CREATE TYPE Onwards.UpdateULATVP AS TABLE 

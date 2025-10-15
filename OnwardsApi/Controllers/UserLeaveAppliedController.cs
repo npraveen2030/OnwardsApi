@@ -50,6 +50,23 @@ namespace OnwardsApi.Controllers
             }
         }
 
+        [HttpGet("getuserleaveappliedbyid/{id}")]
+        public async Task<IActionResult> GetUserLeaveAppliedById(int id)
+        {
+            try
+            {
+                var record = await _userLeaveAppliedService.GetUserLeaveAppliedByIdAsync(id);
+                if (record == null)
+                    return NotFound(new { message = "No user leave application found with the given Id." });
+
+                return Ok(record);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
         [HttpGet("getleavetypes")]
         public async Task<IActionResult> GetLeaveTypes([FromQuery] int userId)
         {

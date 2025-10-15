@@ -24,28 +24,19 @@ namespace OnwardsBLL.Service
             return await _attendanceRegularizationRepository.GetAttendanceRegularizationAsync(managerId);
         }
 
+        public async Task<AttendanceRegularizationDetailsDto?> GetAttendanceRegularizationByIdAsync(int id)
+        {
+            return await _attendanceRegularizationRepository.GetAttendanceRegularizationByIdAsync(id);
+        }
+
         public async Task InsertAttendanceRegularizationAsync(AttendanceRegularizationModel regularization)
         {
-            try
-            {
-                await _attendanceRegularizationRepository.InsertAttendanceRegularizationAsync(regularization);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error occurred while saving attendance regularization.", ex);
-            }
+            await _attendanceRegularizationRepository.InsertAttendanceRegularizationAsync(regularization);
         }
 
         public async Task UpdateAttendanceRegularizationAsync(List<AttendanceRegularizationUpdateModel> regularizations)
         {
-            try
-            {
-                await _attendanceRegularizationRepository.UpdateAttendanceRegularizationAsync(regularizations);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error occurred while Updating attendance regularization.", ex);
-            }
+             await _attendanceRegularizationRepository.UpdateAttendanceRegularizationAsync(regularizations);
         }
 
 

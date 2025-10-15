@@ -11,6 +11,7 @@ namespace OnwardsBLL.Interface
     public interface IAttendanceRegularizationService
     {
         public Task<List<AttendanceRegularizationDto>> GetAttendanceRegularizationAsync(int managerId);
+        public Task<AttendanceRegularizationDetailsDto?> GetAttendanceRegularizationByIdAsync(int id);
         Task InsertAttendanceRegularizationAsync(AttendanceRegularizationModel regularization);
         public Task UpdateAttendanceRegularizationAsync(List<AttendanceRegularizationUpdateModel> regularizations);
     }
