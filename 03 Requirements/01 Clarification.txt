@@ -37,6 +37,17 @@ Missing UI Screen:
 				- Override Paternity Leave : 5 days, Merternity Leave : 60 Days, Baverment leave : 5 Days
 				- Take 6 casual leave and add in current year as Earned leaves ( If exists ) 
 
+
+Leave Approval Screen :
+-----------------------------------------
+* 15Oct2025 : In the screen only Approved, Pending will be displayed 
+* 15Oct2025 : WHen Approving, Rejecting give the Action in the Popup
+* 15Oct2025 : All the Approved records : checkbox should be disabled
+* 15Oct2025 : 
+
+
+
+
 Time Sheet Management:
 --------------------------------------------------------------
 * 04Oct2025 :  
