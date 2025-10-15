@@ -16,17 +16,37 @@ namespace OnwardsApi.Controllers
             _userLeaveAppliedService = userLeaveAppliedService;
         }
 
-        [HttpGet("get")]
-        public async Task<IActionResult> GetUserLeaveApplied(int UserId)
+        [HttpGet("getuserleaveappliedbymanagerid")]
+        public async Task<IActionResult> GetUserLeaveApplied(int managerId)
         {
             try
             {
-                var details = await _userLeaveAppliedService.GetUserLeaveAppliedAsync(UserId);
-                return Ok(new { details });
+                var details = await _userLeaveAppliedService.GetUserLeaveAppliedAsync(managerId);
+                return Ok( details );
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
+        [HttpGet("getdocument/{id}")]
+        public async Task<IActionResult> GetUserLeaveAppliedDocument(int id)
+        {
+            try
+            {
+                var result = await _userLeaveAppliedService.GetUserLeaveAppliedDocumentAsync(id);
+
+                if (result == null)
+                    return NotFound(new { message = "Document not found for the given Id." });
+
+                var (fileName, data) = result.Value;
+
+                return File(data, "application/pdf", fileName);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
             }
         }
 
@@ -59,11 +79,11 @@ namespace OnwardsApi.Controllers
         }
 
         [HttpPost("update")]
-        public async Task<IActionResult> UpdateUserLeaveApplied([FromBody] UserLeaveAppliedUpdateModel leave)
+        public async Task<IActionResult> UpdateUserLeaveApplied([FromBody] List<UserLeaveAppliedUpdateModel> leaves)
         {
             try
             {
-                await _userLeaveAppliedService.UpdateUserLeaveAppliedAsync(leave);
+                await _userLeaveAppliedService.UpdateUserLeaveAppliedAsync(leaves);
                 return Ok(new { success = true, message = "Leave Updated successfully." });
             }
             catch (Exception ex)

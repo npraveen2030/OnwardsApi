@@ -1,5 +1,6 @@
 ﻿using OnwardsBLL.Interface;
 using OnwardsDAL.Interface;
+using OnwardsModel.Dtos;
 using OnwardsModel.Model;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,11 @@ namespace OnwardsBLL.Service
             _attendanceRegularizationRepository = attendanceRegularizationRepository;
         }
 
-        // ------------------ INSERT ------------------
+        public async Task<List<AttendanceRegularizationDto>> GetAttendanceRegularizationAsync(int managerId)
+        {
+            return await _attendanceRegularizationRepository.GetAttendanceRegularizationAsync(managerId);
+        }
+
         public async Task InsertAttendanceRegularizationAsync(AttendanceRegularizationModel regularization)
         {
             try
@@ -31,11 +36,11 @@ namespace OnwardsBLL.Service
             }
         }
 
-        public async Task UpdateAttendanceRegularizationAsync(AttendanceRegularizationUpdateModel regularization)
+        public async Task UpdateAttendanceRegularizationAsync(List<AttendanceRegularizationUpdateModel> regularizations)
         {
             try
             {
-                await _attendanceRegularizationRepository.UpdateAttendanceRegularizationAsync(regularization);
+                await _attendanceRegularizationRepository.UpdateAttendanceRegularizationAsync(regularizations);
             }
             catch (Exception ex)
             {

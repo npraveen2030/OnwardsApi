@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using OnwardsDAL.Interface;
+using OnwardsModel.Dtos;
 using OnwardsModel.Model;
 using System.Data;
 
@@ -18,6 +19,51 @@ namespace OnwardsDAL.Repository
 
         private SqlConnection GetConn() =>
             new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+
+        public async Task<List<AttendanceRegularizationDto>> GetAttendanceRegularizationAsync(int managerId)
+        {
+            try
+            {
+                var result = new List<AttendanceRegularizationDto>();
+
+                await using var conn = GetConn();
+                await conn.OpenAsync();
+
+                await using var cmd = new SqlCommand("Onwards.GetAttendanceRegularizationForManager", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.AddWithValue("@ManagerId", managerId);
+
+                await using var reader = await cmd.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    var record = new AttendanceRegularizationDto
+                    {
+                        Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                        UserId = reader.GetInt32(reader.GetOrdinal("UserId")),
+                        FullName = reader.GetString(reader.GetOrdinal("FullName")),
+                        StartDate = reader.GetDateTime(reader.GetOrdinal("StartDate")),
+                        EndDate = reader.GetDateTime(reader.GetOrdinal("EndDate")),
+                        Duration = reader.GetDecimal(reader.GetOrdinal("Duration")),
+                        Reason = reader.IsDBNull(reader.GetOrdinal("Reason")) ? null : reader.GetString(reader.GetOrdinal("Reason")),
+                        Action = reader.IsDBNull(reader.GetOrdinal("Action")) ? null : reader.GetString(reader.GetOrdinal("Action")),
+                        StatusName = reader.GetString(reader.GetOrdinal("StatusName"))
+                    };
+
+                    result.Add(record);
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error occurred while fetching attendance regularization records for the manager.", ex);
+            }
+        }
+
+
 
         public async Task InsertAttendanceRegularizationAsync(AttendanceRegularizationModel regularization)
         {
@@ -51,8 +97,11 @@ namespace OnwardsDAL.Repository
                 throw new Exception("Error occurred while inserting attendance regularization request.", ex);
             }
         }
-        public async Task UpdateAttendanceRegularizationAsync(AttendanceRegularizationUpdateModel regularization)
+        public async Task UpdateAttendanceRegularizationAsync(List<AttendanceRegularizationUpdateModel> regularizations)
         {
+            if (regularizations == null || regularizations.Count == 0)
+                throw new ArgumentException("No attendance regularizations provided.", nameof(regularizations));
+
             try
             {
                 await using var conn = GetConn();
@@ -63,28 +112,47 @@ namespace OnwardsDAL.Repository
                     CommandType = CommandType.StoredProcedure
                 };
 
-                // Parameters - must match the stored procedure exactly
-                cmd.Parameters.AddWithValue("@Id", regularization.Id);
-                cmd.Parameters.AddWithValue("@UserId", regularization.UserId);
-                cmd.Parameters.AddWithValue("@StartDate", regularization.StartDate.Date);
-                cmd.Parameters.AddWithValue("@EndDate", regularization.EndDate.Date);
-                cmd.Parameters.AddWithValue("@Action", (object?)regularization.Action ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@StatusId", regularization.StatusId);
-                cmd.Parameters.AddWithValue("@LoginId", regularization.LoginId);
+                // ✅ Create DataTable matching Onwards.UpdateARTVP structure
+                var tvp = new DataTable();
+                tvp.Columns.Add("Id", typeof(int));
+                tvp.Columns.Add("StartDate", typeof(DateTime));
+                tvp.Columns.Add("EndDate", typeof(DateTime));
+                tvp.Columns.Add("Action", typeof(string));
+                tvp.Columns.Add("StatusId", typeof(int));
+                tvp.Columns.Add("UserId", typeof(int));
+                tvp.Columns.Add("LoginId", typeof(int));
 
+                // ✅ Fill the DataTable with multiple rows from the list
+                foreach (var item in regularizations)
+                {
+                    tvp.Rows.Add(
+                        item.Id,
+                        item.StartDate.Date,
+                        item.EndDate.Date,
+                        (object?)item.Action ?? DBNull.Value,
+                        item.StatusId,
+                        item.UserId,
+                        item.LoginId
+                    );
+                }
+
+                // ✅ Add structured parameter
+                var param = cmd.Parameters.AddWithValue("@Request", tvp);
+                param.SqlDbType = SqlDbType.Structured;
+                param.TypeName = "Onwards.UpdateARTVP";
+
+                // ✅ Execute once for all records
                 await cmd.ExecuteNonQueryAsync();
             }
             catch (SqlException ex)
             {
-                throw new Exception("SQL error occurred while updating attendance regularization.", ex);
+                throw new Exception("SQL error occurred while updating attendance regularizations.", ex);
             }
             catch (Exception ex)
             {
-                throw new Exception("Error occurred while updating attendance regularization.", ex);
+                throw new Exception("Error occurred while updating attendance regularizations.", ex);
             }
         }
-
-
     }
 }
 

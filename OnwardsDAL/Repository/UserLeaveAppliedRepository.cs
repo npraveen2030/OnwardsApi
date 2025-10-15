@@ -23,7 +23,7 @@ namespace OnwardsDAL.Repository
         private SqlConnection GetConnection() =>
             new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 
-        public async Task<List<UserLeaveAppliedDto>> GetUserLeaveAppliedAsync(int userId)
+        public async Task<List<UserLeaveAppliedDto>> GetUserLeaveAppliedAsync(int managerId)
         {
             try
             {
@@ -32,12 +32,12 @@ namespace OnwardsDAL.Repository
                 await using var conn = GetConnection();
                 await conn.OpenAsync();
 
-                await using var cmd = new SqlCommand("Onwards.GetUserLeaveApplied", conn)
+                await using var cmd = new SqlCommand("Onwards.GetUserLeaveAppliedForManager", conn)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
 
-                cmd.Parameters.AddWithValue("@UserId", userId);
+                cmd.Parameters.AddWithValue("@ManagerId", managerId);
 
                 await using var reader = await cmd.ExecuteReaderAsync();
                 while (await reader.ReadAsync())
@@ -45,12 +45,20 @@ namespace OnwardsDAL.Repository
                     var leave = new UserLeaveAppliedDto
                     {
                         Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                        LeaveTypeName = reader.GetString(reader.GetOrdinal("LeaveTypeName")),
-                        NoOfDays = reader.GetDecimal(reader.GetOrdinal("NoOfDays")),
+                        UserId = reader.GetInt32(reader.GetOrdinal("UserId")),
+                        FullName = reader.GetString(reader.GetOrdinal("FullName")),
+                        PhoneNo = reader.IsDBNull(reader.GetOrdinal("PhoneNo")) ? null : reader.GetString(reader.GetOrdinal("PhoneNo")),
                         StartDate = reader.GetDateTime(reader.GetOrdinal("StartDate")),
                         EndDate = reader.GetDateTime(reader.GetOrdinal("EndDate")),
-                        StatusName = reader.GetString(reader.GetOrdinal("Name"))
+                        NoOfDays = reader.GetDecimal(reader.GetOrdinal("NoOfDays")),
+                        Reason = reader.IsDBNull(reader.GetOrdinal("Reason")) ? null : reader.GetString(reader.GetOrdinal("Reason")),
+                        Action = reader.IsDBNull(reader.GetOrdinal("Action")) ? null : reader.GetString(reader.GetOrdinal("Action")),
+                        NotifiedUserName = reader.IsDBNull(reader.GetOrdinal("NotifiedUserName")) ? null : reader.GetString(reader.GetOrdinal("NotifiedUserName")),
+                        LeaveTypeName = reader.GetString(reader.GetOrdinal("LeaveTypeName")),
+                        StatusName = reader.GetString(reader.GetOrdinal("LeaveStatusName")),
+                        FileName = reader.IsDBNull(reader.GetOrdinal("FileName")) ? null : reader.GetString(reader.GetOrdinal("FileName")),
                     };
+
                     result.Add(leave);
                 }
 
@@ -58,7 +66,42 @@ namespace OnwardsDAL.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception("Error occurred while fetching user applied leaves.", ex);
+                throw new Exception("Error occurred while fetching user leave applications for the manager.", ex);
+            }
+        }
+
+        public async Task<(string FileName, byte[] Data)?> GetUserLeaveAppliedDocumentAsync(int id)
+        {
+            try
+            {
+                await using var conn = GetConnection();
+                await conn.OpenAsync();
+
+                await using var cmd = new SqlCommand("Onwards.GetUserLeaveAppliedDocument", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.AddWithValue("@Id", id);
+
+                await using var reader = await cmd.ExecuteReaderAsync();
+
+                if (await reader.ReadAsync())
+                {
+                    var fileName = reader.GetString(reader.GetOrdinal("FileName"));
+                    var data = (byte[])reader["Data"];
+                    return (fileName, data);
+                }
+
+                return null;
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("SQL error occurred while fetching user leave document.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error occurred while fetching user leave document.", ex);
             }
         }
 
@@ -160,8 +203,11 @@ namespace OnwardsDAL.Repository
         }
 
 
-        public async Task UpdateUserLeaveAppliedAsync(UserLeaveAppliedUpdateModel leave)
+        public async Task UpdateUserLeaveAppliedAsync(List<UserLeaveAppliedUpdateModel> leaves)
         {
+            if (leaves == null || leaves.Count == 0)
+                throw new ArgumentException("No leave applications provided.", nameof(leaves));
+
             try
             {
                 await using var conn = GetConnection();
@@ -172,28 +218,52 @@ namespace OnwardsDAL.Repository
                     CommandType = CommandType.StoredProcedure
                 };
 
-                // Parameters - match the stored procedure exactly
-                cmd.Parameters.AddWithValue("@Id", leave.Id);
-                cmd.Parameters.AddWithValue("@LoginId", leave.LoginId);
-                cmd.Parameters.AddWithValue("@UserId", leave.UserId);
-                cmd.Parameters.AddWithValue("@StartDate", leave.StartDate);
-                cmd.Parameters.AddWithValue("@EndDate", leave.EndDate);
-                cmd.Parameters.AddWithValue("@LeaveTypeId", leave.LeaveTypeId);
-                cmd.Parameters.AddWithValue("@LeaveStatusId", leave.LeaveStatusId);
-                cmd.Parameters.AddWithValue("@Action", (object?)leave.Action ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@NoOfDays", (object?)leave.NoOfDays ?? DBNull.Value);
+                // ✅ Create DataTable matching Onwards.UpdateULATVP
+                var tvp = new DataTable();
+                tvp.Columns.Add("Id", typeof(int));
+                tvp.Columns.Add("StartDate", typeof(DateTime));
+                tvp.Columns.Add("EndDate", typeof(DateTime));
+                tvp.Columns.Add("NoOfDays", typeof(int));
+                tvp.Columns.Add("Action", typeof(string));
+                tvp.Columns.Add("LeaveTypeId", typeof(int));
+                tvp.Columns.Add("LeaveStatusId", typeof(int));
+                tvp.Columns.Add("UserId", typeof(int));
+                tvp.Columns.Add("LoginId", typeof(int));
 
+                // ✅ Fill TVP with all leave updates
+                foreach (var leave in leaves)
+                {
+                    tvp.Rows.Add(
+                        leave.Id,
+                        leave.StartDate.Date,
+                        leave.EndDate.Date,
+                        leave.NoOfDays,
+                        (object?)leave.Action ?? DBNull.Value,
+                        leave.LeaveTypeId,
+                        leave.LeaveStatusId,
+                        leave.UserId,
+                        leave.LoginId
+                    );
+                }
+
+                // ✅ Add structured parameter
+                var param = cmd.Parameters.AddWithValue("@Request", tvp);
+                param.SqlDbType = SqlDbType.Structured;
+                param.TypeName = "Onwards.UpdateULATVP";
+
+                // ✅ Execute stored procedure
                 await cmd.ExecuteNonQueryAsync();
             }
             catch (SqlException ex)
             {
-                throw new Exception("SQL error occurred while updating user leave application.", ex);
+                throw new Exception("SQL error occurred while updating user leave applications.", ex);
             }
             catch (Exception ex)
             {
-                throw new Exception("Error occurred while updating user leave application.", ex);
+                throw new Exception("Error occurred while updating user leave applications.", ex);
             }
         }
+
 
         public async Task<List<CalendarEventDto>> GetCalendarEventsAsync(int userId, int month, int year)
         {

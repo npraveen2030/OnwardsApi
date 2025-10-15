@@ -9,11 +9,11 @@ namespace OnwardsModel.Model
     public class AttendanceRegularizationUpdateModel
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
-        public DateTime StartDate { get; set; } 
+        public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string? Action { get; set; }
         public int StatusId { get; set; }
+        public int UserId { get; set; }
         public int LoginId { get; set; }
     }
 }

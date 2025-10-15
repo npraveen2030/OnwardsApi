@@ -1,4 +1,5 @@
-﻿using OnwardsModel.Model;
+﻿using OnwardsModel.Dtos;
+using OnwardsModel.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,8 @@ namespace OnwardsDAL.Interface
 {
     public interface IAttendanceRegularizationRepository
     {
+        public Task<List<AttendanceRegularizationDto>> GetAttendanceRegularizationAsync(int managerId);
         public Task InsertAttendanceRegularizationAsync(AttendanceRegularizationModel regularization);
-        public Task UpdateAttendanceRegularizationAsync(AttendanceRegularizationUpdateModel regularization);
+        public Task UpdateAttendanceRegularizationAsync(List<AttendanceRegularizationUpdateModel> regularizations);
     }
 }

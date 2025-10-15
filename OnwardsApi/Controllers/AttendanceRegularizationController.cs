@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnwardsBLL.Interface;
+using OnwardsBLL.Service;
 using OnwardsModel.Model;
 
 namespace OnwardsApi.Controllers
@@ -15,7 +16,20 @@ namespace OnwardsApi.Controllers
             _attendanceRegularizationService = attendanceRegularizationService;
         }
 
-        // ------------------ POST: Insert New Regularization Request ------------------
+        [HttpGet("getAttendanceregularizationbymanagerid")]
+        public async Task<IActionResult> GetAttendanceRegularization(int managerId)
+        {
+            try
+            {
+                var details = await _attendanceRegularizationService.GetAttendanceRegularizationAsync(managerId);
+                return Ok(details);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
         [HttpPost("insert")]
         public async Task<IActionResult> InsertAttendanceRegularization([FromBody] AttendanceRegularizationModel regularization)
         {
@@ -36,11 +50,11 @@ namespace OnwardsApi.Controllers
         }
 
         [HttpPost("update")]
-        public async Task<IActionResult> UpdateAttendanceRegularization([FromBody] AttendanceRegularizationUpdateModel regularization)
+        public async Task<IActionResult> UpdateAttendanceRegularization([FromBody] List<AttendanceRegularizationUpdateModel> regularizations)
         {
             try
             {
-                await _attendanceRegularizationService.UpdateAttendanceRegularizationAsync(regularization);
+                await _attendanceRegularizationService.UpdateAttendanceRegularizationAsync(regularizations);
                 return Ok(new { success = true, message = "Attendance regularization request updated successfully." });
             }
             catch (InvalidOperationException ex)

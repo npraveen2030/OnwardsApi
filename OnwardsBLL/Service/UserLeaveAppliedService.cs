@@ -19,9 +19,14 @@ namespace OnwardsBLL.Service
             _repo = repo;
         }
 
-        public async Task<List<UserLeaveAppliedDto>> GetUserLeaveAppliedAsync(int userId)
+        public async Task<List<UserLeaveAppliedDto>> GetUserLeaveAppliedAsync(int managerId)
         {
-            return await _repo.GetUserLeaveAppliedAsync(userId);
+            return await _repo.GetUserLeaveAppliedAsync(managerId);
+        }
+
+        public async Task<(string FileName, byte[] Data)?> GetUserLeaveAppliedDocumentAsync(int id)
+        {
+            return await _repo.GetUserLeaveAppliedDocumentAsync(id);
         }
 
         public async Task<List<LeaveTypeDto>> GetLeaveTypesAsync(int userId)
@@ -34,9 +39,9 @@ namespace OnwardsBLL.Service
             await _repo.InsertUserLeaveAppliedAsync(leave);
         }
 
-        public async Task UpdateUserLeaveAppliedAsync(UserLeaveAppliedUpdateModel leave)
+        public async Task UpdateUserLeaveAppliedAsync(List<UserLeaveAppliedUpdateModel> leaves)
         {
-            await _repo.UpdateUserLeaveAppliedAsync(leave);
+            await _repo.UpdateUserLeaveAppliedAsync(leaves);
         }
 
         public async Task<List<CalendarEventDto>> GetCalendarEventsAsync(int userId, int month, int year)
