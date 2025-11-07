@@ -164,6 +164,7 @@ namespace OnwardsDAL.Repository
                 {
                     return new UserLeaveAppliedDetailsDto
                     {
+                        Id = reader.GetInt32(reader.GetOrdinal("Id")),
                         UserName = reader.GetString(reader.GetOrdinal("UserName")),
                         ManagerName = reader.GetString(reader.GetOrdinal("ManagerName")),
                         LeaveTypeName = reader.GetString(reader.GetOrdinal("LeaveTypeName")),
@@ -172,7 +173,8 @@ namespace OnwardsDAL.Repository
                         EndDate = reader.GetDateTime(reader.GetOrdinal("EndDate")),
                         Reason = reader.GetString(reader.GetOrdinal("Reason")),
                         Action = reader.IsDBNull(reader.GetOrdinal("Action")) ? null : reader.GetString(reader.GetOrdinal("Action")),
-                        StatusName = reader.GetString(reader.GetOrdinal("StatusName"))
+                        StatusName = reader.GetString(reader.GetOrdinal("StatusName")),
+                        FileName = reader.IsDBNull(reader.GetOrdinal("FileName")) ? null : reader.GetString(reader.GetOrdinal("FileName")),
                     };
                 }
 

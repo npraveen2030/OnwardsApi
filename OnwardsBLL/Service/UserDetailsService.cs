@@ -20,23 +20,71 @@ namespace OnwardsBLL.Service
             _repo = repo;
         }
 
-        public async Task<IList<UserModelDto>> GetAllUserDetailsAsync(UserModelFilter filter, int skip, int take)
+        public async Task<List<AdminUserDto>> GetUsersForAdminAsync()
         {
-            return await _repo.GetAllUserDetailsAsync(filter, skip,take);
+            return await _repo.GetUsersForAdminAsync();
         }
 
-        public async Task<IList<string>> GetUsersByNameAsync(string? first, string? second)
+        public async Task<bool> DuplicateEmailCheckAsync(string email, int? userId)
         {
-            return await _repo.GetUsersByNameAsync(first, second);
+            return await _repo.DuplicateEmailCheckAsync(email,userId);
         }
         public async Task<string> InsertOrUpdateUserAsync(UserModel user)
         {
             return await _repo.InsertOrUpdateUserAsync(user);
         }
 
-        public async Task DeleteUserAsync(int Id)
+        public async Task DeleteUserAsync(int Id, int LoginId)
         {
-            await _repo.DeleteUserAsync(Id);
+            await _repo.DeleteUserAsync(Id,LoginId);
+        }
+
+        public async Task<List<GradeDto>> GetAllGradesAsync()
+        {
+            try
+            {
+                return await _repo.GetAllGradesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error occurred while retrieving grades.", ex);
+            }
+        }
+
+        public async Task<List<DepartmentDto>> GetAllDepartmentsAsync()
+        {
+            try
+            {
+                return await _repo.GetAllDepartmentsAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error occurred while retrieving departments.", ex);
+            }
+        }
+
+        public async Task<List<UserTypeDto>> GetAllTypesAsync()
+        {
+            try
+            {
+                return await _repo.GetAllTypesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error occurred while retrieving user types.", ex);
+            }
+        }
+
+        public async Task<List<ShiftsDto>> GetAllShiftsAsync()
+        {
+            try
+            {
+                return await _repo.GetAllShiftsAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error occurred while retrieving shifts.", ex);
+            }
         }
     }
 }

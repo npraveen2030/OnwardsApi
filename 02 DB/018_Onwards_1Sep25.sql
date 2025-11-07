@@ -1,4 +1,50 @@
-﻿----------------------------------------15Oct25-------------------------------------------------
+﻿----------------------------------------16Oct25-------------------------------------------------
+ALTER PROCEDURE [Onwards].[GetUserLeaveAppliedById]
+	@Id INT
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	SELECT ULA.Id,U.FullName AS UserName,Um.FullName AS ManagerName,LT.LeaveTypeName,ULA.NoOfDays,ULA.StartDate,
+		   ULA.EndDate,ULA.Reason,ULA.Action,LS.Name AS StatusName, ULA.FileName
+	FROM Onwards.UserLeaveApplied AS ULA
+	INNER JOIN Onwards.Users AS U ON ULA.UserId = U.Id
+	INNER JOIN Onwards.Users AS Um ON ULA.ManagerId = Um.Id
+	INNER JOIN Onwards.LeaveTypes AS LT ON ULA.LeaveTypeId = LT.Id
+	INNER JOIN Onwards.LeaveStatus AS LS ON ULA.LeaveStatusId = LS.Id
+	WHERE ULA.Id = @Id
+     
+END
+
+
+ALTER TABLE Onwards.Departments
+ADD DepartmentManagerId INT NULL
+
+UPDATE Onwards.Departments
+SET DepartmentManagerId = 1
+
+ALTER TABLE Onwards.Departments
+ADD CONSTRAINT FK_Departments_Users FOREIGN KEY (DepartmentManagerId) REFERENCES Onwards.Users(Id)
+
+ALTER TABLE Onwards.Departments
+ALTER COLUMN DepartmentManagerId INT NOT NULL
+
+CREATE PROCEDURE Onwards.GetUsersForAdmin
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	SELECT U.Id,U.EmployeeCode,U.FullName,U.Email,U.Mobile,U.DOJ,U.DOR,R.RoleName,G.GradeValue,D.DepartmentName,D.DepartmentManagerId,
+	UT.TypeName,Um.FullName AS ReportingManagerName, L.Name AS LocationName
+	FROM Onwards.Users AS U
+	INNER JOIN Onwards.Roles AS R ON R.Id = U.RoleId
+	INNER JOIN Onwards.Grades AS G ON G.Id = U.GradeId
+	INNER JOIN Onwards.Departments AS D ON D.Id = U.DepartmentId
+	INNER JOIN Onwards.UserType AS UT ON UT.Id = U.UserTypeId
+	INNER JOIN Onwards.Users AS Um ON Um.Id = U.ReportingManagerId
+	INNER JOIN Onwards.Locations AS L ON L.Id = U.LocationId
+END
+----------------------------------------15Oct25-------------------------------------------------
 USE msdb;
 GO
 

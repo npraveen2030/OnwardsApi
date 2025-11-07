@@ -24,6 +24,11 @@ namespace OnwardsBLL.Service
             return await _attendanceRegularizationRepository.GetAttendanceRegularizationAsync(managerId);
         }
 
+        public async Task<int> GetAttendanceRegularizationDurationAsync(int locationId, DateTime startDate, DateTime endDate)
+        {
+            return await _attendanceRegularizationRepository.GetAttendanceRegularizationDurationAsync(locationId,startDate,endDate);
+        }
+
         public async Task<AttendanceRegularizationDetailsDto?> GetAttendanceRegularizationByIdAsync(int id)
         {
             return await _attendanceRegularizationRepository.GetAttendanceRegularizationByIdAsync(id);

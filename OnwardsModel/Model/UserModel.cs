@@ -11,6 +11,10 @@ namespace OnwardsModel.Model
     [Table("Users", Schema = "Onwards")]
     public class UserModel : BaseModel
     {
+        public int? Id { get;set;}
+
+        public int ShiftId { get;set;}
+
         [Required]
         [StringLength(100)]
         public string Password { get; set; } = null!;
@@ -27,6 +31,8 @@ namespace OnwardsModel.Model
         [StringLength(20)]
         public string Mobile { get; set; } = null!;
 
+        public int LocationId { get;set;}
+
         [Required]
         public DateTime DOJ { get; set; }
 
@@ -42,11 +48,18 @@ namespace OnwardsModel.Model
 
         [Required]
         public int? DepartmentId { get; set; }
+        public int UserTypeId { get; set; }
 
         [Required]
         public int? ReportingManagerId { get; set; }
 
         [Required]
         public int? AdministrativeManagerId { get; set; }
+    }
+
+    public class EmailCheckRequest
+    {
+        public string Email { get; set; }
+        public int? UserId { get; set; }
     }
 }

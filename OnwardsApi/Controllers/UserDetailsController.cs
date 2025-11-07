@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Mvc;
 using OnwardsBLL.Interface;
+using OnwardsBLL.Service;
 using OnwardsModel.Dtos;
 using OnwardsModel.Model;
 
@@ -16,44 +18,22 @@ namespace OnwardsApi.Controllers
             _userDetalilsService = userDetailsService;
         }
 
-        // POST: api/UserDetails/get
-        [HttpPost("get")]
-        public async Task<IActionResult> GetAllUserDetails(UserModelFilter filter,int skip, int take)
+        [HttpGet("getusersforadmin")]
+        public async Task<IActionResult> GetUsersForAdmin()
         {
             try
             {
-                var userDetails = await _userDetalilsService.GetAllUserDetailsAsync(filter, skip, take);
-                return Ok(new { message = "Details fetched successfully.", userDetails });
+                var users = await _userDetalilsService.GetUsersForAdminAsync();
+                return Ok(users);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { error = ex.Message });
+                return StatusCode(500, new { message = ex.Message });
             }
         }
 
-        [HttpGet("GetByUserName")]
-        public async Task<ActionResult<IEnumerable<string>>> GetByUserName(
-            [FromQuery] string? first,
-            [FromQuery] string? second)
-        {
-            first = (first ?? string.Empty).Trim();
-            second = (second ?? string.Empty).Trim();
-
-            // If no terms provided, return empty (or you could return top N)
-            if (string.IsNullOrEmpty(first) && string.IsNullOrEmpty(second))
-                return Ok(Array.Empty<string>());
-
-            // Case-insensitive LIKE using lower() (portable across providers)
-            string f = first.ToLowerInvariant();
-            string s = second.ToLowerInvariant();
-
-            var results = await _userDetalilsService.GetUsersByNameAsync(f,s);
-
-            return Ok(results);
-        }
-
         // POST: api/UserDetails/insert
-        [HttpPost("insert")]
+        [HttpPost("insertorupdate")]
         public async Task<IActionResult> InsertOrUpdateUserDetails(UserModel details)
         {
             try
@@ -67,17 +47,59 @@ namespace OnwardsApi.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUserDetailsById(int id)
+        [HttpDelete("{id}/{loginId}")]
+        public async Task<IActionResult> DeleteUserDetailsById(
+           [FromRoute] int id, [FromRoute] int loginId)
         {
             try
             {
-                await _userDetalilsService.DeleteUserAsync(id);
+                await _userDetalilsService.DeleteUserAsync(id,loginId);
                 return Ok(new { message = "Details Delted successfully." });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
+        [HttpGet("grades")]
+        public async Task<IActionResult> GetGrades() =>
+        Ok(await _userDetalilsService.GetAllGradesAsync());
+
+        [HttpGet("departments")]
+        public async Task<IActionResult> GetDepartments() =>
+            Ok(await _userDetalilsService.GetAllDepartmentsAsync());
+
+        [HttpGet("types")]
+        public async Task<IActionResult> GetTypes() =>
+            Ok(await _userDetalilsService.GetAllTypesAsync());
+
+        [HttpGet("shifts")]
+        public async Task<IActionResult> GetShifts() =>
+            Ok(await _userDetalilsService.GetAllShiftsAsync());
+
+
+        [HttpPost("DuplicateEmailCheck")]
+        public async Task<IActionResult> DuplicateEmailCheck([FromBody] EmailCheckRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request?.Email))
+                return BadRequest("Email cannot be empty.");
+
+            try
+            {
+                bool isUnique = await _userDetalilsService.DuplicateEmailCheckAsync(request.Email,request?.UserId);
+                return Ok(new
+                {
+                    IsUnique = isUnique
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "Error occurred while checking duplicate email.",
+                    Error = ex.Message
+                });
             }
         }
     }

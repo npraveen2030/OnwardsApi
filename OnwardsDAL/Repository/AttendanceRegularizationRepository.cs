@@ -63,6 +63,32 @@ namespace OnwardsDAL.Repository
             }
         }
 
+        public async Task<int> GetAttendanceRegularizationDurationAsync(int locationId, DateTime startDate, DateTime endDate)
+        {
+            try
+            {
+                await using var conn = GetConn();
+                await conn.OpenAsync();
+
+                await using var cmd = new SqlCommand("Onwards.AttendanceRegularizationDuration", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.AddWithValue("@LocationId", locationId);
+                cmd.Parameters.AddWithValue("@StartDate", startDate);
+                cmd.Parameters.AddWithValue("@EndDate", endDate);
+
+                var result = await cmd.ExecuteScalarAsync();
+                return Convert.ToInt32(result);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error occurred while calculating working days duration.", ex);
+            }
+        }
+
+
         public async Task<AttendanceRegularizationDetailsDto?> GetAttendanceRegularizationByIdAsync(int id)
         {
             try
