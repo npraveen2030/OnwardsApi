@@ -18,9 +18,14 @@ namespace OnwardsBLL.Service
             _repo = repo;
         }
 
-        public List<UserScheduleProfileDto> GetUserScheduleForScheduler(int schedulerId, int companyId, int locationId)
+        public async Task<List<UserScheduleProfileDto>> GetUserScheduleForSchedulerAsync(int schedulerId, int companyId, int locationId)
         {
-            return _repo.GetUserScheduleForScheduler(schedulerId, companyId, locationId);
+            return await _repo.GetUserScheduleForSchedulerAsync(schedulerId, companyId, locationId);
+        }
+
+        public async Task InsertOrUpdateUserScheduleAsync(List<UserScheduleTVP> schedules)
+        {
+            await _repo.InsertOrUpdateUserScheduleAsync(schedules);
         }
     }
 }

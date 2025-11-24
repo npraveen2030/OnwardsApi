@@ -9,6 +9,8 @@ namespace OnwardsBLL.Interface
 {
     public interface IUserScheduleService
     {
-        List<UserScheduleProfileDto> GetUserScheduleForScheduler(int schedulerId, int companyId, int locationId);
+        public Task<List<UserScheduleProfileDto>> GetUserScheduleForSchedulerAsync(int schedulerId, int companyId, int locationId);
+        public Task InsertOrUpdateUserScheduleAsync(List<UserScheduleTVP> schedules);
+      
     }
 }

@@ -9,7 +9,8 @@ namespace OnwardsDAL.Interface
 {
     public interface IUserScheduleRepository
     {
-        List<UserScheduleProfileDto> GetUserScheduleForScheduler(int schedulerId, int companyId, int locationId);
+        Task<List<UserScheduleProfileDto>> GetUserScheduleForSchedulerAsync(int schedulerId, int companyId, int locationId);
+        Task InsertOrUpdateUserScheduleAsync(List<UserScheduleTVP> schedules);
     }
 }
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnwardsBLL.Interface;
+using OnwardsModel.Dtos;
 
 namespace OnwardsApi.Controllers
 {
@@ -15,17 +16,17 @@ namespace OnwardsApi.Controllers
         }
 
         [HttpGet("getschedule")]
-        public IActionResult GetUserSchedule(int schedulerId, int companyId, int locationId)
+        public async Task<IActionResult> GetUserSchedule(int schedulerId, int companyId, int locationId)
         {
-            try
-            {
-                var result = _service.GetUserScheduleForScheduler(schedulerId, companyId, locationId);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { error = ex.Message });
-            }
+            var result = await _service.GetUserScheduleForSchedulerAsync(schedulerId, companyId, locationId);
+            return Ok(result);
+        }
+
+        [HttpPost("submit")]
+        public async Task<IActionResult> InsertOrUpdate([FromBody] List<UserScheduleTVP> schedules)
+        {
+            await _service.InsertOrUpdateUserScheduleAsync(schedules);
+            return Ok(new { message = "Saved successfully" });
         }
     }
 
