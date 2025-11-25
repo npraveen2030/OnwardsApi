@@ -116,6 +116,13 @@ namespace OnwardsApi
             services.AddScoped<ISchedulerProfileRepository, SchedulerProfileRepository>();
             services.AddScoped<ISchedulerProfileService, SchedulerProfileService>();
 
+            services.AddScoped<ISchedulerSkillsRepository, SchedulerSkillsRepository>();
+            services.AddScoped<ISchedulerSkillsService, SchedulerSkillsService>();
+
+            services.AddScoped<IUserScheduleParticipantRepository, UserScheduleParticipantRepository>();
+            services.AddScoped<IUserScheduleParticipantService, UserScheduleParticipantService>();
+
+
             return services;
         }
     }
