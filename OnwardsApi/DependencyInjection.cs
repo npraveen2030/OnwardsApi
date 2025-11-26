@@ -101,6 +101,27 @@ namespace OnwardsApi
             services.AddScoped<IAttendanceRegularizationRepository, AttendanceRegularizationRepository>();
             services.AddScoped<IAttendanceRegularizationService, AttendanceRegularizationService>();
 
+            services.AddScoped<IReportsRepository, ReportsRepository>();
+            services.AddScoped<IReportsService, ReportsService>();
+
+            services.AddScoped<ICourierRepository, CourierRepository>();
+            services.AddScoped<ICourierService, CourierService>();
+
+            services.AddScoped<IAdminScheduleRepository, AdminScheduleRepository>();
+            services.AddScoped<IAdminScheduleService, AdminScheduleService>();
+
+            services.AddScoped<IUserScheduleRepository, UserScheduleRepository>();
+            services.AddScoped<IUserScheduleService, UserScheduleService>();
+
+            services.AddScoped<ISchedulerProfileRepository, SchedulerProfileRepository>();
+            services.AddScoped<ISchedulerProfileService, SchedulerProfileService>();
+
+            services.AddScoped<ISchedulerSkillsRepository, SchedulerSkillsRepository>();
+            services.AddScoped<ISchedulerSkillsService, SchedulerSkillsService>();
+
+            services.AddScoped<IUserScheduleParticipantRepository, UserScheduleParticipantRepository>();
+            services.AddScoped<IUserScheduleParticipantService, UserScheduleParticipantService>();
+
 
             return services;
         }

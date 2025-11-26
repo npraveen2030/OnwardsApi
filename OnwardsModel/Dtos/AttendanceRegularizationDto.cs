@@ -18,4 +18,17 @@ namespace OnwardsModel.Dtos
         public string Action { get; set; }
         public string StatusName { get; set; }
     }
+
+    public class AttendanceRegularizationDetailsDto
+    {
+        public string UserName { get; set; } = string.Empty;
+        public string ManagerName { get; set; } = string.Empty;
+        public string Type { get; set; } = string.Empty;
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public decimal Duration { get; set; }
+        public string Reason { get; set; } = string.Empty;
+        public string? Action { get; set; }
+        public string StatusName { get; set; } = string.Empty;
+    }
 }

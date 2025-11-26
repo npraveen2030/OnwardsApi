@@ -11,6 +11,8 @@ namespace OnwardsDAL.Interface
     public interface IAttendanceRegularizationRepository
     {
         public Task<List<AttendanceRegularizationDto>> GetAttendanceRegularizationAsync(int managerId);
+        public Task<int> GetAttendanceRegularizationDurationAsync(int locationId, DateTime startDate, DateTime endDate);
+        public Task<AttendanceRegularizationDetailsDto?> GetAttendanceRegularizationByIdAsync(int id);
         public Task InsertAttendanceRegularizationAsync(AttendanceRegularizationModel regularization);
         public Task UpdateAttendanceRegularizationAsync(List<AttendanceRegularizationUpdateModel> regularizations);
     }

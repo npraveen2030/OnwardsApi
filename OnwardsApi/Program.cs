@@ -71,8 +71,6 @@ builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
  
 builder.Services.AddProjectServices(builder.Configuration);
 
-
-// 🔥 Add CORS policy
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp",

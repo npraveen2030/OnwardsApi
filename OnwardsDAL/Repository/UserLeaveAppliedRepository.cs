@@ -144,6 +144,53 @@ namespace OnwardsDAL.Repository
             }
         }
 
+        public async Task<UserLeaveAppliedDetailsDto?> GetUserLeaveAppliedByIdAsync(int id)
+        {
+            try
+            {
+                await using var conn = GetConnection();
+                await conn.OpenAsync();
+
+                await using var cmd = new SqlCommand("Onwards.GetUserLeaveAppliedById", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.AddWithValue("@Id", id);
+
+                await using var reader = await cmd.ExecuteReaderAsync();
+
+                if (await reader.ReadAsync())
+                {
+                    return new UserLeaveAppliedDetailsDto
+                    {
+                        Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                        UserName = reader.GetString(reader.GetOrdinal("UserName")),
+                        ManagerName = reader.GetString(reader.GetOrdinal("ManagerName")),
+                        LeaveTypeName = reader.GetString(reader.GetOrdinal("LeaveTypeName")),
+                        NoOfDays = reader.GetDecimal(reader.GetOrdinal("NoOfDays")),
+                        StartDate = reader.GetDateTime(reader.GetOrdinal("StartDate")),
+                        EndDate = reader.GetDateTime(reader.GetOrdinal("EndDate")),
+                        Reason = reader.GetString(reader.GetOrdinal("Reason")),
+                        Action = reader.IsDBNull(reader.GetOrdinal("Action")) ? null : reader.GetString(reader.GetOrdinal("Action")),
+                        StatusName = reader.GetString(reader.GetOrdinal("StatusName")),
+                        FileName = reader.IsDBNull(reader.GetOrdinal("FileName")) ? null : reader.GetString(reader.GetOrdinal("FileName")),
+                    };
+                }
+
+                return null;
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("SQL error occurred while fetching user leave details by ID.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error occurred while fetching user leave details by ID.", ex);
+            }
+        }
+
+
         public async Task InsertUserLeaveAppliedAsync(UserLeaveAppliedModel leave)
         {
             try

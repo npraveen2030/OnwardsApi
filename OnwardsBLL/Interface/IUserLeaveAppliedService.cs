@@ -12,6 +12,7 @@ namespace OnwardsBLL.Interface
     {
         public Task<List<UserLeaveAppliedDto>> GetUserLeaveAppliedAsync(int managerId);
         public Task<(string FileName, byte[] Data)?> GetUserLeaveAppliedDocumentAsync(int id);
+        public Task<UserLeaveAppliedDetailsDto?> GetUserLeaveAppliedByIdAsync(int id);
         public Task<List<LeaveTypeDto>> GetLeaveTypesAsync(int userId);
         public Task<List<CalendarEventDto>> GetCalendarEventsAsync(int userId, int month, int year);
         public Task InsertUserLeaveAppliedAsync(UserLeaveAppliedModel leave);

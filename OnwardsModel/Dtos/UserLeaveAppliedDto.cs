@@ -22,4 +22,19 @@ namespace OnwardsModel.Dtos
         public string StatusName { get; set; }
         public string FileName { get; set; }
     }
+
+    public class UserLeaveAppliedDetailsDto
+    {
+        public int Id { get; set; }
+        public string UserName { get; set; } = string.Empty;
+        public string ManagerName { get; set; } = string.Empty;
+        public string LeaveTypeName { get; set; } = string.Empty;
+        public decimal NoOfDays { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public string Reason { get; set; } = string.Empty;
+        public string? Action { get; set; }
+        public string StatusName { get; set; } = string.Empty;
+        public string? FileName { get; set; } 
+    }
 }
