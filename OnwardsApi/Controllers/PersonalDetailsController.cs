@@ -14,7 +14,7 @@ namespace OnwardsApi.Controllers
         { 
             _personalDetailsService = personalDetailsService;
         }
-        [HttpPost]
+        [HttpPost("save")]
         public async Task<IActionResult> AddPersonalDetails(PersonalDetailsModel details)
         {
             try

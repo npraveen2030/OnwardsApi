@@ -19,5 +19,16 @@ namespace OnwardsModel.Dtos
         public int LocationId { get; set; } 
         public string ReportingManagerEmpCode { get;set;} = null!;
         public string ReportingManagerName { get;set;} = null!;
+
+        public string LocationName { get; set; }
+        public string DepartmentName { get; set; }
+        public string GradeValue { get; set; }
+        public DateTime? DOJ { get; set; }
+
+        public string AdministrativeManagerEmpCode { get; set; }
+        public string AdministrativeManagerName { get; set; }
+
+        public string FunctionalReportingManagerEmpCode { get; set; }
+        public string FunctionalReportingManagerName { get; set; }
     }
 }

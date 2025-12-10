@@ -122,6 +122,9 @@ namespace OnwardsApi
             services.AddScoped<IUserScheduleParticipantRepository, UserScheduleParticipantRepository>();
             services.AddScoped<IUserScheduleParticipantService, UserScheduleParticipantService>();
 
+            services.AddScoped<IUserPersonalDetailsRepository, UserPersonalDetailsRepository>();
+            services.AddScoped<IUserPersonalDetailsService, UserPersonalDetailsService>();
+
 
             return services;
         }
